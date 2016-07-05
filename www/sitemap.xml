@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>https://ikofein.cz/cz/</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/en/</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/cz/poledne</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/poledne"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/lunch"/>
+  <changefreq>daily</changefreq>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/cz/vecer</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/vecer"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/dinner"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/cz/napoje</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/napoje"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/beverages"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.40</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/cz/galerie</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/galerie"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/gallery"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.20</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/cz/kontakt</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/kontakt"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/gallery"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.20</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/en/lunch</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/poledne"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/contact"/>
+  <changefreq>daily</changefreq>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/en/dinner</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/vecer"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/dinner"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/en/beverages</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/napoje"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/beverages"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.40</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/en/gallery</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/galerie"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/gallery"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.20</priority>
+</url>
+<url>
+  <loc>https://ikofein.cz/en/contact</loc>
+  <xhtml:link rel="alternate" hreflang="cs" href="https://ikofein.cz/cz/poledne"/>
+  <xhtml:link rel="alternate" hreflang="en" href="https://ikofein.cz/en/contact"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.20</priority>
+</url>
+</urlset>
