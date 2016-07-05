@@ -1,2 +1,6 @@
 .git
-mnews/data/
+.gitignore
+.rsync-exlude
+/log/*
+/temp/*
+/app/config/config.local.neon

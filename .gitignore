@@ -1,2 +1,7 @@
-log
-session
+app/config/config.local.neon
+log/*
+!log/.gitignore
+temp/*
+!temp/.gitignore
+vendor/*
+!vendor/.htaccess
