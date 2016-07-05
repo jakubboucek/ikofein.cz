@@ -45,7 +45,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 		$this->template->title = $pageKey;
 		$this->template->altLangs = $this->getAllLangsLinks($pageKey);
 
-
+		$this->setView("$realLang-$pageKey");
 	}
 
 	private function match($page, $lang) {

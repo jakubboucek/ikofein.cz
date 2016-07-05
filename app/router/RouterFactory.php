@@ -17,7 +17,7 @@ class RouterFactory
 	public static function createRouter()
 	{
 		$router = new RouteList;
-		$router[] = new Route('[<lang (cz|cs|en)>/][<page [a-z]+>]<? \.htm|\.php|>', 'Static:default');
+		$router[] = new Route('[<lang (cs|cz|en)>/][<page [a-z]+>]<? \.htm|\.php|>', 'Static:default');
 		return $router;
 	}
 
