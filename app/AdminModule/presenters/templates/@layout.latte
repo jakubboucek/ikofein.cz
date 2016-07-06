@@ -1,2 +1,45 @@
-Admin
-{include content}
+<!DOCTYPE html>
+<html lang="cs" class="cs" dir="ltr">
+<head>
+	<meta charset="utf-8" />
+	<meta name="robots" content="noindex, nofollow">
+	<title>Administrace - Kofein</title>
+	<meta name="author" content="Kofein Café s.r.o.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="{$basePath}/favicon.ico" />
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+	<script>tinymce.init({
+		selector:'textarea',
+		entity_encoding: 'raw'
+	});</script>
+</head>
+
+<body>
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" n:href="Dashboard:">
+				<img alt="Kofein restaurant" src="{$basePath}/img/podpis.png" height="16">
+			</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li><p class="navbar-text">Administrace</p></li>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+			<li n:if="$user->isLoggedIn()"><p class="navbar-text">Přihlášen: {$user->getIdentity()->name}</p></li>
+			<li n:if="$user->isLoggedIn()"><a n:href="Sign:out">Odhlásit</a></li>
+		</ul>
+	</div>
+</nav>
+<div class="container">
+    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+    	{$flash->message}
+    </div>
+	{include content}
+</div>
+</body>
+</html>

@@ -2,9 +2,9 @@
 
 namespace App\Presenters;
 
-use Nette,
-	Nette\Http\Request,
-	Nette\Http\Response,
+use App\Component\PostRenderer,
+	Nette,
+	Nette\Http,
 	Nette\Application\BadRequestException;
 
 class StaticPresenter extends Nette\Application\UI\Presenter
@@ -31,10 +31,16 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 	private $httpRequest;
 	private $httpResponse;
+	private $postRenderer;
 
-	public function __construct(Request $httpRequest, Response $httpResponse) {
+	public function __construct(Http\Request $httpRequest, Http\Response $httpResponse, PostRenderer $postRenderer) {
 		$this->httpRequest = $httpRequest;
 		$this->httpResponse = $httpResponse;
+		$this->postRenderer = $postRenderer;
+	}
+
+	public function beforeRender() {
+		$this->template->readyForPost = TRUE;
 	}
 
 	public function renderDefault($page = '', $lang = NULL) {
@@ -46,6 +52,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 		$this->template->altLangs = $this->getAllLangsLinks($pageKey);
 
 		$this->setView("$realLang-$pageKey");
+	}
+
+	public function createComponentPost() {
+		return $this->postRenderer;
 	}
 
 	private function match($page, $lang) {

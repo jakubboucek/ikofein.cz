@@ -12,4 +12,7 @@ session:
 
 
 services:
+	- App\Model\Post
+	postRenderer: App\Component\PostRenderer
 	router: App\RouterFactory::createRouter
+	authenticator: App\Model\UserManager

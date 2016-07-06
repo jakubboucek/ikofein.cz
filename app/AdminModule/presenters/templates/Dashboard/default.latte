@@ -1,0 +1,38 @@
+{block content}
+<div class="row">
+	<div class="panel panel-default">
+		<div class="panel-heading">Texty na stránkách</div>
+		<table class="table">
+			<tr>
+				<th>Typ zprávy</th>
+				<th>Text</th>
+				<th>Zveřeněno</th>
+			</tr>
+			{foreach $posts as $post}
+			<tr>
+				<td>
+					<a n:href="Post:detail key=>$post['key']">{$post['title']}</a>
+					<br><small>{$post['tech_note']}</small>
+				</td>
+				<td>
+					<strong>Česky: </strong>{$post['content_cs']|striphtml|truncate:100}<br>
+					<strong>Anglicky: </strong>{$post['content_en']|striphtml|truncate:100}<br>
+				</td>
+				<td>
+					{if $post['info']['isPublished']}
+						<strong class="text-success">Ano</strong>
+						{ifset $post['published_to']}
+							<br><small>až do {$post['published_to']}</small>
+						{/ifset}
+					{else}
+						<strong class="text-danger">Ne</strong>
+						{if $post['info']['isPlanned']}
+							</br><small>až od {$post['published_from']}</small>
+						{/if}
+					{/if}
+				</td>
+			</tr>
+			{/foreach}
+		</table>
+	</div>
+</div>
