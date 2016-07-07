@@ -10,9 +10,17 @@ application:
 session:
 	expiration: 14 days
 
+aws:
+	credentials:
+		key: AKIAJ6HSP666NW7EWMKQ
+		secret: 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
+
+extensions:
+    aws: JakubBoucek\Aws\DI\AwsExtension
 
 services:
 	- App\Model\Post
+	- JakubBoucek\Aws\SesMailer
 	postRenderer: App\Component\PostRenderer
 	router: App\RouterFactory::createRouter
 	authenticator: App\Model\UserManager

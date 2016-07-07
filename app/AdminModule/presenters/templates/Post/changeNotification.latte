@@ -1,0 +1,22 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>{$title}</title>
+	<style>
+		small { color: gray; }
+		table { border-collapse: collapse; }
+		table td, table th { text-align: left; border: 1px solid gray; padding: 5px; }
+	</style>
+</head>
+<body>
+	<h1>Stránka změněna</h1>
+	<p>Na webu https://ikofein.cz/ došlo ke změně článku „{$post["title"]}“:</p>
+	<table>
+		<tr><th>Key:</th><td>{$post["key"]}</td></tr>
+		<tr><th>Název:</th><td>{$post["title"]}</td></tr>
+		<tr><th>Verze:</th><td>{$post["version"]}</td></tr>
+		<tr><th>Otisk:</th><td>{$post["hash"]}</td></tr>
+	</table>
+	<small>Tento e-mail je zaslán jako privátní notifikace určená pro podporu vývoje webu ikofein.cz. E-mail by nikdy neměl být odeslán nikomu, kdo se nepodílí aktivně na vývoji uvedeného webu. Pokud by se ta nedoptřením stalo, kontaktujte prosím provozovatele webu: <a href="mailto:pan@jakubboucek.cz?subject=Bounce%3A+Remove+unwanted+notifications+%28ikofein.cz%29&amp;body=Dost%C3%A1v%C3%A1m+mailem+notofikace%2C+kter%C3%A9+nechci+%5Bikofein.cz%2Fadmin%2FPost%2FsendChangeNotification%5D%2C+pros%C3%ADm+o+zru%C5%A1en%C3%AD%21">Jakub Bouček, pan@jakubboucek.cz</a></small>
+</body>
+</html>

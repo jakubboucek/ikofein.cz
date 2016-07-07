@@ -3,20 +3,24 @@
 namespace App\AdminModule\Presenters;
 
 use App\Model,
+	App\Forms\BootstrapizeForm,
+	Latte,
 	Nette,
-	Nette\Http\Request,
-	Nette\Http\Response,
 	Nette\Application\BadRequestException,
 	Nette\Application\UI,
-	App\Forms\BootstrapizeForm;
-
+	Nette\Mail,
+	Nette\Http\Request,
+	Nette\Http\Response,
+	JakubBoucek\Aws;
 
 class PostPresenter extends Nette\Application\UI\Presenter
 {
 	private $postModel;
+	private $mailer;
 
-	public function __construct( Model\Post $postModel ) {
+	public function __construct( Model\Post $postModel, Aws\SesMailer $mailer ) {
         $this->postModel = $postModel;
+        $this->mailer = $mailer;
     }
 
 	public function startup() {
@@ -118,10 +122,30 @@ class PostPresenter extends Nette\Application\UI\Presenter
 			'content_en' => $values['content_en'],
 		];
 
-		$this->postModel->save($values['key'], $data);
+		$current = $this->postModel->save($values['key'], $data);
+
+		$this->sendChangeNotification($current);
 
 		$this->flashMessage('Uloženo', 'success');
 		$this->redirect('Dashboard:');
+	}
+
+	private function sendChangeNotification( $post ) {
+		$templateFile = __DIR__ . '/templates/Post/changeNotification.latte';
+		$latte = new Latte\Engine;
+		$mail = new Mail\Message;
+
+		$params = [
+			'title' => "Změna na webu ikofein.cz ($post[title])",
+			'post' => $post,
+		];
+
+		$mail->setFrom('no-reply@ikofein.cz', 'Kofein automat')
+			->setSubject($params['title'])
+			->addTo('pan@jakubboucek.cz', 'Jakub Bouček')
+			->setHtmlBody($latte->renderToString($templateFile, $params));
+		$mailer = $this->mailer;
+		$mailer->send($mail);
 	}
 
 

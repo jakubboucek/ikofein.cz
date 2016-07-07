@@ -107,6 +107,8 @@ class Post
 			->insert($current);
 
 		$this->cache->remove($key);
+
+		return $current;
 	}
 
 	private function getHash() {
