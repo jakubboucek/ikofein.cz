@@ -2,8 +2,9 @@
 
 namespace App\Model;
 
-use Nette;
-use Nette\Security\Passwords;
+use Nette,
+	Nette\Security\Passwords,
+	Nette\Utils\Random;
 
 
 /**
@@ -19,7 +20,8 @@ class UserManager implements Nette\Security\IAuthenticator
 		COLUMN_NAME = 'name',
 		COLUMN_EMAIL = 'email',
 		COLUMN_PASSWORD_HASH = 'password',
-		COLUMN_ROLE = 'role';
+		COLUMN_ROLE = 'role',
+		COLUMN_RESET_TOKEN = 'reset_hash';
 
 
 	/** @var Nette\Database\Context */
@@ -41,7 +43,8 @@ class UserManager implements Nette\Security\IAuthenticator
 	{
 		list($email, $password) = $credentials;
 
-		$row = $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EMAIL, $email)->fetch();
+		$row = $this->getUserByEmail($email);
+
 
 		if (!$row) {
 			throw new Nette\Security\AuthenticationException('The email is incorrect.', self::IDENTITY_NOT_FOUND);
@@ -61,23 +64,43 @@ class UserManager implements Nette\Security\IAuthenticator
 	}
 
 
-	/**
-	 * Adds new user.
-	 * @param  string
-	 * @param  string
-	 * @return void
-	 * @throws DuplicateNameException
-	 */
-	public function add($email, $password)
+	public function getUserByEmail($email) {
+		return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EMAIL, $email)->fetch();
+	}
+
+	public function startReset($email)
 	{
-		try {
-			$this->database->table(self::TABLE_NAME)->insert([
-				self::COLUMN_PASSWORD_HASH => Passwords::hash($password),
-				self::COLUMN_EMAIL => $email,
-			]);
-		} catch (Nette\Database\UniqueConstraintViolationException $e) {
-			throw new DuplicateNameException;
+		$row = $this->getUserByEmail($email);
+
+		if(!$row) {
+			return FALSE;
 		}
+
+		$hash = Random::generate(16);
+
+		$row->update([
+			self::COLUMN_RESET_TOKEN => $hash,
+		]);
+
+		return $hash;
+	}
+
+	public function stopReset($email)
+	{
+		$row = $this->getUserByEmail($email);
+
+		$row->update([
+			self::COLUMN_RESET_TOKEN => NULL,
+		]);
+	}
+
+	public function setPassword($email, $password)
+	{
+		$row = $this->getUserByEmail($email);
+		$row->update([
+			self::COLUMN_PASSWORD_HASH => Passwords::hash($password),
+			self::COLUMN_RESET_TOKEN => NULL,
+		]);
 	}
 
 }

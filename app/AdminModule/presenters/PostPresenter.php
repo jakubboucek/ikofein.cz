@@ -131,7 +131,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
 	}
 
 	private function sendChangeNotification( $post ) {
-		$templateFile = __DIR__ . '/templates/Post/changeNotification.latte';
+		$templateFile = __DIR__ . '/templates/Post/changeNotificationMail.latte';
 		$latte = new Latte\Engine;
 		$mail = new Mail\Message;
 
