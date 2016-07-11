@@ -9,7 +9,7 @@
 				<th>Zveřeněno</th>
 			</tr>
 			{foreach $posts as $post}
-			<tr>
+			<tr n:class="$post['info']['isPublished'] ? : 'gray'">
 				<td>
 					<a n:href="Post:detail key=>$post['key']">{$post['title']}</a>
 					<br><small>{$post['tech_note']}</small>
