@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REMOTE_DIR="/var/www/ikofein.cz/beta"
+REMOTE_DIR="/var/www/ikofein.cz/www"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SSH="ssh sbl"
