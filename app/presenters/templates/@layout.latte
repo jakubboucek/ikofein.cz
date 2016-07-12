@@ -3,7 +3,7 @@
 <html lang="{$lang}" class="{$lang}" dir="ltr">
 <head>
 	<meta charset="utf-8" />
-	<title>{ifset $h1}{$h1} - {/ifset}
+	<title>{ifset #h1}{include h1} - {/ifset}
 		{if $lang=='cs'}Kofein restaurant na pražských Vinohradech{/if}
 		{if $lang=='en'}Kofein restaurant in Vinohrady - Prague{/if}
 	</title>
@@ -65,7 +65,7 @@
 	</nav>
 
 	<section>
-		<h1>{ifset $h1}{$h1}{else}Kofein restaurant{/ifset}</h1>
+		<h1>{ifset #h1}{include h1}{else}Kofein restaurant{/ifset}</h1>
 		{ifset $readyForPost}{control post 'alert', $lang, 'alert'}{/ifset}
 
 		<article>
