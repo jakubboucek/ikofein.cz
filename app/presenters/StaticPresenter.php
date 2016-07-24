@@ -134,7 +134,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 		if(count($keyUrls) && key($keyUrls) == -1) {
 			$keyUrl = current($keyUrls);
 			foreach($this->langs as $lang) {
-				$url = $this->link('default', [
+				$url = $this->link('//default', [
 					'lang' => $lang,
 					'page' => $keyUrl,
 				]);
@@ -144,7 +144,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 		else {
 			foreach($keyUrls as $langId => $keyUrl) {
 				$lang = $this->langs[$langId];
-				$url = $this->link('default', [
+				$url = $this->link('//default', [
 					'lang' => $lang,
 					'page' => $keyUrl,
 				]);
