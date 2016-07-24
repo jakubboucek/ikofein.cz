@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.18.25",
+            "version": "3.18.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "37a8ce927a69de3d821c21b64674a2b3b9d1d247"
+                "reference": "8cc3d3231d9fb9da528205f3b905097a37ac3df3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/37a8ce927a69de3d821c21b64674a2b3b9d1d247",
-                "reference": "37a8ce927a69de3d821c21b64674a2b3b9d1d247",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/8cc3d3231d9fb9da528205f3b905097a37ac3df3",
+                "reference": "8cc3d3231d9fb9da528205f3b905097a37ac3df3",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-07-05 19:25:06"
+            "time": "2016-07-07 23:09:15"
         },
         {
             "name": "defuse/php-encryption",
@@ -759,16 +759,16 @@
         },
         {
             "name": "nette/di",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/di.git",
-                "reference": "6ba187598e40c8596eb830e25e0696f02a97868d"
+                "reference": "beff1de5c216757fee64a93511408361d9b6365e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/di/zipball/6ba187598e40c8596eb830e25e0696f02a97868d",
-                "reference": "6ba187598e40c8596eb830e25e0696f02a97868d",
+                "url": "https://api.github.com/repos/nette/di/zipball/beff1de5c216757fee64a93511408361d9b6365e",
+                "reference": "beff1de5c216757fee64a93511408361d9b6365e",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +814,7 @@
             ],
             "description": "Nette Dependency Injection Component",
             "homepage": "https://nette.org",
-            "time": "2016-06-27 18:13:23"
+            "time": "2016-07-07 14:26:22"
         },
         {
             "name": "nette/finder",
@@ -874,16 +874,16 @@
         },
         {
             "name": "nette/forms",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "ed7ecd76661af5b090f452c1b49ea41b6d82dbf2"
+                "reference": "57295d16f8e90173465735eb6be49a1e3ce614bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/ed7ecd76661af5b090f452c1b49ea41b6d82dbf2",
-                "reference": "ed7ecd76661af5b090f452c1b49ea41b6d82dbf2",
+                "url": "https://api.github.com/repos/nette/forms/zipball/57295d16f8e90173465735eb6be49a1e3ce614bd",
+                "reference": "57295d16f8e90173465735eb6be49a1e3ce614bd",
                 "shasum": ""
             },
             "require": {
@@ -930,7 +930,7 @@
             ],
             "description": "Nette Forms: greatly facilitates web forms",
             "homepage": "https://nette.org",
-            "time": "2016-06-30 18:18:10"
+            "time": "2016-07-09 12:02:06"
         },
         {
             "name": "nette/http",
