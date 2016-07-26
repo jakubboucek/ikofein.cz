@@ -32,6 +32,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
 		if( $this->user->isLoggedIn() ) {
 			$this->redirect('Dashboard:');
 		}
+
+		// Force start session before send content (need to protection)
+		$this->getSession()->start();
 	}
 
 	public function renderReset() {
