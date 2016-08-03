@@ -120,7 +120,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 	}
 
 	private function getBrowserLang($default = '') {
-		$header = $this->httpRequest->getHeader('HTTP_ACCEPT_LANGUAGE', $default);
+		$header = $this->httpRequest->getHeader('accept-language', $default);
 		return substr($header, 0, 2);
 	}
 
