@@ -37,7 +37,7 @@ class Post
 			return $this->getPostByKey( $key, $publishedOnly, $version );
 		}
 		catch(PostNotFoundException $e) {
-			return NULL;
+			return '';
 		}
 	}
 
