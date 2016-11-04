@@ -9,13 +9,13 @@
 	</title>
 	<meta name="author" content="Kofein Café s.r.o.">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="{$basePath}/css/main.css?v201607062035">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/main.css">
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico" />
 
 	{ifset $altLangs}
 	<link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
 	{/ifset}
-	<script type="text/javascript" src="{$basePath}/js/main.min.js" async></script>
+	<script type="text/javascript" src="{$basePath}/js/main.js" async></script>
 	<!--[if lt IE 9]>
 		<script src="//css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
 		<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>

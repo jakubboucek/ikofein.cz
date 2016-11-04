@@ -13,7 +13,6 @@ div.alert-message {
     -ms-border-radius: 3px;
     -o-border-radius: 3px;
     border-radius: 3px;
-    text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
     position: relative;
     display: flex;
     flex-direction: row;
@@ -22,11 +21,11 @@ div.alert-message {
 }
 div.alert-message .box-icon {
     display: block;
-    float: left;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAALVBMVEUAAAD///////////////////////////////////////////////////////+hSKubAAAADnRSTlMA37/vgHAQr5+PUEAwIM0IdwQAAAB3SURBVCjPYxjGgFEAi6DfE0wxNrvHCRiCHO/eNWAInnv37g2GoN4Tv0foYlzvHvC9W4DuIJAguqPiQIJP0R0EEkRzFOc7kOC7CSiC9969e6T37t1bVAe9AwMUR3G/g2h/twHZQTBBARQHQQCKo+pggs8ZRgEWAAAft0uCg1O8vQAAAABJRU5ErkJggg==);
     width: 50px;
+    flex-shrink: 0;
     margin-top: -2px;
-    background-position: center center;
+    background-position: center top;
     background-repeat: no-repeat;
 }
 div.alert-message p {
@@ -36,5 +35,4 @@ div.alert-message p {
 div.alert-message {
     background-color: #e3b000;
     color: #fff;
-    text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
 }
