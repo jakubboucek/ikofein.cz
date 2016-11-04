@@ -1,6 +1,13 @@
 .git
 .gitignore
-.rsync-exlude
+.rsync-exclude
+node_modules
+asset
+composer.json
+composer.lock
+deploy.sh
+package.json
+Gruntfile.js
 /log/*
 /temp/*
 /app/config/config.local.neon
