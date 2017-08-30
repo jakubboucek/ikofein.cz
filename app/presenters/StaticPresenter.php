@@ -96,7 +96,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 	}
 
 	private function redirectTo($pageset) {
-		$this->redirect('default', [
+		$queryParameters = $this->httpRequest->getQuery();
+		$this->redirect('default', $queryParameters + [
 			'lang' => $pageset[1],
 			'page' => $pageset[0],
 		]);
