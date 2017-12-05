@@ -1,15 +1,17 @@
 #!/bin/bash
 
 REMOTE_DIR="/var/www/ikofein.cz/www"
+LOCAL_DIR=""
+SERVER_NAME="mlh"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SSH="ssh sbl"
+SSH="ssh ${SERVER_NAME}"
 
 echo "Uploading data to SSH…"
-rsync -rcP --delete --exclude-from="${DIR}/.rsync-exclude" "${DIR}/" "sbl:$REMOTE_DIR/"
+rsync -rcP --delete --exclude-from="${DIR}/.rsync-exclude" "${DIR}${LOCAL_DIR}/" "${SERVER_NAME}:$REMOTE_DIR/"
 
 echo "Replace file permissions…"
-$SSH sudo fixwww.sh $REMOTE_DIR
+$SSH sudo fixwww $REMOTE_DIR
 
 echo "Remove temporary files…"
 $SSH find $REMOTE_DIR/temp -mindepth 2 -type f -delete
