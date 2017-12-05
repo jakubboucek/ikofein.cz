@@ -16,8 +16,9 @@ use Nette,
 /**
  * Sends emails via AWS SES serivce
  */
-class SesMailer extends Nette\Object implements IMailer
+class SesMailer implements IMailer
 {
+	use Nette\SmartObject;
 
 	private $ses;
 
