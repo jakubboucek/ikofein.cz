@@ -17,11 +17,6 @@ class RouterFactory
 	public static function createRouter()
 	{
 		$router = new RouteList;
-		$router[] = new Route('mnews/<? .*>', [
-			'module' => 'Admin',
-			'presenter' => 'OldAdmin',
-			'action' => 'oldAdmin'
-		]);
 		$router[] = new Route('admin/<presenter>/<action>', [
 			'module' => 'Admin',
 			'presenter' => 'Dashboard',
