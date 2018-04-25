@@ -41,7 +41,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 	public function beforeRender() {
 		$this->template->readyForPost = TRUE;
-	}
+        $this->template->wwwDir = $this->context->getParameters()['wwwDir'];
+    }
 
 	public function renderDefault($page = '', $lang = NULL) {
 		$pageset = $this->match($page, $lang);
