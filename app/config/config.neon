@@ -1,5 +1,6 @@
 parameters:
-
+	crypto:
+		stateKey: {put-here-state-key}
 
 application:
 	errorPresenter: Error
@@ -11,6 +12,16 @@ session:
 	expiration: 14 days
 
 aws:
+	credentials:
+		key: AKIAIZQTKJSYPVJS4E3A
+		secret: {put-here-secret}
+
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=kofein'
+	user: kofein
+	password: {put-here-password}
+	options:
+		lazy: TRUE
 
 extensions:
     aws: JakubBoucek\Aws\DI\AwsExtension
