@@ -8,10 +8,7 @@
 
 namespace JakubBoucek\Aws\DI;
 
-use Nette,
-	Kdyby\CurlCaBundle\CertificateHelper;
-
-
+use Nette;
 
 /**
  * @author Jakub Bouček <pan@jakubboucek.cz>
@@ -19,22 +16,22 @@ use Nette,
 class AwsExtension extends Nette\DI\CompilerExtension
 {
 
-	/**
-	 * @var array
-	 */
-	public $defaults = [
-		'version' => 'latest',
-		'region'  => 'eu-west-1'
-	];
+    /**
+     * @var array
+     */
+    public $defaults = [
+        'version' => 'latest',
+        'region' => 'eu-west-1'
+    ];
 
 
-	public function loadConfiguration()
-	{
-		$builder = $this->getContainerBuilder();
-		$config = $this->getConfig($this->defaults);
+    public function loadConfiguration()
+    {
+        $builder = $this->getContainerBuilder();
+        $config = $this->getConfig($this->defaults);
 
-		$builder->addDefinition($this->prefix('sdk'))
-			->setClass('\Aws\Sdk', ['args' => $config] );
-	}
+        $builder->addDefinition($this->prefix('sdk'))
+            ->setClass('\Aws\Sdk', ['args' => $config]);
+    }
 
 }
