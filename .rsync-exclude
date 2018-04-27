@@ -1,12 +1,15 @@
 .git
 .gitignore
 .rsync-exclude
+.idea
+.DS_Store
 node_modules
 asset
 composer.json
 composer.lock
 deploy.sh
 package.json
+package-lock.json
 Gruntfile.js
 /log/*
 /temp/*
