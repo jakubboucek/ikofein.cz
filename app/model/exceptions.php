@@ -17,3 +17,9 @@ class PostException extends \Exception
 class PostNotFoundException extends PostException
 {
 }
+
+
+
+class PageNotFound extends \Exception
+{
+}

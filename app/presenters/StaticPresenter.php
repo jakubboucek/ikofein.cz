@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Component\PostRenderer;
+use App\Model\PageNotFound;
 use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Http;
@@ -26,16 +27,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         'beverages' => ['napoje', 'beverages'],
         'gallery' => ['galerie', 'gallery'],
         'contact' => ['kontakt', 'contact'],
-    ];
-
-    /**
-     * @var array
-     */
-    private $aliases = [
-        'home' => ['', 'en'],
-        'uvod' => ['', 'cs'],
-        'index' => ['', 'cs'],
-
     ];
 
     /**
@@ -114,12 +105,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      */
     private function match($page, $lang)
     {
-        //check alias
-        if (isset($this->aliases[$page])) {
-            $this->redirectTo($this->aliases[$page]);
-        }
-
-        //determine
+        //homepage - redirect to defined lang variant
         if (empty($page) && empty($lang)) {
             $this->redirectTo([
                 '',
@@ -127,26 +113,39 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             ]);
         }
 
-        //parse map
-        foreach ($this->pageMap as $pageKey => $keyUrls) {
-            foreach ($keyUrls as $langId => $keyUrl) {
-                if ($page == $keyUrl) {
-                    //get lang for universal key
-                    if ($langId == -1) {
-                        $langId = $this->getLangKey($lang);
-                        if ($langId === false) {
-                            $langId = $this->getLangKey($this->determineLang());
-                        }
-                    }
-                    if ($this->langs[$langId] == $lang) {
-                        return [$pageKey, $lang];
-                    } else {
-                        $this->redirectTo([$keyUrl, $this->langs[$langId]]);
-                    }
-                }
-            }
+
+        //get clean lang variant
+        $langId = $this->getLangKey($lang);
+        if ($langId === false) {
+            $langId = $this->getLangKey($this->determineLang());
         }
-        throw new BadRequestException("Unknown page \"$lang/$page\"");
+        $safeLang = $this->langs[$langId];
+
+
+        //parse page
+        try {
+            $pageKey = $this->getPageKeyByUrl($page);
+        } catch (PageNotFound $e) {
+            throw new BadRequestException("Unknown page \"$lang/$page\"");
+        }
+
+        
+        //get clean page
+        if (isset($this->pageMap[$pageKey][$langId])) {      //lang url variant
+            $safePage = $this->pageMap[$pageKey][$langId];
+        } elseif (isset($this->pageMap[$pageKey][-1])) {     //universal url variant
+            $safePage = $this->pageMap[$pageKey][-1];
+        } else {
+            throw new Nette\InvalidStateException("In pageMap is missing page \"$lang/$page\"");
+        }
+
+
+        //check and fix canonical URL
+        if ($lang != $safeLang || $page != $safePage) {
+            $this->redirectTo([$safePage, $safeLang]);
+        }
+
+        return [$pageKey, $lang];
     }
 
 
@@ -210,6 +209,40 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     private function getCookiesLang($default = null)
     {
         return $this->httpRequest->getCookie(self::LANG_COOKIE, $default);
+    }
+
+
+    /**
+     * @param string $keyUrl
+     * @return string
+     * @throws PageNotFound
+     */
+    private function getPageKeyByUrl($keyUrl)
+    {
+        $reversedMap = $this->getReversedPageMap();
+
+        if (isset($reversedMap[$keyUrl])) {
+            return $reversedMap[$keyUrl];
+        }
+
+        throw new PageNotFound();
+    }
+
+
+    /**
+     * @return array
+     */
+    private function getReversedPageMap()
+    {
+        $reversedMap = [];
+
+        foreach ($this->pageMap as $pageKey => $keyUrls) {
+            foreach ($keyUrls as $langId => $keyUrl) {
+                $reversedMap[$keyUrl] = $pageKey;
+            }
+        }
+
+        return $reversedMap;
     }
 
 

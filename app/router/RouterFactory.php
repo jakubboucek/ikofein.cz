@@ -17,6 +17,7 @@ class RouterFactory
     public static function createRouter()
     {
         $router = new RouteList;
+
         $router[] = new Route(
             'admin/<presenter>/<action>',
             [
@@ -25,7 +26,38 @@ class RouterFactory
                 'action' => 'default'
             ]
         );
+
+        $router[] = new Route(
+            'home<? \.htm|\.php|>',
+            [
+                'presenter' => 'Static',
+                'action' => 'default',
+                'lang' => 'en',
+            ],
+            Route::ONE_WAY
+        );
+        $router[] = new Route(
+            'index<? \.htm|\.php|>',
+            [
+                'presenter' => 'Static',
+                'action' => 'default',
+                'page' => null,
+                'lang' => 'cs',
+            ],
+            Route::ONE_WAY
+        );
+        $router[] = new Route(
+            'uvod<? \.htm|\.php|>',
+            [
+                'presenter' => 'Static',
+                'action' => 'default',
+                'page' => null,
+                'lang' => 'cs',
+            ],
+            Route::ONE_WAY
+        );
         $router[] = new Route('[<lang (cs|cz|en)>/][<page [a-z]+>]<? \.htm|\.php|>', 'Static:default');
+
         return $router;
     }
 
