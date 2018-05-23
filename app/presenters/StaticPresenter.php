@@ -129,7 +129,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             throw new BadRequestException("Unknown page \"$lang/$page\"");
         }
 
-        
+
         //get clean page
         if (isset($this->pageMap[$pageKey][$langId])) {      //lang url variant
             $safePage = $this->pageMap[$pageKey][$langId];

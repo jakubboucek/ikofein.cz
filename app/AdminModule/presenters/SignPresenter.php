@@ -72,7 +72,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param $token
+     * @throws CryptoException\EnvironmentIsBrokenException
      * @throws Nette\Application\AbortException
+     * @throws Nette\Utils\JsonException
      */
     public function renderChangePassword($token)
     {
@@ -230,7 +232,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @param UI\Form $form
      * @param $values
+     * @throws CryptoException\EnvironmentIsBrokenException
      * @throws Nette\Application\AbortException
+     * @throws Nette\Utils\JsonException
      */
     public function setPasswordFormSuccess(UI\Form $form, $values)
     {
