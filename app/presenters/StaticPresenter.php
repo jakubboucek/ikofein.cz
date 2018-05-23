@@ -169,6 +169,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      */
     private function getLangKey($lang)
     {
+        if ($lang == 'cz') {
+            $lang = 'cs';
+        }
+
         return array_search($lang, $this->langs);
     }
 
