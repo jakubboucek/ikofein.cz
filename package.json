@@ -7,11 +7,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/jakubboucek/ikofein.cz.git"
+    "url": "https://github.com/jakubboucek/ikofein.cz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jakubboucek/ikofein.cz/issues",
+    "email": "pan@jakubboucek.cz"
   },
   "author": "Jakub Bouček <pan@jakubboucek.cz>",
-  "license": "UNLICENSED",
-  "homepage": "https://bitbucket.org/jakubboucek/ikofein.cz#readme",
+  "license": "MIT",
+  "homepage": "https://github.com/jakubboucek/ikofein.cz",
   "devDependencies": {
     "grunt": "^1.0.2",
     "grunt-contrib-less": "^1.4.1",
