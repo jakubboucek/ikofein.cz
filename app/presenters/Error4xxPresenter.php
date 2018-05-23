@@ -29,6 +29,7 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
         $this->template->setFile(is_file($file) ? $file : __DIR__ . '/templates/Error/4xx.latte');
 
         $this->template->wwwDir = $this->context->getParameters()['wwwDir'];
+        $this->template->dataLayer = [['errorCode'=>$exception->getCode()]];
     }
 
 }

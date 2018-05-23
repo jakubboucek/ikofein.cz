@@ -17,7 +17,7 @@
 	{/ifset}
 	<script type="text/javascript" src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async></script>
 	<script>
-		dataLayer = [];
+		dataLayer = {ifset $dataLayer}{$dataLayer}{else}[]{/ifset};
 	</script>
 	<script>(function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
 	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
