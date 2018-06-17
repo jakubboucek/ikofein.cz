@@ -28,7 +28,7 @@ extensions:
 
 services:
 	- App\Model\Post
-	- JakubBoucek\Aws\SesMailer
+	mail.mailer: JakubBoucek\Aws\SesMailer
 	crypto: App\Crypto(%crypto.stateKey%)
 	postRenderer: App\Component\PostRenderer
 	router: App\RouterFactory::createRouter
