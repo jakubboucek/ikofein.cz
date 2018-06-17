@@ -17,7 +17,7 @@ echo "Remove temporary files…"
 $SSH find $REMOTE_DIR/temp -mindepth 2 -type f -delete
 
 echo -n "Remove nette email-sent marker… "
-ssh sbl /bin/bash << EOF
+ssh $SERVER_NAME /bin/bash << EOF
 	if [ -f ${REMOTE_DIR}/log/email-sent ]
 	then
 		rm ${REMOTE_DIR}/log/email-sent
