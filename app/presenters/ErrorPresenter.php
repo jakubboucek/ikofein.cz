@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use Nette;
+use Nette\Application\IResponse;
 use Nette\Application\Responses;
 use Tracy\ILogger;
 
@@ -26,9 +27,9 @@ class ErrorPresenter implements Nette\Application\IPresenter
 
     /**
      * @param Nette\Application\Request $request
-     * @return Nette\Application\IResponse|Responses\CallbackResponse|Responses\ForwardResponse
+     * @return IResponse
      */
-    public function run(Nette\Application\Request $request)
+    public function run(Nette\Application\Request $request): IResponse
     {
         $exception = $request->getParameter('exception');
 

@@ -4,14 +4,16 @@ namespace App\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls;
+use Nette\Forms\Rendering\DefaultFormRenderer;
 
 class BootstrapizeForm
 {
     /**
-     * @param $form
+     * @param Form $form
      */
     public static function bootstrapize(Form $form)
     {
+        /** @var DefaultFormRenderer $renderer */
         $renderer = $form->getRenderer();
         $renderer->wrappers['controls']['container'] = null;
         $renderer->wrappers['pair']['container'] = 'div class=form-group';
@@ -28,12 +30,16 @@ class BootstrapizeForm
             if ($control instanceof Controls\Button) {
                 $control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn btn-primary' : 'btn btn-default');
                 $usedPrimary = true;
-
-            } elseif ($control instanceof Controls\TextBase || $control instanceof Controls\SelectBox || $control instanceof Controls\MultiSelectBox) {
+            } elseif ($control instanceof Controls\TextBase
+                || $control instanceof Controls\SelectBox
+                || $control instanceof Controls\MultiSelectBox) {
                 $control->getControlPrototype()->addClass('form-control');
-
-            } elseif ($control instanceof Controls\Checkbox || $control instanceof Controls\CheckboxList || $control instanceof Controls\RadioList) {
-                $control->getSeparatorPrototype()->setName('div')->addClass($control->getControlPrototype()->type);
+            } elseif ($control instanceof Controls\Checkbox
+                || $control instanceof Controls\CheckboxList
+                || $control instanceof Controls\RadioList
+            ) {
+                $control->getSeparatorPrototype()
+                    ->setName('div')->addClass($control->getControlPrototype()->type);
             }
         }
     }

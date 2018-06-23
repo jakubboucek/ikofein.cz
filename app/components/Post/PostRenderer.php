@@ -5,6 +5,7 @@ namespace App\Component;
 use App\Model;
 use Nette\Application\UI\Control;
 use Nette\Caching;
+use Template;
 
 class PostRenderer extends Control
 {
@@ -31,23 +32,24 @@ class PostRenderer extends Control
 
 
     /**
-     * @param $key
-     * @param $lang
-     * @param string $template
+     * @param string $key
+     * @param string $lang
+     * @param string $templateName
      * @throws \Nette\Application\ApplicationException
      */
-    public function render($key, $lang, $template = 'post')
+    public function render($key, $lang, $templateName = 'post'): void
     {
         $post = $this->getPost($key);
 
+        $template = $this->getTemplateFile($templateName);
 
-        $template = $this->getTemplateFile($template);
+        $template->isEmpty = ($post === null);
 
-        $template->isEmpty = empty($post);
+        $field = 'content_' . $lang;
 
         $content = '';
-        if (isset($post['content_' . $lang])) {
-            $content = $post['content_' . $lang];
+        if ($post && isset($post[$field])) {
+            $content = $post[$field];
         }
         $template->content = $content;
 
@@ -56,29 +58,27 @@ class PostRenderer extends Control
 
 
     /**
-     * @param $key
-     * @return mixed
+     * @param string $key
+     * @return array|null
      */
-    private function getPost($key)
+    private function getPost($key): ?array
     {
         return $this->cache->load($key, function (& $dependencies) use ($key) {
             $dependencies = [
                 Caching\Cache::EXPIRE => '20 minutes',
             ];
 
-            $post = $this->postModel->tryFindPostByKey($key, true);
-
-            return $post;
+            return $this->postModel->tryFindPostByKey($key, true);
         });
     }
 
 
     /**
-     * @param $templateName
-     * @return \Nette\Application\UI\ITemplate|\Nette\Bridges\ApplicationLatte\Template|\stdClass
+     * @param string $templateName
+     * @return \Nette\Bridges\ApplicationLatte\Template
      * @throws \Nette\Application\ApplicationException
      */
-    private function getTemplateFile($templateName)
+    private function getTemplateFile($templateName): \Nette\Bridges\ApplicationLatte\Template
     {
         if (!preg_match('/^[-.a-z0-9]+$/i', $templateName)) {
             throw new \Nette\Application\ApplicationException('Invalid template name: ' . $templateName);
@@ -89,7 +89,8 @@ class PostRenderer extends Control
             throw new \Nette\Application\ApplicationException("Template \"$filename\" doesn't exists");
         }
 
-        $template = $this->template;
+        /** @var \Nette\Bridges\ApplicationLatte\Template $template */
+        $template = $this->getTemplate();
         $template->setFile($filename);
         return $template;
     }

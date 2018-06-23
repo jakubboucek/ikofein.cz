@@ -10,6 +10,7 @@ use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI;
 use Nette\Mail;
+use Nette\Utils\ArrayHash;
 
 class PostPresenter extends Nette\Application\UI\Presenter
 {
@@ -30,6 +31,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
      */
     public function __construct(Model\Post $postModel, Aws\SesMailer $mailer)
     {
+        parent::__construct();
         $this->postModel = $postModel;
         $this->mailer = $mailer;
     }
@@ -48,10 +50,10 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param $key
+     * @param string $key
      * @throws BadRequestException
      */
-    public function renderDetail($key)
+    public function renderDetail($key): void
     {
         try {
             $post = $this->postModel->getPostByKey($key);
@@ -60,6 +62,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
         }
 
 
+        /** @var UI\Form $form */
         $form = $this['postEditForm'];
         $defaults = [
             'key' => $key,
@@ -114,10 +117,10 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param UI\Form $form
-     * @param $values
+     * @param ArrayHash $values
      * @throws Nette\Application\AbortException
      */
-    public function postEditFormSuccess(UI\Form $form, $values)
+    public function postEditFormSuccess(UI\Form $form, $values): void
     {
         $currentDate = new \DateTime();
 
@@ -136,11 +139,17 @@ class PostPresenter extends Nette\Application\UI\Presenter
         if ($values['published'] && empty($values['published_from'])) {
             $values['published_from'] = $currentDate;
         } elseif ($values['published'] && $values['published_from'] > $currentDate) {
-            $form->addError('Čas publikování je nastaven do budoucna, ale současně máte uvedeno, že se má nyní publikovat. Buď zrušte volbu publikovat a nebo smažte datum publikování.');
+            $form->addError(
+                'Čas publikování je nastaven do budoucna, ale současně máte uvedeno, že se má nyní publikovat.'
+                . 'Buď zrušte volbu publikovat a nebo smažte datum publikování.'
+            );
         }
 
         if ($values['published'] && $values['published_to'] && $values['published_to'] < $currentDate) {
-            $form->addError('Čas konce publikování již nastal, ale současně máte uvedeno, že se má nyní publikovat. Buď zrušte volbu publikovat a nebo smažte datum publikování.');
+            $form->addError(
+                'Čas konce publikování již nastal, ale současně máte uvedeno, že se má nyní publikovat.'
+                . 'Buď zrušte volbu publikovat a nebo smažte datum publikování.'
+            );
         }
 
         if ($form->hasErrors()) {
@@ -164,9 +173,9 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param $post
+     * @param array $post
      */
-    private function sendChangeNotification($post)
+    private function sendChangeNotification($post): void
     {
         $templateFile = __DIR__ . '/templates/Post/changeNotificationMail.latte';
         $latte = new Latte\Engine;

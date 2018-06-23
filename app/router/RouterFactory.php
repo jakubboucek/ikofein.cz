@@ -14,7 +14,7 @@ class RouterFactory
     /**
      * @return Nette\Application\IRouter
      */
-    public static function createRouter()
+    public static function createRouter(): \Nette\Application\IRouter
     {
         $router = new RouteList;
 

@@ -19,6 +19,7 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
      */
     public function __construct(Model\Post $postModel)
     {
+        parent::__construct();
         $this->postModel = $postModel;
     }
 
@@ -26,7 +27,7 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
         if (!$this->user->isLoggedIn()) {
@@ -35,10 +36,7 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     *
-     */
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $posts = $this->postModel->getPosts();
         $this->template->posts = $posts;

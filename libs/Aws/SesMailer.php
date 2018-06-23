@@ -37,45 +37,46 @@ class SesMailer implements IMailer
 
     /**
      * Sends email.
+     * @param Message $message
      * @return void
-     * @throws SendException
      */
-    public function send(Message $mail)
+    public function send(Message $message): void
     {
-        $tmp = clone $mail;
+        $tmp = clone $message;
 
         $from = $this->getCleanMail($tmp->getFrom());
 
         $destinations = [];
         foreach (['To', 'Cc', 'Bcc'] as $key) {
             $header = $tmp->getHeader($key);
-            if (is_array($header)) {
+            if (\is_array($header)) {
                 foreach ($header as $mail => $name) {
                     $destinations[] = $mail;
                 }
             }
         }
 
-        $message = $tmp->generateMessage();
+        $rawMessage = $tmp->generateMessage();
         $sesArgs = [
             'Source' => $from,
             'Destinations' => $destinations,
             'RawMessage' => [
-                'Data' => $message
+                'Data' => $rawMessage
             ]
         ];
-        $result = $this->ses->sendRawEmail($sesArgs);
+
+        $this->ses->sendRawEmail($sesArgs);
     }
 
 
     /**
-     * @param $composedMail
-     * @return int|null|string
+     * @param string|array $composedMail
+     * @return string
      */
     private function getCleanMail($composedMail)
     {
-        if (is_array($composedMail)) {
-            return key($composedMail);
+        if (\is_array($composedMail)) {
+            return (string)key($composedMail);
         }
         return $composedMail;
     }

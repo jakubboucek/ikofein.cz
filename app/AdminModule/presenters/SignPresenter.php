@@ -3,14 +3,18 @@
 namespace App\AdminModule\Presenters;
 
 use App\Crypto;
+use App\CryptoException;
 use App\Forms\BootstrapizeForm;
 use App\Model\UserManager;
-use Defuse\Crypto\Exception as CryptoException;
+use App\Model\UserNotFoundException;
 use JakubBoucek\Aws\SesMailer;
 use Latte;
 use Nette;
 use Nette\Application\UI;
+use Nette\Forms\Controls\TextInput;
 use Nette\Mail;
+use Nette\Security\Identity;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Random;
 
 class SignPresenter extends Nette\Application\UI\Presenter
@@ -37,6 +41,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
      */
     public function __construct(UserManager $userManager, Crypto $crypto, SesMailer $mailer)
     {
+        parent::__construct();
         $this->userManager = $userManager;
         $this->crypto = $crypto;
         $this->mailer = $mailer;
@@ -60,27 +65,36 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      *
      */
-    public function renderReset()
+    public function renderReset(): void
     {
-        $email = '';
         if ($this->user->isLoggedIn()) {
-            $email = $this->user->getIdentity()->email;
-            $this['resetForm']['email']->setDefaultValue($email);
+            /** @var Identity $identity */
+            $identity = $this->user->getIdentity();
+            $email = $identity->email;
+
+            /** @var UI\Form $resetForm */
+            $resetForm = $this['resetForm'];
+            /** @var TextInput $emailFiels */
+            $emailFiels = $resetForm['email'];
+            $emailFiels->setDefaultValue($email);
         }
     }
 
 
     /**
-     * @param $token
-     * @throws CryptoException\EnvironmentIsBrokenException
+     * @param string $token
      * @throws Nette\Application\AbortException
-     * @throws Nette\Utils\JsonException
      */
-    public function renderChangePassword($token)
+    public function renderChangePassword($token): void
     {
         try {
-            $user = $this->getUserActiveRowFromToken($token)->toArray();
-            $this['setPasswordForm']['token']->setDefaultValue($token);
+            $this->getUserActiveRowFromToken($token)->toArray();
+
+            /** @var UI\Form $passwordForm */
+            $passwordForm = $this['setPasswordForm'];
+            /** @var Nette\Forms\Controls\HiddenField $tokenFiled */
+            $tokenFiled = $passwordForm['token'];
+            $tokenFiled->setDefaultValue($token);
         } catch (SignResetPasswordTokenException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
             $this->redirect('Dashboard:');
@@ -126,10 +140,10 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param UI\Form $form
-     * @param $values
+     * @param ArrayHash $values
      * @throws Nette\Application\AbortException
      */
-    public function signInFormSuccess(UI\Form $form, $values)
+    public function signInFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         try {
             $this->user->setExpiration($values->remember ? '14 days' : '20 minutes');
@@ -165,18 +179,17 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param UI\Form $form
-     * @param $values
-     * @throws CryptoException\EnvironmentIsBrokenException
+     * @param ArrayHash $values
      * @throws Nette\Application\AbortException
-     * @throws Nette\Utils\JsonException
      * @throws UI\InvalidLinkException
+     * @throws CryptoException
      */
-    public function resetFormSuccess(UI\Form $form, $values)
+    public function resetFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         $email = $values['email'];
-        $hash = $this->userManager->startReset($email);
 
-        if ($hash) {
+        try {
+            $hash = $this->userManager->startReset($email);
             $key = strtoupper(substr($hash, 0, 6));
             $plainData = [
                 'key' => $key,
@@ -185,17 +198,16 @@ class SignPresenter extends Nette\Application\UI\Presenter
                 'expire' => (new \DateTime('+ 1 hour'))->format(\DateTime::ATOM),
             ];
             $token = $this->crypto->encryptArray($plainData);
-
             $this->sendChangeNotification($email, $key, $token);
-        } else {
-            //fake hash
+        } catch (UserNotFoundException $e) {
+            // Not exists user - fake hash
             $key = strtoupper(Random::generate(6));
         }
 
         $this->flashMessage(
             "Reset hesla byl zahájen s označením: „${key}“. Pokud Vámi zadaný e-mail" .
-            " existuje v databázi, byla na něj právě odeslána zpráva s pokyny pro dokončení procesu. Všechny dříve" .
-            " odeslané žádosti o reset hesla jsou tímto okamžikem zneplatněny, funkční bude pouze e-mail s označením:" .
+            ' existuje v databázi, byla na něj právě odeslána zpráva s pokyny pro dokončení procesu. Všechny dříve' .
+            ' odeslané žádosti o reset hesla jsou tímto okamžikem zneplatněny, funkční bude pouze e-mail s označením:' .
             " „${key}“. Žádost je platná 1 hodinu.",
             'success'
         );
@@ -231,12 +243,10 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param UI\Form $form
-     * @param $values
-     * @throws CryptoException\EnvironmentIsBrokenException
+     * @param ArrayHash $values
      * @throws Nette\Application\AbortException
-     * @throws Nette\Utils\JsonException
      */
-    public function setPasswordFormSuccess(UI\Form $form, $values)
+    public function setPasswordFormSuccess(UI\Form $form, ArrayHash $values)
     {
         try {
             $user = $this->getUserActiveRowFromToken($values['token']);
@@ -255,12 +265,12 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param $email
-     * @param $key
-     * @param $token
+     * @param string $email
+     * @param string $key
+     * @param string $token
      * @throws UI\InvalidLinkException
      */
-    private function sendChangeNotification($email, $key, $token)
+    private function sendChangeNotification($email, $key, $token): void
     {
         $templateFile = __DIR__ . '/templates/Sign/resetMail.latte';
         $latte = new Latte\Engine;
@@ -282,19 +292,17 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param $token
+     * @param string $token
      * @return bool|mixed|Nette\Database\Table\IRow
-     * @throws CryptoException\EnvironmentIsBrokenException
-     * @throws Nette\Utils\JsonException
      * @throws SignResetPasswordTokenException
      */
     private function getUserActiveRowFromToken($token)
     {
         try {
             $plainData = $this->crypto->decryptArray($token);
-        } catch (CryptoException\WrongKeyOrModifiedCiphertextException $e) {
+        } catch (CryptoException $e) {
             throw new SignResetPasswordTokenException(
-                "Odkaz na reset hesla je poškozený, zkuste jej poslat znovu.",
+                'Odkaz na reset hesla je poškozený, zkuste jej poslat znovu.',
                 0,
                 $e
             );
@@ -304,19 +312,20 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $now = new \DateTime();
         if ($expire < $now) {
             throw new SignResetPasswordTokenException(
-                "Odkaz na reset hesla již expiroval, zkuste jej poslat znovu.",
+                'Odkaz na reset hesla již expiroval, zkuste jej poslat znovu.',
                 0
             );
         }
 
-        $user = $this->userManager->getUserByEmail($plainData['email']);
-        if (!$user) {
-            throw new SignResetPasswordTokenException("Uživatel neexistuje, nebo byl smazán", 0);
+        try {
+            $user = $this->userManager->getUserByEmail($plainData['email']);
+        } catch (UserNotFoundException $e) {
+            throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán', 0);
         }
 
-        if ($user['reset_hash'] != $plainData['hash']) {
+        if ($user['reset_hash'] !== $plainData['hash']) {
             throw new SignResetPasswordTokenException(
-                "Odkaz na reset hesla byl zněplatněn, zkuste jej poslat znovu.",
+                'Odkaz na reset hesla byl zněplatněn, zkuste jej poslat znovu.',
                 0
             );
         }

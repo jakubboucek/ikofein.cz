@@ -2,16 +2,17 @@
 
 namespace App\Model;
 
+use Exception;
 use Nette;
+use Nette\Security\IIdentity;
 use Nette\Security\Passwords;
 use Nette\Utils\Random;
-
 
 class UserManager implements Nette\Security\IAuthenticator
 {
     use Nette\SmartObject;
 
-    const
+    public const
         TABLE_NAME = 'user',
         COLUMN_ID = 'id',
         COLUMN_NAME = 'name',
@@ -41,20 +42,29 @@ class UserManager implements Nette\Security\IAuthenticator
      * @return Nette\Security\Identity
      * @throws Nette\Security\AuthenticationException
      */
-    public function authenticate(array $credentials)
+    public function authenticate(array $credentials): IIdentity
     {
-        list($email, $password) = $credentials;
+        [$email, $password] = $credentials;
 
-        $row = $this->getUserByEmail($email);
+        try {
+            $row = $this->getUserByEmail($email);
+        } catch (UserNotFoundException $e) {
+            throw new Nette\Security\AuthenticationException(
+                'The email is incorrect',
+                self::IDENTITY_NOT_FOUND
+            );
+        }
 
+        /** @var Nette\Database\Table\ActiveRow $row */
 
-        if (!$row) {
-            throw new Nette\Security\AuthenticationException('The email is incorrect.', self::IDENTITY_NOT_FOUND);
+        if (!Passwords::verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
+            throw new Nette\Security\AuthenticationException(
+                'The password is incorrect',
+                self::INVALID_CREDENTIAL
+            );
+        }
 
-        } elseif (!Passwords::verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
-            throw new Nette\Security\AuthenticationException('The password is incorrect.', self::INVALID_CREDENTIAL);
-
-        } elseif (Passwords::needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
+        if (Passwords::needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
             $row->update([
                 self::COLUMN_PASSWORD_HASH => Passwords::hash($password),
             ]);
@@ -67,26 +77,33 @@ class UserManager implements Nette\Security\IAuthenticator
 
 
     /**
-     * @param $email
-     * @return bool|mixed|Nette\Database\Table\IRow
+     * @param string $email
+     * @return Nette\Database\Table\ActiveRow
+     * @throws UserNotFoundException
      */
-    public function getUserByEmail($email)
+    public function getUserByEmail($email): Nette\Database\Table\ActiveRow
     {
-        return $this->database->table(self::TABLE_NAME)->where(self::COLUMN_EMAIL, $email)->fetch();
+        $row = $this->database
+            ->table(self::TABLE_NAME)
+            ->where(self::COLUMN_EMAIL, $email)
+            ->fetch();
+
+        if ($row === null) {
+            throw new UserNotFoundException("User \"$email\" not found");
+        }
+
+        return $row;
     }
 
 
     /**
-     * @param $email
-     * @return bool|string
+     * @param string $email
+     * @return string
+     * @throws UserNotFoundException
      */
-    public function startReset($email)
+    public function startReset($email): string
     {
         $row = $this->getUserByEmail($email);
-
-        if (!$row) {
-            return false;
-        }
 
         $hash = Random::generate(16);
 
@@ -99,9 +116,9 @@ class UserManager implements Nette\Security\IAuthenticator
 
 
     /**
-     * @param $email
+     * @param string $email
      */
-    public function stopReset($email)
+    public function stopReset($email): void
     {
         $row = $this->getUserByEmail($email);
 
@@ -112,10 +129,10 @@ class UserManager implements Nette\Security\IAuthenticator
 
 
     /**
-     * @param $email
-     * @param $password
+     * @param string $email
+     * @param string $password
      */
-    public function setPassword($email, $password)
+    public function setPassword($email, $password): void
     {
         $row = $this->getUserByEmail($email);
         $row->update([
@@ -123,5 +140,4 @@ class UserManager implements Nette\Security\IAuthenticator
             self::COLUMN_RESET_TOKEN => null,
         ]);
     }
-
 }

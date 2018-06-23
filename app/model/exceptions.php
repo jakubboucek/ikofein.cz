@@ -20,6 +20,13 @@ class PostNotFoundException extends PostException
 
 
 
-class PageNotFound extends \Exception
+class PageNotFoundException extends \RuntimeException
 {
 }
+
+
+
+class UserNotFoundException extends \RuntimeException
+{
+}
+

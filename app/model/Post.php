@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Nette;
 use Nette\Caching;
+use Nette\Database\Table\ActiveRow;
 
 class Post
 {
@@ -41,44 +42,43 @@ class Post
 
 
     /**
-     * @param $key
+     * @param string $key
      * @param bool $publishedOnly
      * @param string $version
-     * @return bool|mixed|Nette\Database\Table\IRow|string
+     * @return array|null
      */
-    public function tryFindPostByKey($key, $publishedOnly = false, $version = self::CURRENT)
+    public function tryFindPostByKey($key, $publishedOnly = false, $version = self::CURRENT): ?array
     {
         try {
             return $this->getPostByKey($key, $publishedOnly, $version);
         } catch (PostNotFoundException $e) {
-            return '';
+            return null;
         }
     }
 
 
     /**
-     * @param $key
+     * @param string $key
      * @param bool $publishedOnly
      * @param string $version
-     * @return bool|mixed|Nette\Database\Table\IRow
+     * @return array
      * @throws PostNotFoundException
      */
-    public function getPostByKey($key, $publishedOnly = false, $version = self::CURRENT)
+    public function getPostByKey($key, $publishedOnly = false, $version = self::CURRENT): array
     {
-        $post = $this->database->table(self::TABLE_NAME)
+        $row = $this->database->table(self::TABLE_NAME)
             ->where(self::KEY_COLUMN, $key)
             ->where(self::VERSION_COLUMN, $version)
             ->fetch();
 
-        if (!$post) {
-            throw new PostNotFoundException("Post not found", 404);
+        if (!$row) {
+            throw new PostNotFoundException('Post not found', 404);
         }
 
-        $post = $this->preparePost($post);
+        $post = $this->preparePost($row);
 
-        if ($publishedOnly && (false == $post['info']['isPublished'])) {
-
-            throw new PostNotFoundException("Post not published", 403);
+        if ($publishedOnly && ($post['info']['isPublished'] === false)) {
+            throw new PostNotFoundException('Post not published', 403);
         }
 
         return $post;
@@ -90,16 +90,18 @@ class Post
      * @param string $version
      * @return array
      */
-    public function getPosts($publishedOnly = false, $version = self::CURRENT)
+    public function getPosts($publishedOnly = false, $version = self::CURRENT): array
     {
         $selection = $this->database->table(self::TABLE_NAME)
             ->where(self::VERSION_COLUMN, $version);
 
         $posts = [];
+
+        /** @var ActiveRow $post */
         foreach ($selection as $post) {
             $post = $this->preparePost($post);
 
-            if ($publishedOnly &&  (!$post['info']['isPublished'])) {
+            if ($publishedOnly && (!$post['info']['isPublished'])) {
                 continue;
             }
 
@@ -111,11 +113,11 @@ class Post
 
 
     /**
-     * @param $key
-     * @param $data
-     * @return mixed
+     * @param string $key
+     * @param array $data
+     * @return array
      */
-    public function save($key, $data)
+    public function save($key, $data): array
     {
         $data = [
                 'version' => self::CURRENT,
@@ -156,12 +158,12 @@ class Post
 
 
     /**
-     * @param $post
-     * @return mixed
+     * @param ActiveRow $row
+     * @return array
      */
-    private function preparePost($post)
+    private function preparePost(ActiveRow $row): array
     {
-        $post = $post->toArray();
+        $post = $row->toArray();
 
         $post['info'] = [
             'isPublished' => $this->isPublished($post),
@@ -174,10 +176,10 @@ class Post
 
 
     /**
-     * @param $post
+     * @param array $post
      * @return bool
      */
-    public function isPublished($post)
+    public function isPublished($post): bool
     {
         if (empty($post['published_from'])) {
             return false;
@@ -192,10 +194,10 @@ class Post
 
 
     /**
-     * @param $post
+     * @param array $post
      * @return bool
      */
-    public function isPlanned($post)
+    public function isPlanned($post): bool
     {
         $current = new \DateTime();
 
@@ -205,7 +207,7 @@ class Post
 
 
     /**
-     * @param $post
+     * @param array $post
      * @return bool
      */
     public function isExpired($post)

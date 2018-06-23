@@ -21,17 +21,21 @@ class AwsExtension extends Nette\DI\CompilerExtension
      */
     public $defaults = [
         'version' => 'latest',
-        'region' => 'eu-west-1'
+        'region' => 'eu-west-1',
+        'credentials' => [
+            'key' => null,
+            'secret' => null
+        ]
     ];
 
 
-    public function loadConfiguration()
+    public function loadConfiguration(): void
     {
+        $config = $this->validateConfig($this->defaults);
         $builder = $this->getContainerBuilder();
-        $config = $this->getConfig($this->defaults);
 
         $builder->addDefinition($this->prefix('sdk'))
-            ->setClass('\Aws\Sdk', ['args' => $config]);
+            ->setFactory(\Aws\Sdk::class, [$config]);
     }
 
 }
