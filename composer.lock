@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d78cf59daf3b2664c6cbbf93a45101a4",
+    "content-hash": "f2893e5fbf28f8af3941459f1e6c0c8c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.62.1",
+            "version": "3.62.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "2c9b27be62dce8a2b84918229d98f4eeb7f75056"
+                "reference": "ae9574e690c48fb31846d3f20fc080f54e422cd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2c9b27be62dce8a2b84918229d98f4eeb7f75056",
-                "reference": "2c9b27be62dce8a2b84918229d98f4eeb7f75056",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ae9574e690c48fb31846d3f20fc080f54e422cd6",
+                "reference": "ae9574e690c48fb31846d3f20fc080f54e422cd6",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-06-21T23:31:06+00:00"
+            "time": "2018-07-11T21:28:38+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -155,12 +155,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "b4e2ffb457f37d629a6ec9b72fd0d9c85f3dfe2c"
+                "reference": "7bc46be28e4b01b96d0dfda8c58169072e626558"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b4e2ffb457f37d629a6ec9b72fd0d9c85f3dfe2c",
-                "reference": "b4e2ffb457f37d629a6ec9b72fd0d9c85f3dfe2c",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/7bc46be28e4b01b96d0dfda8c58169072e626558",
+                "reference": "7bc46be28e4b01b96d0dfda8c58169072e626558",
                 "shasum": ""
             },
             "require": {
@@ -212,7 +212,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-06-14T22:09:16+00:00"
+            "time": "2018-06-25T23:51:40+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -337,12 +337,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "a86920609b0efa58ab1bc4bf36d85b5d2c5f2f2e"
+                "reference": "505c0b1372f0308ac855df2983cebe5bc4de7f3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/a86920609b0efa58ab1bc4bf36d85b5d2c5f2f2e",
-                "reference": "a86920609b0efa58ab1bc4bf36d85b5d2c5f2f2e",
+                "url": "https://api.github.com/repos/nette/latte/zipball/505c0b1372f0308ac855df2983cebe5bc4de7f3e",
+                "reference": "505c0b1372f0308ac855df2983cebe5bc4de7f3e",
                 "shasum": ""
             },
             "require": {
@@ -401,7 +401,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2018-06-22T09:28:28+00:00"
+            "time": "2018-07-09T12:38:36+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -756,12 +756,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/database.git",
-                "reference": "f7ce519b40a98281e303da6056b0098851993182"
+                "reference": "3121900e34c239fcba05bab7b5479854e60cf3e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/database/zipball/f7ce519b40a98281e303da6056b0098851993182",
-                "reference": "f7ce519b40a98281e303da6056b0098851993182",
+                "url": "https://api.github.com/repos/nette/database/zipball/3121900e34c239fcba05bab7b5479854e60cf3e6",
+                "reference": "3121900e34c239fcba05bab7b5479854e60cf3e6",
                 "shasum": ""
             },
             "require": {
@@ -820,7 +820,7 @@
                 "queries",
                 "sqlite"
             ],
-            "time": "2018-06-22T09:33:50+00:00"
+            "time": "2018-07-11T13:19:28+00:00"
         },
         {
             "name": "nette/di",
@@ -897,12 +897,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/finder.git",
-                "reference": "5cb8b32afec79574861aeb224fa4d3c94c2740d3"
+                "reference": "131631f544acbe8de9dcb3b82cfa43b988110ae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/finder/zipball/5cb8b32afec79574861aeb224fa4d3c94c2740d3",
-                "reference": "5cb8b32afec79574861aeb224fa4d3c94c2740d3",
+                "url": "https://api.github.com/repos/nette/finder/zipball/131631f544acbe8de9dcb3b82cfa43b988110ae9",
+                "reference": "131631f544acbe8de9dcb3b82cfa43b988110ae9",
                 "shasum": ""
             },
             "require": {
@@ -951,7 +951,7 @@
                 "iterator",
                 "nette"
             ],
-            "time": "2018-06-22T09:33:53+00:00"
+            "time": "2018-06-28T11:21:19+00:00"
         },
         {
             "name": "nette/forms",
@@ -959,12 +959,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "95b9cfcfcf9bb1a17372aec2e44f2e03655e0808"
+                "reference": "177fbe395e2c9ffad06c36e9a2457b81382e3377"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/95b9cfcfcf9bb1a17372aec2e44f2e03655e0808",
-                "reference": "95b9cfcfcf9bb1a17372aec2e44f2e03655e0808",
+                "url": "https://api.github.com/repos/nette/forms/zipball/177fbe395e2c9ffad06c36e9a2457b81382e3377",
+                "reference": "177fbe395e2c9ffad06c36e9a2457b81382e3377",
                 "shasum": ""
             },
             "require": {
@@ -1019,7 +1019,7 @@
                 "nette",
                 "validation"
             ],
-            "time": "2018-06-22T09:33:54+00:00"
+            "time": "2018-06-28T11:17:14+00:00"
         },
         {
             "name": "nette/http",
@@ -1355,12 +1355,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/security.git",
-                "reference": "5c237bfef4a47e44102e8cf94520ca7887bea225"
+                "reference": "bc0f81d34099f8ba4fb4f0d1d260c1e39d80976e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/security/zipball/5c237bfef4a47e44102e8cf94520ca7887bea225",
-                "reference": "5c237bfef4a47e44102e8cf94520ca7887bea225",
+                "url": "https://api.github.com/repos/nette/security/zipball/bc0f81d34099f8ba4fb4f0d1d260c1e39d80976e",
+                "reference": "bc0f81d34099f8ba4fb4f0d1d260c1e39d80976e",
                 "shasum": ""
             },
             "require": {
@@ -1411,7 +1411,7 @@
                 "authorization",
                 "nette"
             ],
-            "time": "2018-05-13T16:22:28+00:00"
+            "time": "2018-07-11T13:38:19+00:00"
         },
         {
             "name": "nette/utils",
@@ -1494,16 +1494,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.15",
+            "version": "v2.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "10bcb46e8f3d365170f6de9d05245aa066b81f09"
+                "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/10bcb46e8f3d365170f6de9d05245aa066b81f09",
-                "reference": "10bcb46e8f3d365170f6de9d05245aa066b81f09",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/29af24f25bab834fcbb38ad2a69fa93b867e070d",
+                "reference": "29af24f25bab834fcbb38ad2a69fa93b867e070d",
                 "shasum": ""
             },
             "require": {
@@ -1539,7 +1539,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-06-08T15:26:40+00:00"
+            "time": "2018-07-04T16:31:37+00:00"
         },
         {
             "name": "psr/http-message",
@@ -1648,7 +1648,7 @@
             "require": {
                 "ext-json": "*",
                 "ext-session": "*",
-                "php": ">=5.4.4"
+                "php": ">=7.1"
             },
             "require-dev": {
                 "nette/di": "~2.3",
@@ -1799,12 +1799,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "33c459fdad4190173e1e61e82b6000e29fbfca34"
+                "reference": "8044478e0b6084648b71ed3a3408bc540e55300a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/33c459fdad4190173e1e61e82b6000e29fbfca34",
-                "reference": "33c459fdad4190173e1e61e82b6000e29fbfca34",
+                "url": "https://api.github.com/repos/nette/tester/zipball/8044478e0b6084648b71ed3a3408bc540e55300a",
+                "reference": "8044478e0b6084648b71ed3a3408bc540e55300a",
                 "shasum": ""
             },
             "require": {
@@ -1853,7 +1853,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2018-06-22T09:34:08+00:00"
+            "time": "2018-07-05T08:19:03+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -1861,12 +1861,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "35b8caf75e791ba1b2d24fec1552168d72692b12"
+                "reference": "8b1c9c0409a503e06f1170447a0ac4e20a4ea16f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/35b8caf75e791ba1b2d24fec1552168d72692b12",
-                "reference": "35b8caf75e791ba1b2d24fec1552168d72692b12",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8b1c9c0409a503e06f1170447a0ac4e20a4ea16f",
+                "reference": "8b1c9c0409a503e06f1170447a0ac4e20a4ea16f",
                 "shasum": ""
             },
             "require": {
@@ -1904,7 +1904,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-06-03T11:33:10+00:00"
+            "time": "2018-07-07T10:49:49+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -2007,12 +2007,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ac713a7c60191cc7f9f89c9bf0b02f2d9097feb5"
+                "reference": "ea30584b2aa2b605e01dbca1cc30f3fb136b990a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ac713a7c60191cc7f9f89c9bf0b02f2d9097feb5",
-                "reference": "ac713a7c60191cc7f9f89c9bf0b02f2d9097feb5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ea30584b2aa2b605e01dbca1cc30f3fb136b990a",
+                "reference": "ea30584b2aa2b605e01dbca1cc30f3fb136b990a",
                 "shasum": ""
             },
             "require": {
@@ -2038,6 +2038,7 @@
                 "ext-zip": "*",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "phing/phing": "^2.16.0",
+                "phpstan/phpstan-deprecation-rules": "^0.10.2",
                 "phpstan/phpstan-php-parser": "^0.10",
                 "phpstan/phpstan-phpunit": "^0.10",
                 "phpstan/phpstan-strict-rules": "^0.10",
@@ -2066,7 +2067,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2018-06-22T18:08:17+00:00"
+            "time": "2018-07-10T21:16:17+00:00"
         },
         {
             "name": "phpstan/phpstan-nette",
@@ -2074,18 +2075,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-nette.git",
-                "reference": "1a8acd177c3cbf7c55005054e7a1284954a41236"
+                "reference": "ed77cc1b73319d1b866f83eb582e963da7bf59e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/1a8acd177c3cbf7c55005054e7a1284954a41236",
-                "reference": "1a8acd177c3cbf7c55005054e7a1284954a41236",
+                "url": "https://api.github.com/repos/phpstan/phpstan-nette/zipball/ed77cc1b73319d1b866f83eb582e963da7bf59e1",
+                "reference": "ed77cc1b73319d1b866f83eb582e963da7bf59e1",
                 "shasum": ""
             },
             "require": {
                 "nikic/php-parser": "^4.0",
                 "php": "~7.1",
-                "phpstan/phpstan": "^0.10"
+                "phpstan/phpstan": "^0.10.2"
             },
             "conflict": {
                 "nette/application": "<2.3.0",
@@ -2129,7 +2130,7 @@
                 "MIT"
             ],
             "description": "Nette Framework class reflection extension for PHPStan",
-            "time": "2018-05-29T20:53:48+00:00"
+            "time": "2018-07-10T21:28:40+00:00"
         },
         {
             "name": "psr/log",
@@ -2184,12 +2185,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "0e4ea9f9e1fd3c6a563524f8f399696d98c7c85a"
+                "reference": "731d60f7fc78a8816dae7049df255cd55e30c313"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/0e4ea9f9e1fd3c6a563524f8f399696d98c7c85a",
-                "reference": "0e4ea9f9e1fd3c6a563524f8f399696d98c7c85a",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/731d60f7fc78a8816dae7049df255cd55e30c313",
+                "reference": "731d60f7fc78a8816dae7049df255cd55e30c313",
                 "shasum": ""
             },
             "conflict": {
@@ -2240,7 +2241,7 @@
                 "laravel/socialite": ">=1,<1.0.99|>=2,<2.0.10",
                 "magento/magento1ce": ">=1.5.0.1,<1.9.3.2",
                 "magento/magento1ee": ">=1.9,<1.14.3.2",
-                "magento/magento2ce": ">=2,<2.2",
+                "magento/product-community-edition": ">=2,<2.2.5",
                 "monolog/monolog": ">=1.8,<1.12",
                 "namshi/jose": "<2.2",
                 "onelogin/php-saml": "<2.10.4",
@@ -2271,6 +2272,8 @@
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
                 "stormpath/sdk": ">=0,<9.9.99",
                 "swiftmailer/swiftmailer": ">=4,<5.4.5",
+                "sylius/admin-bundle": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
+                "sylius/sylius": ">=1,<1.0.17|>=1.1,<1.1.9|>=1.2,<1.2.2",
                 "symfony/dependency-injection": ">=2,<2.0.17",
                 "symfony/form": ">=2.3,<2.3.35|>=2.4,<2.6.12|>=2.7,<2.7.38|>=2.8,<2.8.31|>=3,<3.2.14|>=3.3,<3.3.13",
                 "symfony/framework-bundle": ">=2,<2.3.18|>=2.4,<2.4.8|>=2.5,<2.5.2",
@@ -2343,7 +2346,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2018-06-08T09:55:50+00:00"
+            "time": "2018-07-09T14:09:25+00:00"
         },
         {
             "name": "symfony/console",
@@ -2351,12 +2354,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "ac3d14fa82aad7ab067ecc84e0e1a4d01789cc76"
+                "reference": "b203891a206dd5fe867e22fcacfdf2a28e787c1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/ac3d14fa82aad7ab067ecc84e0e1a4d01789cc76",
-                "reference": "ac3d14fa82aad7ab067ecc84e0e1a4d01789cc76",
+                "url": "https://api.github.com/repos/symfony/console/zipball/b203891a206dd5fe867e22fcacfdf2a28e787c1f",
+                "reference": "b203891a206dd5fe867e22fcacfdf2a28e787c1f",
                 "shasum": ""
             },
             "require": {
@@ -2411,7 +2414,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-05-31T10:18:23+00:00"
+            "time": "2018-07-11T09:58:49+00:00"
         },
         {
             "name": "symfony/finder",
