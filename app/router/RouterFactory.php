@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use Nette;
+use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 
@@ -12,9 +15,9 @@ class RouterFactory
 
 
     /**
-     * @return Nette\Application\IRouter
+     * @return IRouter
      */
-    public static function createRouter(): \Nette\Application\IRouter
+    public static function createRouter(): IRouter
     {
         $router = new RouteList;
 
@@ -36,6 +39,7 @@ class RouterFactory
             ],
             Route::ONE_WAY
         );
+
         $router[] = new Route(
             'index<? \.htm|\.php|>',
             [
@@ -46,6 +50,7 @@ class RouterFactory
             ],
             Route::ONE_WAY
         );
+
         $router[] = new Route(
             'uvod<? \.htm|\.php|>',
             [
@@ -60,5 +65,4 @@ class RouterFactory
 
         return $router;
     }
-
 }
