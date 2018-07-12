@@ -28,6 +28,7 @@ extensions:
 
 services:
 	- App\Model\Post
+	- App\Model\WebDir(%wwwDir%)
 	mail.mailer: JakubBoucek\Aws\SesMailer
 	crypto: App\Crypto(%crypto.stateKey%)
 	postRenderer: App\Component\PostRenderer

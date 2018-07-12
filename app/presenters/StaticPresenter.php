@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\Component\PostRenderer;
 use App\Model\PageNotFoundException;
+use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
 
@@ -38,10 +39,11 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      * StaticPresenter constructor.
      * @param PostRenderer $postRenderer
      */
-    public function __construct(PostRenderer $postRenderer)
+    public function __construct(PostRenderer $postRenderer, WebDir $wwwDir)
     {
         parent::__construct();
         $this->postRenderer = $postRenderer;
+        $this->wwwDir = $wwwDir;
     }
 
 
@@ -51,7 +53,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     public function beforeRender()
     {
         $this->template->readyForPost = true;
-        $this->template->wwwDir = $this->context->getParameters()['wwwDir'];
+        $this->template->wwwDir = $this->wwwDir->getPath();
     }
 
 
