@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection HtmlUnknownTag */
 
 declare(strict_types=1);
 
