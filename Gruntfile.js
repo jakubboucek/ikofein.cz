@@ -14,7 +14,7 @@ module.exports = function(grunt) {
               'asset/js/core.js',
               'asset/js/libs/slimbox-2.05.js',
               'asset/js/gallery.js',
-              'asset/js/libs/slimbox-autoload.js',
+              'asset/js/libs/slimbox-autoload.js'
             ]
         }
       }
@@ -22,17 +22,17 @@ module.exports = function(grunt) {
     less: {
       options: {
         banner: '/*! Package: <%= pkg.name %> <%= pkg.version %> (build: <%= grunt.template.today("yyyy-mm-dd") %>), author: <%= pkg.author %> */\n',
-        compress: true,
+        compress: true
       },
       default: {
         files: {
           'www/css/main.css': [
               'asset/less/style.less',
               'asset/less/alert.less',
-              'asset/less/slimbox2.less',
+              'asset/less/slimbox2.less'
           ],
           'www/css/admin.css': [
-              'asset/less/admin.less',
+              'asset/less/admin.less'
           ]
         }
       }
