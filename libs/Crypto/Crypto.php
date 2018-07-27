@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use Defuse\Crypto\Crypto as CryptoDefuse;
@@ -30,7 +32,7 @@ class Crypto
      * @return string
      * @throws CryptoException
      */
-    public function encrypt($plaintext, $raw_binary = false): string
+    public function encrypt(string $plaintext, bool $raw_binary = false): string
     {
         try {
             return CryptoDefuse::encryptWithPassword($plaintext, $this->key, $raw_binary);
@@ -50,7 +52,7 @@ class Crypto
      * @return string
      * @throws CryptoException
      */
-    public function decrypt($ciphertext, $raw_binary = false)
+    public function decrypt(string $ciphertext, bool $raw_binary = false): string
     {
         try {
             return CryptoDefuse::decryptWithPassword($ciphertext, $this->key, $raw_binary);
@@ -90,7 +92,7 @@ class Crypto
      * @return array
      * @throws CryptoException
      */
-    public function decryptArray($ciphertext): array
+    public function decryptArray(string $ciphertext): array
     {
         try {
             $cipher = $this->strictBase64Decode($ciphertext);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
@@ -73,12 +75,11 @@ class SesMailer implements IMailer
      * @param string|array $composedMail
      * @return string
      */
-    private function getCleanMail($composedMail)
+    private function getCleanMail($composedMail): string
     {
         if (\is_array($composedMail)) {
             return (string)key($composedMail);
         }
         return $composedMail;
     }
-
 }

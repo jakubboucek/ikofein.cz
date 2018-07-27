@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\AdminModule\Presenters;
 
 use App\Crypto;
@@ -51,7 +53,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    public function renderIn()
+    public function renderIn(): void
     {
         if ($this->user->isLoggedIn()) {
             $this->redirect('Dashboard:');
@@ -105,7 +107,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    public function actionOut()
+    public function actionOut(): void
     {
         $this->user->logout(true);
         $this->redirect(':Static:');
@@ -115,7 +117,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @return UI\Form
      */
-    public function createComponentSignInForm()
+    public function createComponentSignInForm(): UI\Form
     {
         $form = new UI\Form;
         $form->addEmail('email', 'E-mail:')
@@ -158,7 +160,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @return UI\Form
      */
-    public function createComponentResetForm()
+    public function createComponentResetForm(): UI\Form
     {
         $form = new UI\Form;
         $form->addEmail('email', 'E-mail:')
@@ -178,9 +180,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @param UI\Form $form
      * @param ArrayHash $values
+     * @throws CryptoException
      * @throws Nette\Application\AbortException
      * @throws UI\InvalidLinkException
-     * @throws CryptoException
      */
     public function resetFormSuccess(UI\Form $form, ArrayHash $values): void
     {
@@ -216,7 +218,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @return UI\Form
      */
-    public function createComponentSetPasswordForm()
+    public function createComponentSetPasswordForm(): UI\Form
     {
         $form = new UI\Form;
         $form->addHidden('token');
@@ -244,7 +246,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
      * @param ArrayHash $values
      * @throws Nette\Application\AbortException
      */
-    public function setPasswordFormSuccess(UI\Form $form, ArrayHash $values)
+    public function setPasswordFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         try {
             $user = $this->getUserActiveRowFromToken($values['token']);
@@ -257,7 +259,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $password = $values['password'];
         $this->userManager->setPassword($email, $password);
 
-        $this->flashMessage("Heslo bylo změněno", 'success');
+        $this->flashMessage('Heslo bylo změněno', 'success');
         $this->redirect('Sign:in');
     }
 
@@ -268,7 +270,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
      * @param string $token
      * @throws UI\InvalidLinkException
      */
-    private function sendChangeNotification($email, $key, $token): void
+    private function sendChangeNotification(string $email, string $key, string $token): void
     {
         $templateFile = __DIR__ . '/templates/Sign/resetMail.latte';
         $latte = new Latte\Engine;
@@ -294,7 +296,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
      * @return bool|mixed|Nette\Database\Table\IRow
      * @throws SignResetPasswordTokenException
      */
-    private function getUserActiveRowFromToken($token)
+    private function getUserActiveRowFromToken(string $token)
     {
         try {
             $plainData = $this->crypto->decryptArray($token);

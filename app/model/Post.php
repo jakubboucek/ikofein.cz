@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
 use Nette;
@@ -8,11 +10,10 @@ use Nette\Database\Table\ActiveRow;
 
 class Post
 {
-
-    const CURRENT = 'current';
-    const TABLE_NAME = 'post';
-    const KEY_COLUMN = 'key';
-    const VERSION_COLUMN = 'version';
+    private const CURRENT = 'current';
+    private const TABLE_NAME = 'post';
+    private const KEY_COLUMN = 'key';
+    private const VERSION_COLUMN = 'version';
 
 
     /** @var Nette\Database\Context */
@@ -47,7 +48,7 @@ class Post
      * @param string $version
      * @return array|null
      */
-    public function tryFindPostByKey($key, $publishedOnly = false, $version = self::CURRENT): ?array
+    public function tryFindPostByKey(string $key, bool $publishedOnly = false, string $version = self::CURRENT): ?array
     {
         try {
             return $this->getPostByKey($key, $publishedOnly, $version);
@@ -64,7 +65,7 @@ class Post
      * @return array
      * @throws PostNotFoundException
      */
-    public function getPostByKey($key, $publishedOnly = false, $version = self::CURRENT): array
+    public function getPostByKey(string $key, bool $publishedOnly = false, string $version = self::CURRENT): array
     {
         $row = $this->database->table(self::TABLE_NAME)
             ->where(self::KEY_COLUMN, $key)
@@ -90,7 +91,7 @@ class Post
      * @param string $version
      * @return array
      */
-    public function getPosts($publishedOnly = false, $version = self::CURRENT): array
+    public function getPosts(bool $publishedOnly = false, string $version = self::CURRENT): array
     {
         $selection = $this->database->table(self::TABLE_NAME)
             ->where(self::VERSION_COLUMN, $version);
@@ -117,7 +118,7 @@ class Post
      * @param array $data
      * @return array
      */
-    public function save($key, $data): array
+    public function save(string $key, array $data): array
     {
         $data = [
                 'version' => self::CURRENT,
@@ -151,9 +152,9 @@ class Post
     /**
      * @return string
      */
-    private function getHash()
+    private function getHash(): string
     {
-        return \Nette\Utils\Random::generate(16);
+        return Nette\Utils\Random::generate(16);
     }
 
 
@@ -179,7 +180,7 @@ class Post
      * @param array $post
      * @return bool
      */
-    public function isPublished($post): bool
+    public function isPublished(array $post): bool
     {
         if (empty($post['published_from'])) {
             return false;
@@ -197,7 +198,7 @@ class Post
      * @param array $post
      * @return bool
      */
-    public function isPlanned($post): bool
+    public function isPlanned(array $post): bool
     {
         $current = new \DateTime();
 
@@ -210,13 +211,11 @@ class Post
      * @param array $post
      * @return bool
      */
-    public function isExpired($post)
+    public function isExpired(array $post): bool
     {
         $current = new \DateTime();
 
         return (bool)$post['published_to'] &&
             $post['published_to'] < $current;
     }
-
 }
-

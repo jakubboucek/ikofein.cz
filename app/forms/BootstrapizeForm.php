@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Forms;
 
 use Nette\Application\UI\Form;
@@ -11,7 +13,7 @@ class BootstrapizeForm
     /**
      * @param Form $form
      */
-    public static function bootstrapize(Form $form)
+    public static function bootstrapize(Form $form): void
     {
         /** @var DefaultFormRenderer $renderer */
         $renderer = $form->getRenderer();

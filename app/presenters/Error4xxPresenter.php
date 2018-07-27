@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Presenters;
 
 use App\Model\WebDir;
@@ -23,7 +25,7 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\BadRequestException
      */
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
         if (!$this->getRequest()->isMethod(Nette\Application\Request::FORWARD)) {
@@ -35,7 +37,7 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
     /**
      * @param Nette\Application\BadRequestException $exception
      */
-    public function renderDefault(Nette\Application\BadRequestException $exception)
+    public function renderDefault(Nette\Application\BadRequestException $exception): void
     {
         // load template 403.latte or 404.latte or ... 4xx.latte
         $file = __DIR__ . "/templates/Error/{$exception->getCode()}.latte";
@@ -43,8 +45,8 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
         $template = $this->getTemplate();
         $template->setFile(is_file($file) ? $file : __DIR__ . '/templates/Error/4xx.latte');
 
-        $template->dataLayer = [['errorCode'=>$exception->getCode()]];
         $template->wwwDir = $this->wwwDir->getPath();
+        $template->dataLayer = [['errorCode' => $exception->getCode()]];
     }
 
 }

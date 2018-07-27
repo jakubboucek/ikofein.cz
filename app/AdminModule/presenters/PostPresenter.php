@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\AdminModule\Presenters;
 
 use App\Forms\BootstrapizeForm;
@@ -40,7 +42,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    public function startup()
+    public function startup(): void
     {
         parent::startup();
         if (!$this->user->isLoggedIn()) {
@@ -53,7 +55,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
      * @param string $key
      * @throws BadRequestException
      */
-    public function renderDetail($key): void
+    public function renderDetail(string $key): void
     {
         try {
             $post = $this->postModel->getPostByKey($key);
@@ -81,7 +83,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
     /**
      * @return UI\Form
      */
-    public function createComponentPostEditForm()
+    public function createComponentPostEditForm(): UI\Form
     {
         $form = new UI\Form;
         $form->addCheckbox('published', 'Publikováno')
@@ -123,7 +125,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
      * @param ArrayHash $values
      * @throws Nette\Application\AbortException
      */
-    public function postEditFormSuccess(UI\Form $form, $values): void
+    public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         $currentDate = new \DateTime();
 
@@ -178,7 +180,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
     /**
      * @param array $post
      */
-    private function sendChangeNotification($post): void
+    private function sendChangeNotification(array $post): void
     {
         $templateFile = __DIR__ . '/templates/Post/changeNotificationMail.latte';
         $latte = new Latte\Engine;

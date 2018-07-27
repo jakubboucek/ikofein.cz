@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Component;
 
 use App\Model;
 use Nette\Application\UI\Control;
 use Nette\Caching;
-use Template;
 
 class PostRenderer extends Control
 {
@@ -37,7 +38,7 @@ class PostRenderer extends Control
      * @param string $templateName
      * @throws \Nette\Application\ApplicationException
      */
-    public function render($key, $lang, $templateName = 'post'): void
+    public function render(string $key, string $lang, string $templateName = 'post'): void
     {
         $post = $this->getPost($key);
 
@@ -61,7 +62,7 @@ class PostRenderer extends Control
      * @param string $key
      * @return array|null
      */
-    private function getPost($key): ?array
+    private function getPost(string $key): ?array
     {
         return $this->cache->load($key, function (& $dependencies) use ($key) {
             $dependencies = [
@@ -78,7 +79,7 @@ class PostRenderer extends Control
      * @return \Nette\Bridges\ApplicationLatte\Template
      * @throws \Nette\Application\ApplicationException
      */
-    private function getTemplateFile($templateName): \Nette\Bridges\ApplicationLatte\Template
+    private function getTemplateFile(string $templateName): \Nette\Bridges\ApplicationLatte\Template
     {
         if (!preg_match('/^[-.a-z0-9]+$/i', $templateName)) {
             throw new \Nette\Application\ApplicationException('Invalid template name: ' . $templateName);
