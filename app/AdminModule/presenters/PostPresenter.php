@@ -88,20 +88,23 @@ class PostPresenter extends Nette\Application\UI\Presenter
             ->setOption('description', 'Skryjete-li příspěvek, bude jeho místo prázdné');
 
         $form->addText('published_from', 'Publikováno od')
-            ->setType('date')
-            ->setOption('description',
-                'Před tímto časem se příspěvek nezobrazí. Nevyplňujte, nechcete-li plánovat zobrazení.');
+            ->setHtmlType('date')
+            ->setOption(
+                'description',
+                'Před tímto časem se příspěvek nezobrazí. Nevyplňujte, nechcete-li plánovat zobrazení.'
+            );
 
         $form->addText('published_to', 'Publikováno do')
-            ->setType('date')
-            ->setOption('description',
-                'Po tomto čase se příspěvek nezobrazí (naposledy bude zobrazen před tímto datem). Nevyplňujte, nechcete-li plánovat konec zobrazení.');
+            ->setHtmlType('date')
+            ->setOption(
+                'description',
+                'Po tomto čase se příspěvek nezobrazí (naposledy bude zobrazen před tímto datem).'
+                . ' Nevyplňujte, nechcete-li plánovat konec zobrazení.'
+            );
 
-        $form->addTextArea('content_cs', 'Český obsah')
-            ->getControlPrototype()->setRows(20);
+        $form->addTextArea('content_cs', 'Český obsah', null, 20);
 
-        $form->addTextArea('content_en', 'Anglický obsah')
-            ->getControlPrototype()->setRows(20);
+        $form->addTextArea('content_en', 'Anglický obsah', null, 20);
 
         $form->addSubmit('send', 'Uložit');
 
@@ -141,14 +144,14 @@ class PostPresenter extends Nette\Application\UI\Presenter
         } elseif ($values['published'] && $values['published_from'] > $currentDate) {
             $form->addError(
                 'Čas publikování je nastaven do budoucna, ale současně máte uvedeno, že se má nyní publikovat.'
-                . 'Buď zrušte volbu publikovat a nebo smažte datum publikování.'
+                . ' Buď zrušte volbu publikovat a nebo smažte datum publikování.'
             );
         }
 
         if ($values['published'] && $values['published_to'] && $values['published_to'] < $currentDate) {
             $form->addError(
                 'Čas konce publikování již nastal, ale současně máte uvedeno, že se má nyní publikovat.'
-                . 'Buď zrušte volbu publikovat a nebo smažte datum publikování.'
+                . ' Buď zrušte volbu publikovat a nebo smažte datum publikování.'
             );
         }
 
@@ -193,6 +196,4 @@ class PostPresenter extends Nette\Application\UI\Presenter
         $mailer = $this->mailer;
         $mailer->send($mail);
     }
-
-
 }

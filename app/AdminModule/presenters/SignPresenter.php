@@ -118,10 +118,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function createComponentSignInForm()
     {
         $form = new UI\Form;
-        $form->addText('email', 'E-mail:')
-            ->setType('email')
+        $form->addEmail('email', 'E-mail:')
             ->setRequired('E-mail musí být vyplněn')
-            ->setAttribute('autofocus');
+            ->setHtmlAttribute('autofocus');
 
         $form->addPassword('password', 'Heslo:')
             ->setRequired('heslo musí být vyplněno');
@@ -162,10 +161,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function createComponentResetForm()
     {
         $form = new UI\Form;
-        $form->addText('email', 'E-mail:')
-            ->setType('email')
+        $form->addEmail('email', 'E-mail:')
             ->setRequired('E-mail musí být vyplněn')
-            ->setAttribute('autofocus');
+            ->setHtmlAttribute('autofocus');
 
         $form->addSubmit('send', 'Zahájit reset hesla');
 
@@ -225,7 +223,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addPassword('password', 'Heslo:')
             ->setRequired('Heslo musí být vyplněno')
-            ->setAttribute('autofocus');
+            ->setHtmlAttribute('autofocus');
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
