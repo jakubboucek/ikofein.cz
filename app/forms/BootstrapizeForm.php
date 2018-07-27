@@ -15,6 +15,7 @@ class BootstrapizeForm
     {
         /** @var DefaultFormRenderer $renderer */
         $renderer = $form->getRenderer();
+        $renderer->wrappers['error']['container'] = 'ul class="error alert alert-danger"';
         $renderer->wrappers['controls']['container'] = null;
         $renderer->wrappers['pair']['container'] = 'div class=form-group';
         $renderer->wrappers['pair']['.error'] = 'has-error';
