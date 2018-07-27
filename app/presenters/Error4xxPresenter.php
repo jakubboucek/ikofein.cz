@@ -2,10 +2,23 @@
 
 namespace App\Presenters;
 
+use App\Model\WebDir;
 use Nette;
 
 class Error4xxPresenter extends Nette\Application\UI\Presenter
 {
+    /**
+     * @var WebDir
+     */
+    private $wwwDir;
+
+
+    public function __construct(WebDir $wwwDir)
+    {
+        parent::__construct();
+        $this->wwwDir = $wwwDir;
+    }
+
 
     /**
      * @throws Nette\Application\BadRequestException
@@ -30,8 +43,8 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
         $template = $this->getTemplate();
         $template->setFile(is_file($file) ? $file : __DIR__ . '/templates/Error/4xx.latte');
 
-        $template->wwwDir = $this->context->getParameters()['wwwDir'];
         $template->dataLayer = [['errorCode'=>$exception->getCode()]];
+        $template->wwwDir = $this->wwwDir->getPath();
     }
 
 }
