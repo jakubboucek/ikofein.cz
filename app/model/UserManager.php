@@ -24,15 +24,20 @@ class UserManager implements Nette\Security\IAuthenticator
 
     /** @var Database\Context */
     private $database;
+    
+    /** @var Passwords */
+    private $passwords;
 
 
     /**
      * UserManager constructor.
      * @param Database\Context $database
+     * @param Passwords $passwords
      */
-    public function __construct(Database\Context $database)
+    public function __construct(Database\Context $database, Passwords $passwords)
     {
         $this->database = $database;
+        $this->passwords = $passwords;
     }
 
 
@@ -57,16 +62,16 @@ class UserManager implements Nette\Security\IAuthenticator
 
         /** @var Nette\Database\Table\ActiveRow $row */
 
-        if (!Passwords::verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
+        if (!$this->passwords->verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
             throw new Nette\Security\AuthenticationException(
                 'The password is incorrect',
                 self::INVALID_CREDENTIAL
             );
         }
 
-        if (Passwords::needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
+        if ($this->passwords->needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
             $row->update([
-                self::COLUMN_PASSWORD_HASH => Passwords::hash($password),
+                self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
             ]);
         }
 
@@ -136,7 +141,7 @@ class UserManager implements Nette\Security\IAuthenticator
     {
         $row = $this->getUserByEmail($email);
         $row->update([
-            self::COLUMN_PASSWORD_HASH => Passwords::hash($password),
+            self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
             self::COLUMN_RESET_TOKEN => null,
         ]);
     }
