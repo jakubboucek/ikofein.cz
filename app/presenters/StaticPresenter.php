@@ -102,7 +102,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     private function match(?string $page, ?string $lang): array
     {
         //homepage - redirect to defined lang variant
-        if (empty($page) && empty($lang)) {
+        if ($page === null && $lang === null) {
             $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
             $this->redirectTo([
                 '',

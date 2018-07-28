@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpCSValidationInspection */
 
 declare(strict_types=1);
 
@@ -31,4 +31,3 @@ class PageNotFoundException extends \RuntimeException
 class UserNotFoundException extends \RuntimeException
 {
 }
-

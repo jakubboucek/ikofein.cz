@@ -43,6 +43,4 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
         $posts = $this->postModel->getPosts();
         $this->template->posts = $posts;
     }
-
-
 }

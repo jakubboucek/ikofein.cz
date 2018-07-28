@@ -48,5 +48,4 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
         $template->wwwDir = $this->wwwDir->getPath();
         $template->dataLayer = [['errorCode' => $exception->getCode()]];
     }
-
 }

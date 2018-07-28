@@ -141,13 +141,15 @@ class PostPresenter extends Nette\Application\UI\Presenter
             $values['published_to'] = null;
         }
 
-        if ($values['published'] && empty($values['published_from'])) {
-            $values['published_from'] = $currentDate;
-        } elseif ($values['published'] && $values['published_from'] > $currentDate) {
-            $form->addError(
-                'Čas publikování je nastaven do budoucna, ale současně máte uvedeno, že se má nyní publikovat.'
-                . ' Buď zrušte volbu publikovat a nebo smažte datum publikování.'
-            );
+        if ($values['published']) {
+            if (empty($values['published_from'])) {
+                $values['published_from'] = $currentDate;
+            } elseif ($values['published_from'] > $currentDate) {
+                $form->addError(
+                    'Čas publikování je nastaven do budoucna, ale současně máte uvedeno, že se má nyní publikovat.'
+                    . ' Buď zrušte volbu publikovat a nebo smažte datum publikování.'
+                );
+            }
         }
 
         if ($values['published'] && $values['published_to'] && $values['published_to'] < $currentDate) {
