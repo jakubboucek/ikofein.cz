@@ -122,10 +122,12 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $form = new UI\Form;
         $form->addEmail('email', 'E-mail:')
             ->setRequired('E-mail musí být vyplněn')
-            ->setHtmlAttribute('autofocus');
+            ->setHtmlAttribute('autofocus')
+            ->setHtmlAttribute('autocomplete', 'username');
 
         $form->addPassword('password', 'Heslo:')
-            ->setRequired('heslo musí být vyplněno');
+            ->setRequired('heslo musí být vyplněno')
+            ->setHtmlAttribute('autocomplete', 'current-password');
 
         $form->addCheckbox('remember', 'Zůstat přihlášen');
 
@@ -165,7 +167,8 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $form = new UI\Form;
         $form->addEmail('email', 'E-mail:')
             ->setRequired('E-mail musí být vyplněn')
-            ->setHtmlAttribute('autofocus');
+            ->setHtmlAttribute('autofocus')
+            ->setHtmlAttribute('autocomplete', 'email');
 
         $form->addSubmit('send', 'Zahájit reset hesla');
 
@@ -225,11 +228,13 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addPassword('password', 'Heslo:')
             ->setRequired('Heslo musí být vyplněno')
-            ->setHtmlAttribute('autofocus');
+            ->setHtmlAttribute('autofocus')
+            ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
-            ->addRule(UI\Form::EQUAL, 'Hesla se neshodují', $form['password']);
+            ->addRule(UI\Form::EQUAL, 'Hesla se neshodují', $form['password'])
+            ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addSubmit('send', 'Nastavit nové heslo');
 
