@@ -17,7 +17,7 @@ aws:
 		secret: {put-here-secret}
 
 database:
-	dsn: 'mysql:host=127.0.0.1;dbname=kofein'
+	dsn: 'mysql:host=127.0.0.1;dbname=kofein;charset=utf8'
 	user: kofein
 	password: {put-here-password}
 	options:
