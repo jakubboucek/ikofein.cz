@@ -30,5 +30,8 @@
 	"minimum-stability": "dev",
 	"autoload-dev": {
 		"classmap": ["app/", "libs/"]
+	},
+	"config": {
+		"optimize-autoloader": true
 	}
 }
