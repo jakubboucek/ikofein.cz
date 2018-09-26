@@ -1,11 +1,12 @@
 app/config/config.local.neon
+bower_components
 log/*
 !log/.gitignore
+node_modules
 temp/*
 !temp/.gitignore
 vendor/*
 !vendor/.htaccess
-node_modules
 www/css/admin.css
 www/css/main.css
 www/js/main.js

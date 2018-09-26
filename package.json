@@ -1,6 +1,5 @@
 {
   "name": "ikofein.cz",
-  "version": "1.0.0",
   "description": "Website ikofein.cz",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,12 +12,16 @@
     "url": "https://github.com/jakubboucek/ikofein.cz/issues",
     "email": "pan@jakubboucek.cz"
   },
-  "author": "Jakub Bouček <pan@jakubboucek.cz>",
+  "author": {
+    "name": "Jakub Bouček",
+    "email": "pan@jakubboucek.cz",
+    "url": "https://www.jakub-boucek.cz/"
+  },
   "license": "MIT",
   "homepage": "https://github.com/jakubboucek/ikofein.cz",
   "devDependencies": {
-    "grunt": "^1.0.2",
-    "grunt-contrib-less": "^1.4.1",
-    "grunt-contrib-uglify": "^2.3.0"
+    "grunt": "^1.0.3",
+    "grunt-contrib-less": "^2.0.0",
+    "grunt-contrib-uglify-es": "^3.3.0"
   }
 }
