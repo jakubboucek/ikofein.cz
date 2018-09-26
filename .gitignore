@@ -7,6 +7,3 @@ temp/*
 !temp/.gitignore
 vendor/*
 !vendor/.htaccess
-www/css/admin.css
-www/css/main.css
-www/js/main.js
