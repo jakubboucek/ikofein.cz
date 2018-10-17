@@ -32,5 +32,5 @@ services:
 	mail.mailer: JakubBoucek\Aws\SesMailer
 	crypto: App\Crypto(%crypto.stateKey%)
 	postRenderer: App\Component\PostRenderer
-	router: App\RouterFactory::createRouter
+	router: App\Router\RouterFactory::createRouter
 	authenticator: App\Model\UserManager

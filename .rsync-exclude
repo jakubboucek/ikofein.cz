@@ -14,4 +14,4 @@ package-lock.json
 Gruntfile.js
 /log/*
 /temp/*
-/app/config/config.local.neon
+/app/Config/config.local.neon

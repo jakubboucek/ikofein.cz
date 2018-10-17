@@ -1,4 +1,4 @@
-app/config/config.local.neon
+app/Config/config.local.neon
 bower_components
 log/*
 !log/.gitignore
