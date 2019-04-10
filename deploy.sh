@@ -1,5 +1,11 @@
 #!/bin/bash
 
+FOLDERS=(
+    "app"
+    "libs"
+    "vendor"
+    "www"
+)
 REMOTE_DIR="/var/www/ikofein.cz/www"
 LOCAL_DIR=""
 SERVER_NAME="mlh"
@@ -7,8 +13,10 @@ SERVER_NAME="mlh"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SSH="ssh ${SERVER_NAME}"
 
-echo "Uploading data to SSH…"
-rsync -rcP --delete --exclude-from="${DIR}/.rsync-exclude" "${DIR}${LOCAL_DIR}/" "${SERVER_NAME}:$REMOTE_DIR/"
+for folder in "${FOLDERS[@]}"; do
+    echo "Uploading folder /$folder to SSH…"
+    rsync -rcP --delete --exclude-from="${DIR}/.rsync-exclude" "${DIR}${LOCAL_DIR}/$folder" "${SERVER_NAME}:$REMOTE_DIR/"
+done
 
 echo "Replace file permissions…"
 ${SSH} sudo fixwww ${REMOTE_DIR}
