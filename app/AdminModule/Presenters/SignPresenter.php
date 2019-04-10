@@ -9,6 +9,7 @@ use App\CryptoException;
 use App\Forms\BootstrapizeForm;
 use App\Model\UserManager;
 use App\Model\UserNotFoundException;
+use DateTime;
 use JakubBoucek\Aws\SesMailer;
 use Latte;
 use Nette;
@@ -21,6 +22,12 @@ use Nette\Utils\Random;
 
 class SignPresenter extends Nette\Application\UI\Presenter
 {
+    /**
+     * @var string
+     * @persistent
+     */
+    public $backlink;
+
     /**
      * @var UserManager
      */
@@ -52,10 +59,12 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @throws Nette\Application\AbortException
+     * @throws Nette\InvalidStateException
      */
     public function renderIn(): void
     {
         if ($this->user->isLoggedIn()) {
+            $this->restoreRequest($this->backlink);
             $this->redirect('Dashboard:');
         }
 
@@ -155,6 +164,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
             $form->addError('The username or password you entered is incorrect.');
             return;
         }
+        $this->restoreRequest($this->backlink);
         $this->redirect('Dashboard:');
     }
 
@@ -182,13 +192,14 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param UI\Form $form
-     * @param ArrayHash $values
      * @throws CryptoException
      * @throws Nette\Application\AbortException
+     * @throws Nette\InvalidArgumentException
      * @throws UI\InvalidLinkException
      */
-    public function resetFormSuccess(UI\Form $form, ArrayHash $values): void
+    public function resetFormSuccess(UI\Form $form): void
     {
+        $values = $form->values;
         $email = $values['email'];
 
         try {
@@ -198,7 +209,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
                 'key' => $key,
                 'hash' => $hash,
                 'email' => $email,
-                'expire' => (new \DateTime('+ 1 hour'))->format(\DateTime::ATOM),
+                'expire' => (new DateTime('+ 1 hour'))->format(DateTime::ATOM),
             ];
             $token = $this->crypto->encryptArray($plainData);
             $this->sendChangeNotification($email, $key, $token);
@@ -313,8 +324,8 @@ class SignPresenter extends Nette\Application\UI\Presenter
             );
         }
 
-        $expire = new \DateTime($plainData['expire']);
-        $now = new \DateTime();
+        $expire = new DateTime($plainData['expire']);
+        $now = new DateTime();
         if ($expire < $now) {
             throw new SignResetPasswordTokenException(
                 'Odkaz na reset hesla již expiroval, zkuste jej poslat znovu.',

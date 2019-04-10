@@ -9,6 +9,8 @@ use Nette;
 
 class DashboardPresenter extends Nette\Application\UI\Presenter
 {
+    use RequireLoggedUser;
+
     /**
      * @var Model\Post
      */
@@ -26,16 +28,6 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @throws Nette\Application\AbortException
-     */
-    public function startup(): void
-    {
-        parent::startup();
-        if (!$this->user->isLoggedIn()) {
-            $this->redirect('Sign:in');
-        }
-    }
 
 
     public function renderDefault(): void

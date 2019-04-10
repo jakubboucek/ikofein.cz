@@ -6,6 +6,8 @@ namespace App\AdminModule\Presenters;
 
 use App\Forms\BootstrapizeForm;
 use App\Model;
+use DateTime;
+use DateTimeInterface;
 use JakubBoucek\Aws;
 use Latte;
 use Nette;
@@ -16,6 +18,8 @@ use Nette\Utils\ArrayHash;
 
 class PostPresenter extends Nette\Application\UI\Presenter
 {
+    use RequireLoggedUser;
+
     /**
      * @var Model\Post
      */
@@ -40,18 +44,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @throws Nette\Application\AbortException
-     */
-    public function startup(): void
-    {
-        parent::startup();
-        if (!$this->user->isLoggedIn()) {
-            $this->redirect('Sign:in');
-        }
-    }
-
-
-    /**
      * @param string $key
      * @throws BadRequestException
      */
@@ -69,8 +61,8 @@ class PostPresenter extends Nette\Application\UI\Presenter
         $defaults = [
             'key' => $key,
             'published' => $post['info']['isPublished'],
-            'published_from' => $post['published_from'] ? $post['published_from']->format('Y-m-d') : null,
-            'published_to' => $post['published_to'] ? $post['published_to']->format('Y-m-d') : null,
+            'published_from' => $post['published_from'] instanceof DateTimeInterface ? $post['published_from']->format('Y-m-d') : null,
+            'published_to' => $post['published_to'] instanceof DateTimeInterface ? $post['published_to']->format('Y-m-d') : null,
             'content_cs' => $post['content_cs'],
             'content_en' => $post['content_en'],
         ];
@@ -127,16 +119,16 @@ class PostPresenter extends Nette\Application\UI\Presenter
      */
     public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
     {
-        $currentDate = new \DateTime();
+        $currentDate = new DateTime();
 
         if ($values['published_from']) {
-            $values['published_from'] = new \DateTime($values['published_from']);
+            $values['published_from'] = new DateTime($values['published_from']);
         } else {
             $values['published_from'] = null;
         }
 
         if ($values['published_to']) {
-            $values['published_to'] = new \DateTime($values['published_to']);
+            $values['published_to'] = new DateTime($values['published_to']);
         } else {
             $values['published_to'] = null;
         }
