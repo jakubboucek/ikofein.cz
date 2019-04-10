@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Router;
 
 use Nette;
-use Nette\Application\IRouter;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 
@@ -15,13 +14,13 @@ class RouterFactory
 
 
     /**
-     * @return IRouter
+     * @return RouteList
      */
-    public static function createRouter(): IRouter
+    public static function createRouter(): RouteList
     {
         $router = new RouteList;
 
-        $router[] = new Route(
+        $router->addRoute(
             'admin/<presenter>/<action>',
             [
                 'module' => 'Admin',
@@ -30,7 +29,7 @@ class RouterFactory
             ]
         );
 
-        $router[] = new Route(
+        $router->addRoute(
             'home<? \.htm|\.php|>',
             [
                 'presenter' => 'Static',
@@ -40,7 +39,7 @@ class RouterFactory
             Route::ONE_WAY
         );
 
-        $router[] = new Route(
+        $router->addRoute(
             'index<? \.htm|\.php|>',
             [
                 'presenter' => 'Static',
@@ -51,7 +50,7 @@ class RouterFactory
             Route::ONE_WAY
         );
 
-        $router[] = new Route(
+        $router->addRoute(
             'uvod<? \.htm|\.php|>',
             [
                 'presenter' => 'Static',
@@ -61,7 +60,8 @@ class RouterFactory
             ],
             Route::ONE_WAY
         );
-        $router[] = new Route('[<lang (cs|cz|en)>/][<page [a-z]+>]<? \.htm|\.php|>', 'Static:default');
+
+        $router->addRoute('[<lang (cs|cz|en)>/][<page [a-z]+>]<? \.htm|\.php|>', 'Static:default');
 
         return $router;
     }
