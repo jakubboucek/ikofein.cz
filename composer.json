@@ -12,22 +12,15 @@
 		"nette/di": "^3.0",
 		"nette/forms": "^3.0",
 		"nette/http": "^3.0",
-		"nette/robot-loader": "^3.0",
+		"nette/robot-loader": "^3.2",
 		"nette/security": "^3.0",
 		"nette/utils": "^3.0",
-		"latte/latte": "^3.0",
-		"tracy/tracy": "^2.4",
-		"aws/aws-sdk-php": "^3.18",
-		"defuse/php-encryption": "^2.0",
-		"nette/mail": "^3.0@dev"
+		"latte/latte": "^2.5",
+		"tracy/tracy": "^2.6",
+		"aws/aws-sdk-php": "^3.91",
+		"defuse/php-encryption": "^2.2",
+		"nette/mail": "^3.0"
 	},
-	"require-dev": {
-		"roave/security-advisories": "dev-master",
-		"nette/tester": "^2.1@dev",
-		"phpstan/phpstan": "^0.10.0@dev",
-		"phpstan/phpstan-nette": "^0.10.0@dev"
-	},
-	"minimum-stability": "dev",
 	"autoload-dev": {
 		"classmap": ["app/", "libs/"]
 	},
