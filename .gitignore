@@ -1,5 +1,6 @@
-app/Config/config.local.neon
 bower_components
+local/*
+!local/Config/.gitignore
 log/*
 !log/.gitignore
 node_modules
