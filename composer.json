@@ -21,7 +21,10 @@
 		"defuse/php-encryption": "^2.2",
 		"nette/mail": "^3.0"
 	},
-	"autoload-dev": {
+    "autoload": {
+        "classmap": ["app/Booting.php"]
+    },
+    "autoload-dev": {
 		"classmap": ["app/", "libs/"]
 	},
 	"config": {
