@@ -23,7 +23,7 @@ use Nette\Utils\Random;
 class SignPresenter extends Nette\Application\UI\Presenter
 {
     /**
-     * @var string
+     * @var string|null
      * @persistent
      */
     public $backlink;
@@ -164,7 +164,10 @@ class SignPresenter extends Nette\Application\UI\Presenter
             $form->addError('The username or password you entered is incorrect.');
             return;
         }
-        $this->restoreRequest($this->backlink);
+
+        if ($this->backlink !== null) {
+            $this->restoreRequest($this->backlink);
+        }
         $this->redirect('Dashboard:');
     }
 
