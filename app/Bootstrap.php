@@ -9,7 +9,7 @@ use Nette\InvalidArgumentException;
 use Nette\NotSupportedException;
 
 
-class Booting
+class Bootstrap
 {
     /**
      * @return Configurator

@@ -22,7 +22,7 @@
 		"nette/mail": "^3.0"
 	},
     "autoload": {
-        "classmap": ["app/Booting.php"]
+        "classmap": ["app/Bootstrap.php"]
     },
     "autoload-dev": {
 		"classmap": ["app/", "libs/"]
