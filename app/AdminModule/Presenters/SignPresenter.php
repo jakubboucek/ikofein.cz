@@ -64,7 +64,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function renderIn(): void
     {
         if ($this->user->isLoggedIn()) {
-            $this->restoreRequest($this->backlink);
+            if($this->backlink) {
+                $this->restoreRequest($this->backlink);
+            }
             $this->redirect('Dashboard:');
         }
 
