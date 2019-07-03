@@ -21,6 +21,9 @@
 		"defuse/php-encryption": "^2.2",
 		"nette/mail": "^3.0"
 	},
+	"require-dev": {
+		"jakubboucek/composer-vendor-checker": "dev-master"
+	},
     "autoload": {
         "classmap": ["app/Bootstrap.php"]
     },

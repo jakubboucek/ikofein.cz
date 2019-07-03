@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26edab67b899b3b0a9167ba95329a5c0",
+    "content-hash": "99aceaa9882a812d49ffdda14afd54e0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1813,10 +1813,50 @@
             "time": "2019-06-18T12:20:11+00:00"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "jakubboucek/composer-vendor-checker",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jakubboucek/php-composer-vendor-checker.git",
+                "reference": "61dee325355569d6530088cff40a48371318f232"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jakubboucek/php-composer-vendor-checker/zipball/61dee325355569d6530088cff40a48371318f232",
+                "reference": "61dee325355569d6530088cff40a48371318f232",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JakubBoucek\\ComposerVendorChecker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Bouček",
+                    "email": "pan@jakubboucek.cz"
+                }
+            ],
+            "description": "Package for your app – it allows your app to check himself has consistent vendor dir (direct API, no CLI)",
+            "time": "2019-07-02T23:51:20+00:00"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jakubboucek/composer-vendor-checker": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
