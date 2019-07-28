@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99aceaa9882a812d49ffdda14afd54e0",
+    "content-hash": "d2081e88cee0ec2351112a5f885fecec",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.107.6",
+            "version": "3.108.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "59e56f9ca6d32d3940d71dd9a95b6f784975fd89"
+                "reference": "df65815065b0195bc374bd17d8cc6884b4870da1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/59e56f9ca6d32d3940d71dd9a95b6f784975fd89",
-                "reference": "59e56f9ca6d32d3940d71dd9a95b6f784975fd89",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/df65815065b0195bc374bd17d8cc6884b4870da1",
+                "reference": "df65815065b0195bc374bd17d8cc6884b4870da1",
                 "shasum": ""
             },
             "require": {
@@ -87,7 +87,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-07-23T18:42:17+00:00"
+            "time": "2019-07-26T18:22:40+00:00"
         },
         {
             "name": "defuse/php-encryption",
@@ -1816,7 +1816,7 @@
     "packages-dev": [
         {
             "name": "jakubboucek/composer-vendor-checker",
-            "version": "dev-master",
+            "version": "v1.0-BETA",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jakubboucek/php-composer-vendor-checker.git",
@@ -1853,11 +1853,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
-        "jakubboucek/composer-vendor-checker": 20
+        "jakubboucek/composer-vendor-checker": 10
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">= 7.2"
