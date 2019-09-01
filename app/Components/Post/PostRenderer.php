@@ -40,11 +40,12 @@ class PostRenderer extends Control
      */
     public function render(string $key, string $lang, string $templateName = 'post'): void
     {
-        $post = $this->getPost($key);
+        $postInfo = $this->getPost($key);
+        $post = $postInfo['post'];
 
         $template = $this->getTemplateFile($templateName);
 
-        $template->isEmpty = ($post === null);
+        $template->isEmpty = $postInfo['isEmpty'];
 
         $field = 'content_' . $lang;
 
@@ -62,14 +63,18 @@ class PostRenderer extends Control
      * @param string $key
      * @return array|null
      */
-    private function getPost(string $key): ?array
+    private function getPost(string $key): array
     {
         return $this->cache->load($key, function (& $dependencies) use ($key) {
             $dependencies = [
                 Caching\Cache::EXPIRE => '20 minutes',
             ];
 
-            return $this->postModel->tryFindPostByKey($key, true);
+            $post = $this->postModel->tryFindPostByKey($key, true);
+            return [
+                'post' => $post,
+                'isEmpty' => $post === null
+            ];
         });
     }
 
