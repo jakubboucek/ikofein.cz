@@ -22,13 +22,18 @@
 		"nette/mail": "^3.0"
 	},
 	"require-dev": {
-		"jakubboucek/composer-vendor-checker": "^1.0@beta"
+		"jakubboucek/composer-vendor-checker": "^1.1"
 	},
-    "autoload": {
-        "classmap": ["app/Bootstrap.php"]
-    },
-    "autoload-dev": {
-		"classmap": ["app/", "libs/"]
+	"autoload": {
+		"classmap": [
+			"app/Bootstrap.php"
+		]
+	},
+	"autoload-dev": {
+		"classmap": [
+			"app/",
+			"libs/"
+		]
 	},
 	"config": {
 		"optimize-autoloader": true

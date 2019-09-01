@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d2081e88cee0ec2351112a5f885fecec",
+    "content-hash": "eaa0bab7a9305ddd1e9f9fa030444c3c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1816,16 +1816,16 @@
     "packages-dev": [
         {
             "name": "jakubboucek/composer-vendor-checker",
-            "version": "v1.0",
+            "version": "v1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jakubboucek/php-composer-vendor-checker.git",
-                "reference": "25fd543e147cd7b7814f74061fb721495f8fdebc"
+                "reference": "5573e5b28bcf548f12dc0c3b29cb320a2c0ca310"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jakubboucek/php-composer-vendor-checker/zipball/25fd543e147cd7b7814f74061fb721495f8fdebc",
-                "reference": "25fd543e147cd7b7814f74061fb721495f8fdebc",
+                "url": "https://api.github.com/repos/jakubboucek/php-composer-vendor-checker/zipball/5573e5b28bcf548f12dc0c3b29cb320a2c0ca310",
+                "reference": "5573e5b28bcf548f12dc0c3b29cb320a2c0ca310",
                 "shasum": ""
             },
             "require": {
@@ -1852,14 +1852,12 @@
                 }
             ],
             "description": "Package for your app – it allows your app to check himself has consistent vendor dir (direct API, no CLI)",
-            "time": "2019-08-31T19:32:36+00:00"
+            "time": "2019-09-01T01:03:40+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "jakubboucek/composer-vendor-checker": 10
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
