@@ -4,7 +4,7 @@ services:
     image: jakubboucek/lamp-devstack-php
     container_name: ikofein-web
     volumes:
-      - ".:/var/www/html/www"
+      - ".:/var/www/html:cached"
     ports:
       - "8080:80"
     restart: always
