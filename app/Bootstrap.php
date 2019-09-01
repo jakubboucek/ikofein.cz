@@ -50,7 +50,7 @@ class Bootstrap
     protected static function checkVendorConsistency(): void
     {
         if (Debugger::$productionMode === false && class_exists(Checker::class)) {
-            Checker::validateReqs(__DIR__ . '/..');
+            (new Checker(__DIR__ . '/..'))->setStrictReqs(false)->validate();
         }
 
     }
