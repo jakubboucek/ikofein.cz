@@ -31,12 +31,12 @@
 	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<header>
 		<div>
-			<a href="/" class="logo">
-				<img src="/img/layout/header-logo-print.png" alt="Kofein restaurant">
+			<a href="{$basePath}/" class="logo">
+				<img src="{$basePath}/img/layout/header-logo-print.png" alt="Kofein restaurant">
 			</a>
 			<nav n:ifset="$altLangs" class="language-switcher">
-				{if $lang=='cs'}<a href="{$altLangs['en']}"><img src="{$basePath}/img/layout/header-flag.en.png" alt="English" title="English"></a>{/if}
-				{if $lang=='en'}<a href="{$altLangs['cs']}"><img src="{$basePath}/img/layout/header-flag.cs.png" alt="Česky" title="Česky"></a>{/if}
+				{if $lang=='cs'}<a href="{$basePath}{$altLangs['en']}"><img src="{$basePath}/img/layout/header-flag.en.png" alt="English" title="English"></a>{/if}
+				{if $lang=='en'}<a href="{$basePath}{$altLangs['cs']}"><img src="{$basePath}/img/layout/header-flag.cs.png" alt="Česky" title="Česky"></a>{/if}
 			</nav>
 		</div>
 	</header>
