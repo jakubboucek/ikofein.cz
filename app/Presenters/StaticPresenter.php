@@ -17,7 +17,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     /**
      * @var array
      */
-    private const LANGS = ['en', 'cs'];
+    private const LANGS = [
+        'en' => 'en-US',
+        'cs' => 'cs-CZ'
+    ];
 
     /**
      * @var array
@@ -70,6 +73,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      * @throws BadRequestException
      * @throws Nette\Application\AbortException
      * @throws Nette\Application\UI\InvalidLinkException
+     * @throws Nette\InvalidStateException
      */
     public function renderDefault(?string $page = null, ?string $lang = null): void
     {
@@ -78,6 +82,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         $this->template->lang = $realLang;
         $this->template->title = $pageKey;
         $this->template->altLangs = $this->getAllLangsLinks($pageKey);
+
+        $this->getHttpResponse()->addHeader('Content-Language', self::LANGS[$realLang]);
 
         $this->setView("$realLang-$pageKey");
     }
@@ -98,6 +104,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      * @return array
      * @throws BadRequestException
      * @throws Nette\Application\AbortException
+     * @throws Nette\InvalidStateException
      */
     private function match(?string $page, ?string $lang): array
     {
@@ -168,7 +175,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             $lang = 'cs';
         }
 
-        $langKey = array_search($lang, self::LANGS, true);
+        $langKey = array_key_exists($lang, self::LANGS);
 
         if ($langKey === false) {
             return null;
@@ -209,7 +216,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         $request = $this->getHttpRequest();
 
         if ($request instanceof Nette\Http\Request) {
-            $detectedLanguage = $request->detectLanguage(self::LANGS);
+            $detectedLanguage = $request->detectLanguage(array_keys(self::LANGS));
             return $detectedLanguage ?? $default;
         }
 
@@ -233,7 +240,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      */
     private function getDefaultLang(): string
     {
-        return self::LANGS[0];
+        return array_key_first(self::LANGS);
     }
 
 
@@ -282,9 +289,9 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     {
         $keyUrls = self::PAGE_MAP[$pageKey];
         $links = [];
-        if (\count($keyUrls) && \key($keyUrls) === -1) {
-            $keyUrl = \current($keyUrls);
-            foreach (self::LANGS as $lang) {
+        if (count($keyUrls) && key($keyUrls) === -1) {
+            $keyUrl = current($keyUrls);
+            foreach (self::LANGS as $lang => $fullLang) {
                 $url = $this->link('//default', [
                     'lang' => $lang,
                     'page' => $keyUrl,
@@ -292,8 +299,9 @@ class StaticPresenter extends Nette\Application\UI\Presenter
                 $links[$lang] = $url;
             }
         } else {
+            $langKeys = array_keys(self::LANGS);
             foreach ($keyUrls as $langId => $keyUrl) {
-                $lang = self::LANGS[$langId];
+                $lang = $langKeys[$langId];
                 $url = $this->link('//default', [
                     'lang' => $lang,
                     'page' => $keyUrl,
@@ -311,6 +319,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      */
     private function isLangValid(?string $lang): bool
     {
-        return \in_array($lang, self::LANGS, true);
+        return array_key_exists($lang, self::LANGS);
     }
 }
