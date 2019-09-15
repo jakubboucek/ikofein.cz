@@ -15,15 +15,14 @@
 	{ifset $altLangs}
 	<link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
 	{/ifset}
-	<script type="text/javascript" src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async></script>
-	<script>
+	<script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
+	<script n:nonce>
 		dataLayer = {ifset $dataLayer}{$dataLayer}{else}[]{/ifset};
-	</script>
-	<script>(function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
-	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-	})(window,document,'script','dataLayer','GTM-WLWCSG');</script>
+		(function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-WLWCSG');</script>
 </head>
 
 <body>
@@ -77,5 +76,4 @@
 		</div>
 	</footer>
 </body>
-
 </html>

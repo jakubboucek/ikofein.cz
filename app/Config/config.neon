@@ -26,6 +26,26 @@ database:
 extensions:
     aws: JakubBoucek\Aws\DI\AwsExtension
 
+http:
+    csp:
+        script-src:
+            - 'strict-dynamic'
+            - 'nonce'
+            - 'unsafe-inline'   # csp-2 fallback
+            - 'http:'           # csp-2 fallback
+            - 'https:'          # csp-2 fallback
+        frame-ancestors: none
+        frame-src:
+            - self
+            - https://www.googletagmanager.com/
+            - https://www.google.com/   # google maps
+        form-action: self
+        object-src: none
+        style-src:
+            - self
+            - 'unsafe-inline' # because wysiwyg editor
+        base-uri: none
+
 services:
 	- App\Model\Post
 	- App\Model\WebDir(%wwwDir%)
