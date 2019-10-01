@@ -43,6 +43,7 @@ http:
         object-src: none
         style-src:
             - self
+            - 'https://maxcdn.bootstrapcdn.com'
             - 'unsafe-inline' # because wysiwyg editor
         base-uri: none
 
