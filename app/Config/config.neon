@@ -44,6 +44,7 @@ http:
         style-src:
             - self
             - 'https://maxcdn.bootstrapcdn.com'
+            - 'https://cdn.tinymce.com'
             - 'unsafe-inline' # because wysiwyg editor
         base-uri: none
 
