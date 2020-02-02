@@ -8,7 +8,7 @@ FOLDERS=(
 )
 REMOTE_DIR="/var/www/ikofein.cz/www"
 LOCAL_DIR=""
-SERVER_NAME="mlh"
+SERVER_NAME="ralph"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SSH="ssh ${SERVER_NAME}"
