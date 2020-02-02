@@ -24,7 +24,7 @@ class Bootstrap
     {
         $configurator = new Configurator;
 
-        $configurator->setDebugMode([]);
+        $configurator->setDebugMode((int)getenv() === 1 ? true : null);
         $configurator->enableDebugger(__DIR__ . '/../log', 'pan@jakubboucek.cz');
 
         self::checkVendorConsistency();

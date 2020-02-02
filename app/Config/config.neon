@@ -7,7 +7,6 @@ application:
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
-
 session:
 	expiration: 14 days
 
@@ -47,6 +46,9 @@ http:
             - 'https://cdn.tinymce.com'
             - 'unsafe-inline' # because wysiwyg editor
         base-uri: none
+
+tracy:
+    fromEmail: noreply@ikofein.cz
 
 services:
 	- App\Model\Post
