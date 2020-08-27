@@ -1,0 +1,14 @@
+{
+  "name": "ikofein.cz",
+  "description": "Website ikofein.cz",
+  "main": "",
+  "authors": [
+    "Jakub Bouček <pan@jakubboucek.cz>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jakubboucek/ikofein.cz",
+  "dependencies": {
+    "magnific-popup": "^1.1.0",
+    "jquery": "^3.5.1"
+  }
+}
