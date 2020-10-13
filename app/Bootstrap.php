@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use JakubBoucek\ComposerVendorChecker\Checker;
+use JakubBoucek\ComposerConsistency\ComposerConsistency;
 use Nette\Configurator;
 use Nette\InvalidArgumentException;
 use Nette\NotSupportedException;
@@ -44,14 +44,10 @@ class Bootstrap
     }
 
 
-    /**
-     * @throws RuntimeException
-     */
     protected static function checkVendorConsistency(): void
     {
-        if (Debugger::$productionMode === false && class_exists(Checker::class)) {
-            (new Checker(__DIR__ . '/..'))->setStrictReqs(false)->validate();
+        if (Debugger::$productionMode === false && class_exists(ComposerConsistency::class)) {
+            ComposerConsistency::rootDir(__DIR__ . '/..')->validate();
         }
-
     }
 }
