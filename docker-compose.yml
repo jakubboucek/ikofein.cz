@@ -2,7 +2,6 @@ version: '3'
 services:
   web:
     image: jakubboucek/lamp-devstack-php
-    container_name: ikofein-web
     volumes:
       - ".:/var/www/html:cached"
     ports:
@@ -14,7 +13,6 @@ services:
       - mysqldb
   mysqldb:
     image: jakubboucek/lamp-devstack-mysql
-    container_name: ikofein-mysql
     restart: always
     environment:
       - MYSQL_DATABASE=default
