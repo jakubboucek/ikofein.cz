@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace JakubBoucek\Aws\DI;
 
 use Nette;
+use Nette\Schema\Expect;
 
 /**
  * @author Jakub Bouček <pan@jakubboucek.cz>
@@ -18,26 +19,30 @@ use Nette;
 class AwsExtension extends Nette\DI\CompilerExtension
 {
 
-    /**
-     * @var array
-     */
-    public $defaults = [
-        'version' => 'latest',
-        'region' => 'eu-west-1',
-        'credentials' => [
-            'key' => null,
-            'secret' => null
-        ]
-    ];
-
+    public function getConfigSchema(): Nette\Schema\Schema
+    {
+        return Expect::structure(
+            [
+                'version' => Expect::string()->default('latest'),
+                'region' => Expect::string()->default('eu-west-1'),
+                'credentials' => Expect::structure(
+                    [
+                        'key' => Expect::string()->required(),
+                        'secret' => Expect::string()->required(),
+                    ]
+                )->castTo('array'),
+            ]
+        )->castTo('array');
+    }
 
     public function loadConfiguration(): void
     {
-        $config = $this->validateConfig($this->defaults);
         $builder = $this->getContainerBuilder();
 
         $builder->addDefinition($this->prefix('sdk'))
-            ->setFactory(\Aws\Sdk::class, [$config]);
+            ->setFactory(\Aws\Sdk::class, [$this->config]);
+
+        $this->initialization->addBody('putenv(\'AWS_CSM_ENABLED=false\');');
     }
 
 }
