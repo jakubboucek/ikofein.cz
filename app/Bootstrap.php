@@ -14,12 +14,6 @@ use Tracy\Debugger;
 
 class Bootstrap
 {
-    /**
-     * @return Configurator
-     * @throws InvalidArgumentException
-     * @throws NotSupportedException
-     * @throws RuntimeException
-     */
     public static function boot(): Configurator
     {
         $configurator = new Configurator;

@@ -1,26 +1,26 @@
 parameters:
-	crypto:
-		stateKey: {put-here-state-key}
+    crypto:
+        stateKey: {put-here-state-key}
 
 application:
-	errorPresenter: Error
-	mapping:
-		*: App\*Module\Presenters\*Presenter
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
 
 session:
-	expiration: 14 days
+    expiration: 14 days
 
 aws:
-	credentials:
-		key: AKIAIZQTKJSYPVJS4E3A
-		secret: {put-here-secret}
+    credentials:
+        key: AKIAIZQTKJSYPVJS4E3A
+        secret: {put-here-secret}
 
 database:
-	dsn: 'mysql:host=mysqldb;dbname=default;charset=utf8'
-	user: root
-	password: devstack
-	options:
-		lazy: TRUE
+    dsn: 'mysql:host=mysqldb;dbname=default;charset=utf8'
+    user: root
+    password: devstack
+    options:
+        lazy: TRUE
 
 extensions:
     aws: JakubBoucek\Aws\DI\AwsExtension
@@ -51,10 +51,10 @@ tracy:
     fromEmail: noreply@ikofein.cz
 
 services:
-	- App\Model\Post
-	- App\Model\WebDir(%wwwDir%)
-	mail.mailer: JakubBoucek\Aws\SesMailer
-	crypto: App\Crypto(%crypto.stateKey%)
-	postRenderer: App\Component\PostRenderer
-	router: App\Router\RouterFactory::createRouter
-	authenticator: App\Model\UserManager
+    - App\Model\Post
+    - App\Model\WebDir(%wwwDir%)
+    mail.mailer: JakubBoucek\Aws\SesMailer
+    crypto: App\Crypto(%crypto.stateKey%)
+    postRenderer: App\Component\PostRenderer
+    router: App\Router\RouterFactory::createRouter
+    authenticator: App\Model\UserManager

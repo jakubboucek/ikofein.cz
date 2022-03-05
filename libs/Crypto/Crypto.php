@@ -10,26 +10,16 @@ use Nette\Utils\JsonException;
 
 class Crypto
 {
-    /**
-     * @var string
-     */
-    private $key;
+    private string $key;
 
 
-    /**
-     * Crypto constructor.
-     * @param string $key
-     */
-    public function __construct($key)
+    public function __construct(string $key)
     {
         $this->key = $key;
     }
 
 
     /**
-     * @param string $plaintext
-     * @param bool $raw_binary
-     * @return string
      * @throws CryptoException
      */
     public function encrypt(string $plaintext, bool $raw_binary = false): string
@@ -38,7 +28,7 @@ class Crypto
             return CryptoDefuse::encryptWithPassword($plaintext, $this->key, $raw_binary);
         } catch (\Defuse\Crypto\Exception\CryptoException $e) {
             throw new CryptoException(
-                'Unable to encrypt - enryption failed',
+                'Unable to encrypt - encryption failed',
                 $e->getCode(),
                 $e
             );
@@ -47,9 +37,6 @@ class Crypto
 
 
     /**
-     * @param string $ciphertext
-     * @param bool $raw_binary
-     * @return string
      * @throws CryptoException
      */
     public function decrypt(string $ciphertext, bool $raw_binary = false): string
@@ -67,8 +54,6 @@ class Crypto
 
 
     /**
-     * @param array $plainArray
-     * @return string
      * @throws CryptoException
      */
     public function encryptArray(array $plainArray): string
@@ -88,8 +73,6 @@ class Crypto
 
 
     /**
-     * @param string $ciphertext
-     * @return array
      * @throws CryptoException
      */
     public function decryptArray(string $ciphertext): array
@@ -119,8 +102,6 @@ class Crypto
 
 
     /**
-     * @param string $input
-     * @return string
      * @throws CryptoException
      */
     private function strictBase64Decode(string $input): string

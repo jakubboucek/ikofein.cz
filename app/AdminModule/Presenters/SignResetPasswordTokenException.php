@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
-class SignResetPasswordTokenException extends \Exception
+use Exception;
+
+class SignResetPasswordTokenException extends Exception
 {
 }

@@ -11,23 +11,14 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
 
-    /**
-     * @var Model\Post
-     */
-    private $postModel;
+    private Model\Post $postModel;
 
 
-    /**
-     * DashboardPresenter constructor.
-     * @param Model\Post $postModel
-     */
     public function __construct(Model\Post $postModel)
     {
         parent::__construct();
         $this->postModel = $postModel;
     }
-
-
 
 
     public function renderDefault(): void

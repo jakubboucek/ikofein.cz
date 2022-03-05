@@ -5,26 +5,17 @@ declare(strict_types=1);
 namespace App\Component;
 
 use App\Model;
+use Nette\Application\ApplicationException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Caching;
 
 class PostRenderer extends Control
 {
-    /**
-     * @var Model\Post
-     */
-    private $postModel;
-    /**
-     * @var Caching\Cache
-     */
-    private $cache;
+    private Model\Post $postModel;
+    private Caching\Cache $cache;
 
 
-    /**
-     * PostRenderer constructor.
-     * @param Model\Post $postModel
-     * @param Caching\IStorage $storage
-     */
     public function __construct(Model\Post $postModel, Caching\IStorage $storage)
     {
         $this->postModel = $postModel;
@@ -33,10 +24,7 @@ class PostRenderer extends Control
 
 
     /**
-     * @param string $key
-     * @param string $lang
-     * @param string $templateName
-     * @throws \Nette\Application\ApplicationException
+     * @throws ApplicationException
      */
     public function render(string $key, string $lang, string $templateName = 'post'): void
     {
@@ -59,10 +47,6 @@ class PostRenderer extends Control
     }
 
 
-    /**
-     * @param string $key
-     * @return array|null
-     */
     private function getPost(string $key): array
     {
         return $this->cache->load($key, function (& $dependencies) use ($key) {
@@ -80,22 +64,20 @@ class PostRenderer extends Control
 
 
     /**
-     * @param string $templateName
-     * @return \Nette\Bridges\ApplicationLatte\Template
-     * @throws \Nette\Application\ApplicationException
+     * @throws ApplicationException
      */
-    private function getTemplateFile(string $templateName): \Nette\Bridges\ApplicationLatte\Template
+    private function getTemplateFile(string $templateName): Template
     {
         if (!preg_match('/^[-.a-z0-9]+$/i', $templateName)) {
-            throw new \Nette\Application\ApplicationException('Invalid template name: ' . $templateName);
+            throw new ApplicationException('Invalid template name: ' . $templateName);
         }
 
         $filename = __DIR__ . '/' . $templateName . '.latte';
         if (!file_exists($filename)) {
-            throw new \Nette\Application\ApplicationException("Template \"$filename\" doesn't exists");
+            throw new ApplicationException("Template \"$filename\" doesn't exists");
         }
 
-        /** @var \Nette\Bridges\ApplicationLatte\Template $template */
+        /** @var Template $template */
         $template = $this->getTemplate();
         $template->setFile($filename);
         return $template;

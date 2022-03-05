@@ -9,11 +9,9 @@ class DuplicateNameException extends \Exception
 }
 
 
-
 class PostException extends \Exception
 {
 }
-
 
 
 class PostNotFoundException extends PostException
@@ -21,11 +19,9 @@ class PostNotFoundException extends PostException
 }
 
 
-
 class PageNotFoundException extends \RuntimeException
 {
 }
-
 
 
 class UserNotFoundException extends \RuntimeException

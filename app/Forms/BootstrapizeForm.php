@@ -10,9 +10,6 @@ use Nette\Forms\Rendering\DefaultFormRenderer;
 
 class BootstrapizeForm
 {
-    /**
-     * @param Form $form
-     */
     public static function bootstrapize(Form $form): void
     {
         /** @var DefaultFormRenderer $renderer */

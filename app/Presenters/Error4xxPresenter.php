@@ -6,13 +6,11 @@ namespace App\Presenters;
 
 use App\Model\WebDir;
 use Nette;
+use Nette\Application\BadRequestException;
 
 class Error4xxPresenter extends Nette\Application\UI\Presenter
 {
-    /**
-     * @var WebDir
-     */
-    private $wwwDir;
+    private WebDir $wwwDir;
 
 
     public function __construct(WebDir $wwwDir)
@@ -23,7 +21,7 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @throws Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function startup(): void
     {
@@ -34,10 +32,7 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param Nette\Application\BadRequestException $exception
-     */
-    public function renderDefault(Nette\Application\BadRequestException $exception): void
+    public function renderDefault(BadRequestException $exception): void
     {
         // load template 403.latte or 404.latte or ... 4xx.latte
         $file = __DIR__ . "/templates/Error/{$exception->getCode()}.latte";

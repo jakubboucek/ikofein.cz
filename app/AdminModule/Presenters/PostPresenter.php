@@ -20,21 +20,10 @@ class PostPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
 
-    /**
-     * @var Model\Post
-     */
-    private $postModel;
-    /**
-     * @var Aws\SesMailer
-     */
-    private $mailer;
+    private Model\Post $postModel;
+    private Aws\SesMailer $mailer;
 
 
-    /**
-     * PostPresenter constructor.
-     * @param Model\Post $postModel
-     * @param Aws\SesMailer $mailer
-     */
     public function __construct(Model\Post $postModel, Aws\SesMailer $mailer)
     {
         parent::__construct();
@@ -44,7 +33,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param string $key
      * @throws BadRequestException
      */
     public function renderDetail(string $key): void
@@ -72,9 +60,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @return UI\Form
-     */
     public function createComponentPostEditForm(): UI\Form
     {
         $form = new UI\Form;

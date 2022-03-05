@@ -14,17 +14,11 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 {
     public const LANG_COOKIE = 'lang';
 
-    /**
-     * @var array
-     */
     private const LANGS = [
         'en' => 'en-US',
         'cs' => 'cs-CZ'
     ];
 
-    /**
-     * @var array
-     */
     private const PAGE_MAP = [
         'homepage' => [-1 => ''],
         'lunch' => ['lunch', 'poledne'],
@@ -34,21 +28,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         'contact' => ['contact', 'kontakt'],
     ];
 
-    /**
-     * @var PostRenderer
-     */
-    private $postRenderer;
-    /**
-     * @var WebDir
-     */
-    private $wwwDir;
+    private PostRenderer $postRenderer;
+    private WebDir $wwwDir;
 
 
-    /**
-     * StaticPresenter constructor.
-     * @param PostRenderer $postRenderer
-     * @param WebDir $wwwDir
-     */
     public function __construct(PostRenderer $postRenderer, WebDir $wwwDir)
     {
         parent::__construct();
@@ -57,9 +40,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     *
-     */
     public function beforeRender(): void
     {
         $this->template->readyForPost = true;
@@ -68,8 +48,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param string|null $page
-     * @param string|null $lang
      * @throws BadRequestException
      * @throws Nette\Application\AbortException
      * @throws Nette\Application\UI\InvalidLinkException
@@ -89,9 +67,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @return PostRenderer
-     */
     public function createComponentPost(): PostRenderer
     {
         return $this->postRenderer;
@@ -99,9 +74,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param string|null $page
-     * @param string|null $lang
-     * @return array
      * @throws BadRequestException
      * @throws Nette\Application\AbortException
      * @throws Nette\InvalidStateException
@@ -152,7 +124,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param array $pageset
      * @throws Nette\Application\AbortException
      */
     private function redirectTo(array $pageset): void
@@ -165,10 +136,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param string|null $lang
-     * @return int|null
-     */
     private function getLangKey(?string $lang): ?int
     {
         if ($lang === 'cz') {
@@ -185,10 +152,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param string $default
-     * @return string
-     */
     private function determineLang(string $default = ''): string
     {
         $lang = $this->getBrowserLang($default);
@@ -207,10 +170,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param string $default
-     * @return string
-     */
     private function getBrowserLang(string $default = ''): string
     {
         $request = $this->getHttpRequest();
@@ -224,10 +183,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param string $default
-     * @return string
-     */
     private function getCookiesLang(string $default = ''): string
     {
         $cookie = $this->getHttpRequest()->getCookie(self::LANG_COOKIE);
@@ -235,9 +190,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @return string
-     */
     private function getDefaultLang(): string
     {
         return array_key_first(self::LANGS);
@@ -245,8 +197,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param string|null $keyUrl
-     * @return string
      * @throws PageNotFoundException
      */
     private function getPageKeyByUrl(?string $keyUrl): string
@@ -281,8 +231,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     /**
      * Return array of absolute URLs to Static::default presenter for all available langs
-     * @param string $pageKey
-     * @return array
      * @throws Nette\Application\UI\InvalidLinkException
      */
     private function getAllLangsLinks(string $pageKey): array
@@ -313,10 +261,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param string|null $lang
-     * @return bool
-     */
     private function isLangValid(?string $lang): bool
     {
         return array_key_exists($lang, self::LANGS);

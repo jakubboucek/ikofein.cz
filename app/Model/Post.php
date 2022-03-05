@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use DateTime;
 use Nette;
 use Nette\Caching;
+use Nette\Caching\IStorage;
+use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\User;
 
 class Post
 {
@@ -16,25 +20,12 @@ class Post
     private const VERSION_COLUMN = 'version';
 
 
-    /** @var Nette\Database\Context */
-    private $database;
-    /**
-     * @var Caching\Cache
-     */
-    private $cache;
-    /**
-     * @var Nette\Security\User
-     */
-    private $user;
+    private Context $database;
+    private Caching\Cache $cache;
+    private User $user;
 
 
-    /**
-     * Post constructor.
-     * @param Nette\Database\Context $database
-     * @param Caching\IStorage $storage
-     * @param Nette\Security\User $user
-     */
-    public function __construct(Nette\Database\Context $database, Caching\IStorage $storage, Nette\Security\User $user)
+    public function __construct(Context $database, IStorage $storage, User $user)
     {
         $this->database = $database;
         $this->cache = new Caching\Cache($storage, 'post');
@@ -42,12 +33,6 @@ class Post
     }
 
 
-    /**
-     * @param string $key
-     * @param bool $publishedOnly
-     * @param string $version
-     * @return array|null
-     */
     public function tryFindPostByKey(string $key, bool $publishedOnly = false, string $version = self::CURRENT): ?array
     {
         try {
@@ -59,10 +44,6 @@ class Post
 
 
     /**
-     * @param string $key
-     * @param bool $publishedOnly
-     * @param string $version
-     * @return array
      * @throws PostNotFoundException
      */
     public function getPostByKey(string $key, bool $publishedOnly = false, string $version = self::CURRENT): array
@@ -86,11 +67,6 @@ class Post
     }
 
 
-    /**
-     * @param bool $publishedOnly
-     * @param string $version
-     * @return array
-     */
     public function getPosts(bool $publishedOnly = false, string $version = self::CURRENT): array
     {
         $selection = $this->database->table(self::TABLE_NAME)
@@ -113,17 +89,12 @@ class Post
     }
 
 
-    /**
-     * @param string $key
-     * @param array $data
-     * @return array
-     */
     public function save(string $key, array $data): array
     {
         $data = [
                 'version' => self::CURRENT,
                 'hash' => $this->getHash(),
-                'created_at' => new \DateTime(),
+                'created_at' => new DateTime(),
                 'created_by' => $this->user->getId(),
             ] + $data;
 
@@ -138,7 +109,7 @@ class Post
             ->where(self::VERSION_COLUMN, self::CURRENT)
             ->fetch()->toArray();
 
-        $current['version'] = (new \DateTime)->format(\DateTime::ATOM);
+        $current['version'] = (new DateTime)->format(DateTime::ATOM);
 
         $this->database->table(self::TABLE_NAME)
             ->insert($current);
@@ -149,19 +120,12 @@ class Post
     }
 
 
-    /**
-     * @return string
-     */
     private function getHash(): string
     {
         return Nette\Utils\Random::generate(16);
     }
 
 
-    /**
-     * @param ActiveRow $row
-     * @return array
-     */
     private function preparePost(ActiveRow $row): array
     {
         $post = $row->toArray();
@@ -176,10 +140,6 @@ class Post
     }
 
 
-    /**
-     * @param array $post
-     * @return bool
-     */
     public function isPublished(array $post): bool
     {
         if (empty($post['published_from'])) {
@@ -194,26 +154,18 @@ class Post
     }
 
 
-    /**
-     * @param array $post
-     * @return bool
-     */
     public function isPlanned(array $post): bool
     {
-        $current = new \DateTime();
+        $current = new DateTime();
 
         return (bool)$post['published_from'] &&
             $post['published_from'] > $current;
     }
 
 
-    /**
-     * @param array $post
-     * @return bool
-     */
     public function isExpired(array $post): bool
     {
-        $current = new \DateTime();
+        $current = new DateTime();
 
         return (bool)$post['published_to'] &&
             $post['published_to'] < $current;
