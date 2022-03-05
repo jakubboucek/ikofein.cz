@@ -79,7 +79,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function renderChangePassword(string $token): void
     {
         try {
-            $this->getUserActiveRowFromToken($token)->toArray();
+            $this->getUserActiveRowFromToken($token);
 
             /** @var UI\Form $passwordForm */
             $passwordForm = $this['setPasswordForm'];
@@ -102,6 +102,20 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $this->redirect(':Static:');
     }
 
+    public function actionCancelReset(string $token): void
+    {
+        try {
+            $user = $this->getUserActiveRowFromToken($token);
+            $this->userManager->stopResetPassword($user->email);
+        } catch (SignResetPasswordTokenException $e) {
+            // User doesn't exists, just fake response
+            /** @noinspection PhpUnhandledExceptionInspection */
+            usleep(random_int(10_000, 200_000));
+        }
+
+        $this->flashMessage('Proces pro reset hesla byl zrušen, odkaz v e-mailu je nyní neplatný.', 'success');
+        $this->redirect('Dashboard:');
+    }
 
     public function createComponentSignInForm(): UI\Form
     {
@@ -176,7 +190,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $email = $values['email'];
 
         try {
-            $token = $this->userManager->startReset($email);
+            $token = $this->userManager->startResetPassword($email);
             $jwt = $this->jwt->encode($email, $token, '+1 hour', $this->getResetPasswordAudience());
             $this->sendChangeNotification($email, $jwt);
         } catch (UserNotFoundException $e) {
@@ -236,6 +250,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $email = $user->email;
         $password = $values['password'];
         $this->userManager->setPassword($email, $password);
+        $this->userManager->stopResetPassword($email);
 
         $this->flashMessage('Heslo bylo změněno', 'success');
         $this->redirect('Sign:in');
@@ -251,9 +266,15 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $latte = new Latte\Engine;
         $mail = new Mail\Message;
 
+        $abuseLink = (new Nette\Http\UrlImmutable('mailto:pan@jakubboucek.cz'))
+            ->withQueryParameter('subject','Bounce: Remove unwanted notifications (ikofein.cz)')
+            ->withQueryParameter('body','Dostávám e-maily [ikofein.cz/admin/sign/resetPessword], žádám o zrušení!');
+
         $params = [
             'title' => "Reset hesla k webu ikofein.cz",
-            'link' => $this->link('//changePassword', ['token' => $token]),
+            'resetLink' => $this->link('//changePassword', ['token' => $token]),
+            'cancelLink' => $this->link('//cancelReset', ['token' => $token]),
+            'abuseLink' => $abuseLink,
         ];
 
         $mail->setFrom('no-reply@ikofein.cz', 'Kofein automat')
@@ -282,13 +303,16 @@ class SignPresenter extends Nette\Application\UI\Presenter
             );
         }
 
+        $email = $tokenData['subject'];
+        $token = $tokenData['value'];
+
         try {
-            $user = $this->userManager->getUserByEmail($tokenData['subject']);
+            $user = $this->userManager->getUserByEmail($email);
         } catch (UserNotFoundException $e) {
             throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán', 0);
         }
 
-        if (hash_equals($user['reset_hash'], $tokenData['value']) === false) {
+        if ($this->userManager->verifyResetPasswordToken($email, $token)) {
             throw new SignResetPasswordTokenException(
                 'Odkaz na reset hesla byl zneplatněn, zkuste jej poslat znovu.',
                 0

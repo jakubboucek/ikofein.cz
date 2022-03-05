@@ -93,27 +93,42 @@ class UserManager implements Nette\Security\IAuthenticator
     /**
      * @throws UserNotFoundException
      */
-    public function startReset(string $email): string
+    public function startResetPassword(string $email): string
     {
         $row = $this->getUserByEmail($email);
 
         $token = Random::generate(16);
 
+        $hash = base64_encode(hash('sha256', $token, true));
+
         $row->update([
-            self::COLUMN_RESET_TOKEN => $token,
+            self::COLUMN_RESET_TOKEN => $hash,
         ]);
 
         return $token;
     }
 
 
-    public function stopReset(string $email): void
+    public function stopResetPassword(string $email): void
     {
         $row = $this->getUserByEmail($email);
 
         $row->update([
             self::COLUMN_RESET_TOKEN => null,
         ]);
+    }
+
+    public function verifyResetPasswordToken(string $email, string $token): bool
+    {
+        $row = $this->getUserByEmail($email);
+
+        if($row['reset_hash'] === null) {
+            return false;
+        }
+
+        $hash = base64_encode(hash('sha256', $token, true));
+
+        return hash_equals($row['reset_hash'], $hash);
     }
 
 
