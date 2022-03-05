@@ -6,7 +6,7 @@
 	"require": {
 		"php": ">= 7.4",
 		"aws/aws-sdk-php": "^3.212",
-		"defuse/php-encryption": "^2.3",
+		"firebase/php-jwt": "^6.0",
 		"latte/latte": "^2.11",
 		"nette/application": "^3.1",
 		"nette/bootstrap": "^3.1",

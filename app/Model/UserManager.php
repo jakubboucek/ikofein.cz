@@ -97,13 +97,13 @@ class UserManager implements Nette\Security\IAuthenticator
     {
         $row = $this->getUserByEmail($email);
 
-        $hash = Random::generate(16);
+        $token = Random::generate(16);
 
         $row->update([
-            self::COLUMN_RESET_TOKEN => $hash,
+            self::COLUMN_RESET_TOKEN => $token,
         ]);
 
-        return $hash;
+        return $token;
     }
 
 

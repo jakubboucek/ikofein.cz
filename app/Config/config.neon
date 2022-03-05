@@ -1,6 +1,6 @@
 parameters:
-    crypto:
-        stateKey: {put-here-state-key}
+    jwt:
+        base64-key: {put-here-key}
 
 application:
     errorPresenter: Error
@@ -54,7 +54,7 @@ services:
     - App\Model\Post
     - App\Model\WebDir(%wwwDir%)
     mail.mailer: JakubBoucek\Aws\SesMailer
-    crypto: App\Crypto(%crypto.stateKey%)
+    - App\Model\Jwt\Jwt(%jwt.base64-key%)
     postRenderer: App\Component\PostRenderer
     router: App\Router\RouterFactory::createRouter
     authenticator: App\Model\UserManager

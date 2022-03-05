@@ -4,37 +4,37 @@ declare(strict_types=1);
 
 namespace App\AdminModule\Presenters;
 
-use App\Crypto;
-use App\CryptoException;
 use App\Forms\BootstrapizeForm;
+use App\Model\Jwt\Jwt;
+use App\Model\Jwt\JwtException;
 use App\Model\UserManager;
 use App\Model\UserNotFoundException;
-use DateTime;
-use DateTimeImmutable;
 use JakubBoucek\Aws\SesMailer;
 use Latte;
 use Nette;
 use Nette\Application\UI;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\TextInput;
 use Nette\Mail;
 use Nette\Security\Identity;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Random;
 
 class SignPresenter extends Nette\Application\UI\Presenter
 {
+    private const RESET_PASSWORD_AUDIENCE = 'reset-password';
+
     /** @persistent */
     public ?string $backlink;
     private UserManager $userManager;
-    private Crypto $crypto;
+    private Jwt $jwt;
     private SesMailer $mailer;
 
 
-    public function __construct(UserManager $userManager, Crypto $crypto, SesMailer $mailer)
+    public function __construct(UserManager $userManager, Jwt $jwt, SesMailer $mailer)
     {
         parent::__construct();
         $this->userManager = $userManager;
-        $this->crypto = $crypto;
+        $this->jwt = $jwt;
         $this->mailer = $mailer;
     }
 
@@ -46,7 +46,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function renderIn(): void
     {
         if ($this->getUser()->isLoggedIn()) {
-            if($this->backlink) {
+            if ($this->backlink) {
                 $this->restoreRequest($this->backlink);
             }
             $this->redirect('Dashboard:');
@@ -166,7 +166,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @throws CryptoException
      * @throws Nette\Application\AbortException
      * @throws Nette\InvalidArgumentException
      * @throws UI\InvalidLinkException
@@ -177,26 +176,20 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $email = $values['email'];
 
         try {
-            $hash = $this->userManager->startReset($email);
-            $key = strtoupper(substr($hash, 0, 6));
-            $plainData = [
-                'key' => $key,
-                'hash' => $hash,
-                'email' => $email,
-                'expire' => (new DateTime('+ 1 hour'))->format(DateTime::ATOM),
-            ];
-            $token = $this->crypto->encryptArray($plainData);
-            $this->sendChangeNotification($email, $key, $token);
+            $token = $this->userManager->startReset($email);
+            $jwt = $this->jwt->encode($email, $token, '+1 hour', $this->getResetPasswordAudience());
+            $this->sendChangeNotification($email, $jwt);
         } catch (UserNotFoundException $e) {
-            // Not exists user - fake hash
-            $key = strtoupper(Random::generate(6));
+            // User doesn't exists, just fake response
+            /** @noinspection PhpUnhandledExceptionInspection */
+            usleep(random_int(10_000, 200_000));
         }
 
         $this->flashMessage(
-            "Reset hesla byl zahájen s označením: „${key}“. Pokud Vámi zadaný e-mail" .
+            'Proces pro reset hesla byl zahájen. Pokud Vámi zadaný e-mail' .
             ' existuje v databázi, byla na něj právě odeslána zpráva s pokyny pro dokončení procesu. Všechny dříve' .
-            ' odeslané žádosti o reset hesla jsou tímto okamžikem zneplatněny, funkční bude pouze e-mail s označením:' .
-            " „${key}“. Žádost je platná 1 hodinu.",
+            ' odeslané žádosti o reset hesla jsou tímto okamžikem zneplatněny.' .
+            ' Žádost je platná 1 hodinu.',
             'success'
         );
         $this->redirect('this');
@@ -252,16 +245,15 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws UI\InvalidLinkException
      */
-    private function sendChangeNotification(string $email, string $key, string $token): void
+    private function sendChangeNotification(string $email, string $token): void
     {
         $templateFile = __DIR__ . '/templates/Sign/resetMail.latte';
         $latte = new Latte\Engine;
         $mail = new Mail\Message;
 
         $params = [
-            'title' => "Reset hesla k webu ikofein.cz ($key)",
+            'title' => "Reset hesla k webu ikofein.cz",
             'link' => $this->link('//changePassword', ['token' => $token]),
-            'key' => $key,
         ];
 
         $mail->setFrom('no-reply@ikofein.cz', 'Kofein automat')
@@ -275,14 +267,14 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param string $token
-     * @return bool|mixed|Nette\Database\Table\IRow
+     * @return ActiveRow
      * @throws SignResetPasswordTokenException
      */
-    private function getUserActiveRowFromToken(string $token)
+    private function getUserActiveRowFromToken(string $token): ActiveRow
     {
         try {
-            $plainData = $this->crypto->decryptArray($token);
-        } catch (CryptoException $e) {
+            $tokenData = $this->jwt->decode($token, $this->getResetPasswordAudience());
+        } catch (JwtException $e) {
             throw new SignResetPasswordTokenException(
                 'Odkaz na reset hesla je poškozený, zkuste jej poslat znovu.',
                 0,
@@ -290,22 +282,13 @@ class SignPresenter extends Nette\Application\UI\Presenter
             );
         }
 
-        $expire = new DateTimeImmutable($plainData['expire']);
-        $now = new DateTimeImmutable();
-        if ($expire < $now) {
-            throw new SignResetPasswordTokenException(
-                'Odkaz na reset hesla již expiroval, zkuste jej poslat znovu.',
-                0
-            );
-        }
-
         try {
-            $user = $this->userManager->getUserByEmail($plainData['email']);
+            $user = $this->userManager->getUserByEmail($tokenData['subject']);
         } catch (UserNotFoundException $e) {
             throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán', 0);
         }
 
-        if ($user['reset_hash'] !== $plainData['hash']) {
+        if (hash_equals($user['reset_hash'], $tokenData['value']) === false) {
             throw new SignResetPasswordTokenException(
                 'Odkaz na reset hesla byl zneplatněn, zkuste jej poslat znovu.',
                 0
@@ -313,5 +296,10 @@ class SignPresenter extends Nette\Application\UI\Presenter
         }
 
         return $user;
+    }
+
+    private function getResetPasswordAudience(): string
+    {
+        return Jwt::ISSUER_ID . '/' . self::RESET_PASSWORD_AUDIENCE;
     }
 }
