@@ -26,39 +26,7 @@ class RouterFactory
             ]
         );
 
-        $router->addRoute(
-            'home<? \.htm|\.php|>',
-            [
-                'presenter' => 'Static',
-                'action' => 'default',
-                'lang' => 'en',
-            ],
-            Route::ONE_WAY
-        );
-
-        $router->addRoute(
-            'index<? \.htm|\.php|>',
-            [
-                'presenter' => 'Static',
-                'action' => 'default',
-                'page' => null,
-                'lang' => 'cs',
-            ],
-            Route::ONE_WAY
-        );
-
-        $router->addRoute(
-            'uvod<? \.htm|\.php|>',
-            [
-                'presenter' => 'Static',
-                'action' => 'default',
-                'page' => null,
-                'lang' => 'cs',
-            ],
-            Route::ONE_WAY
-        );
-
-        $router->addRoute('[<lang (cs|cz|en)>/][<page [a-z]+>]<? \.htm|\.php|>', 'Static:default');
+        $router->addRoute('[<lang (cs|cz|en)>/][<page [a-z]+>]', 'Static:default');
 
         return $router;
     }
