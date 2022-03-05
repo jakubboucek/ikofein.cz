@@ -1,23 +1,26 @@
 version: '3'
 services:
-  web:
-    image: jakubboucek/lamp-devstack-php
-    volumes:
-      - ".:/var/www/html:cached"
-    ports:
-      - "127.0.0.1:8080:80"
-    environment:
-      - NETTE_DEBUG=1
-    restart: always
-    depends_on:
-      - mysqldb
-  mysqldb:
-    image: jakubboucek/lamp-devstack-mysql
-    restart: always
-    environment:
-      - MYSQL_DATABASE=default
-      - MYSQL_ROOT_PASSWORD=devstack
-    ports:
-      - "127.0.0.1:33060:3306"
-    volumes:
-      - "./docker/mysql/data:/var/lib/mysql"
+    web:
+        image: jakubboucek/lamp-devstack-php:7.4-debug
+        environment:
+            APP_DEBUG: 1
+            TZ: Europe/Prague
+            PHP_IDE_CONFIG: "serverName=docker-cli"
+            XDEBUG_CONFIG: "client_host=host.docker.internal"
+        ports:
+            - "127.0.0.1:8080:80"
+        restart: always
+        volumes:
+            - ".:/var/www/html"
+
+    mysqldb:
+        image: jakubboucek/lamp-devstack-mysql
+        environment:
+            MARIADB_DATABASE: default
+            MARIADB_ROOT_PASSWORD: devstack
+            TZ: Europe/Prague
+        ports:
+            - "127.0.0.1:33060:3306"
+        restart: always
+        volumes:
+            - "./docker/mysql/data:/var/lib/mysql"
