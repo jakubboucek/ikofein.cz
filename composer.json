@@ -1,25 +1,25 @@
 {
 	"name": "jakubboucek/ikofein.cz",
-	"description": "Kofeint restaurant",
+	"description": "Kofein restaurant",
 	"type": "project",
 	"license": ["MIT"],
 	"require": {
 		"php": ">= 7.4",
-		"nette/application": "^3.0.6",
-		"nette/bootstrap": "^3.0",
-		"nette/caching": "^3.0",
-		"nette/database": "^3.0",
+		"aws/aws-sdk-php": "^3.212",
+		"defuse/php-encryption": "^2.3",
+		"latte/latte": "^2.11",
+		"nette/application": "^3.1",
+		"nette/bootstrap": "^3.1",
+		"nette/caching": "^3.1",
+		"nette/database": "^3.1",
 		"nette/di": "^3.0",
-		"nette/forms": "^3.0",
-		"nette/http": "^3.0",
-		"nette/robot-loader": "^3.2",
-		"nette/security": "^3.0",
-		"nette/utils": "^3.0",
-		"latte/latte": "^2.5",
-		"tracy/tracy": "^2.6",
-		"aws/aws-sdk-php": "^3.91",
-		"defuse/php-encryption": "^2.2",
-		"nette/mail": "^3.0"
+		"nette/forms": "^3.1",
+		"nette/http": "^3.1",
+		"nette/mail": "^3.1",
+		"nette/robot-loader": "^3.4",
+		"nette/security": "^3.1",
+		"nette/utils": "^3.2",
+		"tracy/tracy": "^2.9"
 	},
 	"require-dev": {
 		"jakubboucek/composer-consistency": "^2.0"
@@ -36,7 +36,8 @@
 		]
 	},
 	"config": {
-		"optimize-autoloader": true
+		"optimize-autoloader": true,
+		"sort-packages": true
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true
