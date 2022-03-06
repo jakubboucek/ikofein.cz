@@ -22,6 +22,9 @@ database:
     options:
         lazy: TRUE
 
+di:
+    debugger: false
+
 extensions:
     aws: JakubBoucek\Aws\DI\AwsExtension
 
