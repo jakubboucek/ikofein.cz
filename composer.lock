@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d78221ea321ac4f2223cd9f2dd05523b",
+    "content-hash": "99589e78ae346f1f5ffa9253dff59332",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2392,62 +2392,7 @@
             "time": "2022-02-15T16:38:30+00:00"
         }
     ],
-    "packages-dev": [
-        {
-            "name": "jakubboucek/composer-consistency",
-            "version": "v2.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jakubboucek/php-composer-consistency.git",
-                "reference": "3cd785e135043e14d4515344848d78ca6ed1619e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jakubboucek/php-composer-consistency/zipball/3cd785e135043e14d4515344848d78ca6ed1619e",
-                "reference": "3cd785e135043e14d4515344848d78ca6ed1619e",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.3"
-            },
-            "replace": {
-                "jakubboucek/composer-vendor-checker": "self.version"
-            },
-            "require-dev": {
-                "nette/tester": "^2.3",
-                "phpstan/phpstan": "^0.12.48",
-                "symplify/easy-coding-standard": "^8.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "JakubBoucek\\ComposerConsistency\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jakub Bouček",
-                    "email": "pan@jakubboucek.cz"
-                }
-            ],
-            "description": "Checks if the vendor/ directory is consistent with the project's composer.lock (direct API, no CLI)",
-            "support": {
-                "issues": "https://github.com/jakubboucek/php-composer-consistency/issues",
-                "source": "https://github.com/jakubboucek/php-composer-consistency/tree/v2.0.1"
-            },
-            "time": "2021-05-02T16:40:44+00:00"
-        }
-    ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": [],

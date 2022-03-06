@@ -22,9 +22,6 @@
 		"redbitcz/debug-mode-enabler": "^3.2",
 		"tracy/tracy": "^2.9"
 	},
-	"require-dev": {
-		"jakubboucek/composer-consistency": "^2.0"
-	},
 	"autoload": {
 		"classmap": [
 			"app/Bootstrap.php"
