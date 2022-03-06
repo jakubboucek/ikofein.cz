@@ -6,6 +6,7 @@
 	<title>{ifset #h1}{include h1} - {/ifset}
 		{if $lang=='cs'}Kofein restaurant na pražských Vinohradech{/if}
 		{if $lang=='en'}Kofein restaurant in Vinohrady - Prague{/if}
+		{if $lang=='uk'}Kofein ресторан у Виноградах – Прага{/if}
 	</title>
 	<meta name="author" content="Solar flare s.r.o.">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,8 +35,9 @@
 				<img src="{$basePath}/img/layout/header-logo-print.png" alt="Kofein restaurant">
 			</a>
 			<nav n:ifset="$altLangs" class="language-switcher">
-				{if $lang=='cs'}<a href="{$basePath}{$altLangs['en']}"><img src="{$basePath}/img/layout/header-flag.en.png" alt="English" title="English"></a>{/if}
-				{if $lang=='en'}<a href="{$basePath}{$altLangs['cs']}"><img src="{$basePath}/img/layout/header-flag.cs.png" alt="Česky" title="Česky"></a>{/if}
+				{if $lang!=='en'}<a href="{$basePath}{$altLangs['en']}">🇺🇸</a>{/if}
+				{if $lang!=='cs'}<a href="{$basePath}{$altLangs['cs']}">🇨🇿</a>{/if}
+				{* {if $lang!=='uk'}<a href="{$basePath}{$altLangs['uk']}">🇺🇦</a>{/if} *}
 			</nav>
 		</div>
 	</header>
@@ -57,6 +59,14 @@
 			<li><a class="beverages" href="{$basePath}/en/beverages"><span>Beverages</span></a></li>
 			<li><a class="gallery" href="{$basePath}/en/gallery"><span>Gallery</span></a></li>
 			<li><a class="contact" href="{$basePath}/en/contact"><span>Contact</span></a></li>
+		{/if}
+		{if $lang=='uk'}
+			<li><a class="home" href="{$basePath}/uk/"><span>Додому</span></a></li>
+			<li><a class="lunch" href="{$basePath}/uk/обід"><span>Обід</span></a></li>
+			<li><a class="dinner" href="{$basePath}/uk/вечеря"><span>Вечеря</span></a></li>
+			<li><a class="beverages" href="{$basePath}/uk/напої"><span>напої</span></a></li>
+			<li><a class="gallery" href="{$basePath}/uk/галерея"><span>Галерея</span></a></li>
+			<li><a class="contact" href="{$basePath}/uk/контакт"><span>Контакти</span></a></li>
 		{/if}
 		</ul>
 	</nav>

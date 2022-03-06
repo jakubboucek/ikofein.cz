@@ -90,6 +90,7 @@
             color: white;
             text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
             transition: text-shadow 0.3s ease;
+
             span {
               position: relative;
               transition: top 0.1s ease,
@@ -100,6 +101,7 @@
 
             &:hover, &:focus, &:active {
               text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.6);
+
               span {
                 top: -2px;
                 left: -2px;
@@ -143,9 +145,11 @@
 
         aside.illustration {
           text-align: center;
+
           img {
             max-width: 100%;
           }
+
           @media (max-height: 580px) {
             &.bigscreen {
               display: none;
@@ -162,12 +166,14 @@
       background: #7b8427 url('/img/layout/footer-bg.png') no-repeat top center;
       width: 100%;
       padding: 20px 0;
+
       div {
         @media (min-width: @page-width) {
           width: @page-width;
         }
         color: #c8d44c;
         margin: 0 auto;
+
         a {
           color: #c8d44c;
           font-weight: normal;
@@ -251,18 +257,23 @@
     width: 100%;
     margin: 0;
     padding-left: 15px;
+
     tr:nth-child(odd) {
       background-color: #d2de61
     }
+
     tr:nth-child(even) {
       background-color: #dfe888
     }
+
     tr td {
       padding: 3px 10px;
+
       &:nth-child(2) {
         width: 120px;
         white-space: nowrap;
       }
+
       small {
         color: #4d531c;
         font-size: xx-small;
@@ -291,17 +302,26 @@
 
   .language-switcher {
     border: 0;
-    left: 9%;
+    left: 6%;
     position: absolute;
-    bottom: 10px;
-    width: percentage(55/580);
-    max-width: 55px;
-    min-width: 40px;
+    bottom: 15px;
+    font-size: 2rem;
+    @media (min-width: 450px) and (max-resolution: 2dppx) {
+      font-size: 3rem;
+      left: 9%;
+    }
+    @media (min-width: 640px) {
+      font-size: 3rem;
+      left: 9%;
+    }
+
+    a {
+      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+      display: block;
+      line-height: 0.9;
+    }
   }
 
-  .language-switcher img {
-    width: 100%;
-  }
 
   .mn-posts {
     h3 {

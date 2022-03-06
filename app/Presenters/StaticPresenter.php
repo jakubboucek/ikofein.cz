@@ -17,16 +17,17 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     private const LANGS = [
         'en' => 'en-US',
-        'cs' => 'cs-CZ'
+        'cs' => 'cs-CZ',
+        'uk' => 'uk-UA',
     ];
 
     private const PAGE_MAP = [
-        'homepage' => ['homepage', 'homepage'],
-        'lunch' => ['lunch', 'poledne'],
-        'dinner' => ['dinner', 'vecer'],
-        'beverages' => ['beverages', 'napoje'],
-        'gallery' => ['gallery', 'galerie'],
-        'contact' => ['contact', 'kontakt'],
+        'homepage' => ['homepage', 'homepage', 'homepage'],
+        'lunch' => ['lunch', 'poledne', 'обід'],
+        'dinner' => ['dinner', 'vecer', 'вечеря'],
+        'beverages' => ['beverages', 'napoje', 'напої'],
+        'gallery' => ['gallery', 'galerie', 'галерея'],
+        'contact' => ['contact', 'kontakt', 'контакт'],
     ];
 
     private PostRenderer $postRenderer;
