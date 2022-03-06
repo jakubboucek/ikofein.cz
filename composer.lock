@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ded45f530b782b27125adfda95fc72f0",
+    "content-hash": "d78221ea321ac4f2223cd9f2dd05523b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2108,6 +2108,64 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "redbitcz/debug-mode-enabler",
+            "version": "v3.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/redbitcz/php-debug-mode-enabler.git",
+                "reference": "78f325c05edea76e723b466dec183505539be65b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/redbitcz/php-debug-mode-enabler/zipball/78f325c05edea76e723b466dec183505539be65b",
+                "reference": "78f325c05edea76e723b466dec183505539be65b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "nette/utils": "^3.0",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "firebase/php-jwt": "^5.0",
+                "nette/tester": "^2.4",
+                "phpstan/phpstan": "^0.12.98"
+            },
+            "suggest": {
+                "firebase/php-jwt": "Optional, required for SignedUrl plugin"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Redbitcz\\DebugMode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Redbit s.r.o.",
+                    "homepage": "https://www.redbit.cz/"
+                },
+                {
+                    "name": "Jakub Bouček",
+                    "homepage": "https://www.jakub-boucek.cz/"
+                }
+            ],
+            "description": "Debug mode enabler - safe and clean way to manage Debug Mode in your App",
+            "homepage": "https://github.com/redbitcz/php-debug-mode-enabler",
+            "keywords": [
+                "debug"
+            ],
+            "support": {
+                "issues": "https://github.com/redbitcz/php-debug-mode-enabler/issues",
+                "source": "https://github.com/redbitcz/php-debug-mode-enabler/tree/v3.2.2"
+            },
+            "time": "2022-03-06T00:31:31+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",

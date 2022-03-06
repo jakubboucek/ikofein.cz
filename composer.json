@@ -19,6 +19,7 @@
 		"nette/robot-loader": "^3.4",
 		"nette/security": "^3.1",
 		"nette/utils": "^3.2",
+		"redbitcz/debug-mode-enabler": "^3.2",
 		"tracy/tracy": "^2.9"
 	},
 	"require-dev": {

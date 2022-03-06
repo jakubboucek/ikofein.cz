@@ -8,6 +8,7 @@ use JakubBoucek\ComposerConsistency\ComposerConsistency;
 use Nette\Configurator;
 use Nette\InvalidArgumentException;
 use Nette\NotSupportedException;
+use Redbitcz\DebugMode\Detector;
 use RuntimeException;
 use Tracy\Debugger;
 
@@ -18,7 +19,7 @@ class Bootstrap
     {
         $configurator = new Configurator;
 
-        $configurator->setDebugMode((int)getenv('NETTE_DEBUG') === 1 ? true : []);
+        $configurator->setDebugMode(Detector::detect());
         $configurator->enableDebugger(__DIR__ . '/../log', 'pan@jakubboucek.cz');
 
         self::checkVendorConsistency();
