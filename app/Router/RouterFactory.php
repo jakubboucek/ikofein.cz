@@ -26,7 +26,7 @@ class RouterFactory
             ]
         );
 
-        $router->addRoute('[<lang (cs|cz|en)>/][<page [a-z]+>]', 'Static:default');
+        $router->addRoute('[<lang [a-z]{2}>/][<page=homepage>]', 'Static:default');
 
         return $router;
     }

@@ -9,6 +9,7 @@ use App\Model\PageNotFoundException;
 use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
+use OutOfRangeException;
 
 class StaticPresenter extends Nette\Application\UI\Presenter
 {
@@ -20,7 +21,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     ];
 
     private const PAGE_MAP = [
-        'homepage' => [-1 => ''],
+        'homepage' => ['homepage', 'homepage'],
         'lunch' => ['lunch', 'poledne'],
         'dinner' => ['dinner', 'vecer'],
         'beverages' => ['beverages', 'napoje'],
@@ -49,13 +50,16 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @throws BadRequestException
-     * @throws Nette\Application\AbortException
+     * @throws OutOfRangeException
      * @throws Nette\Application\UI\InvalidLinkException
-     * @throws Nette\InvalidStateException
      */
-    public function renderDefault(?string $page = null, ?string $lang = null): void
+    public function renderDefault(string $page = null, ?string $lang = null): void
     {
-        [$pageKey, $realLang] = $this->match($page, $lang);
+        try {
+            [$pageKey, $realLang] = $this->match($page, $lang);
+        } catch (PageNotFoundException $e) {
+            throw new BadRequestException("Page '$lang/$page' does not found", 0, $e);
+        }
 
         $this->template->lang = $realLang;
         $this->template->title = $pageKey;
@@ -74,49 +78,55 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @throws BadRequestException
-     * @throws Nette\Application\AbortException
-     * @throws Nette\InvalidStateException
+     * @throws PageNotFoundException|OutOfRangeException
      */
-    private function match(?string $page, ?string $lang): array
+    private function match(string $page, ?string $lang): array
     {
-        //homepage - redirect to defined lang variant
-        if ($page === null && $lang === null) {
-            $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
-            $this->redirectTo([
-                '',
-                $this->determineLang()
-            ]);
+        $requestPage = $page;
+        $requestLang = $lang;
+
+
+        // parse page
+        $pageKey = $this->getPageKeyByUrl($page);
+
+
+        // lang not defined - determine it
+        if ($lang === null) {
+            // try detect it by cookie
+            if (($lang = $this->getCookiesLang()) === null) {
+                // otherwise detect it by browser
+                $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
+                $lang = $this->getBrowserLang($this->getDefaultLang());
+            }
+
+            // If detected lang invalid (or empty), use default
+            // prevent mystery 404 by invalid HTTP header or cookie
+            if ($this->isLangValid($lang) === false) {
+                $lang = $this->getDefaultLang();
+            }
         }
 
+        $langKey = $this->getLangKey($lang);
 
-        //get clean lang variant
-        $safeLang = $this->isLangValid($lang) ? $lang : $this->determineLang();
-
-
-        //parse page
-        try {
-            $pageKey = $this->getPageKeyByUrl($page);
-        } catch (PageNotFoundException $e) {
-            throw new BadRequestException("Unknown page \"$lang/$page\"", Nette\Http\IResponse::S404_NOT_FOUND);
+        if (isset(self::PAGE_MAP[$pageKey][$langKey]) === false) {
+            throw new OutOfRangeException("Unable to search PAGE_MAP[$pageKey][$langKey]");
         }
 
+        $page = self::PAGE_MAP[$pageKey][$langKey];
 
-        //get clean page
-        $langId = $this->getLangKey($safeLang);
-        if (isset(self::PAGE_MAP[$pageKey][$langId])) {      //lang url variant
-            $safePage = self::PAGE_MAP[$pageKey][$langId];
-        } elseif (isset(self::PAGE_MAP[$pageKey][-1])) {     //universal url variant
-            $safePage = self::PAGE_MAP[$pageKey][-1];
-        } else {
-            throw new Nette\InvalidStateException("In pageMap is missing page \"$lang/$page\"");
-        }
-
-        $page = $page ?? '';
+        $this->getHttpResponse()->setCookie(
+            self::LANG_COOKIE,
+            $lang,
+            '+1 month',
+            null,
+            null,
+            $this->getHttpRequest()->isSecured(),
+            true
+        );
 
         //check and fix canonical URL
-        if ($lang !== $safeLang || $page !== $safePage) {
-            $this->redirectTo([$safePage, $safeLang]);
+        if ($requestLang !== $lang || $requestPage !== $page) {
+            $this->redirectTo($page, $lang);
         }
 
         return [$pageKey, $lang];
@@ -126,67 +136,49 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    private function redirectTo(array $pageset): void
+    private function redirectTo(string $page, string $lang): void
     {
         $queryParameters = $this->getHttpRequest()->getQuery();
-        $this->redirect('default', $queryParameters + [
-                'lang' => $pageset[1],
-                'page' => $pageset[0],
-            ]);
+        $this->redirect(
+            'default',
+            $queryParameters + [
+                'lang' => $lang,
+                'page' => $page,
+            ]
+        );
     }
 
 
-    private function getLangKey(?string $lang): ?int
+    private function getLangKey(string $lang): int
     {
-        if ($lang === 'cz') {
-            $lang = 'cs';
-        }
-
-        $langKey = array_key_exists($lang, self::LANGS);
+        $langKey = array_search($lang, array_keys(self::LANGS), true);
 
         if ($langKey === false) {
-            return null;
+            throw new PageNotFoundException("Unknown lang '$lang' in LANGS");
         }
 
         return (int)$langKey;
     }
 
-
-    private function determineLang(string $default = ''): string
-    {
-        $lang = $this->getBrowserLang($default);
-        $lang = $this->getCookiesLang($lang);
-
-        if ($lang === 'cz') {
-            $lang = 'cs';
-        }
-
-        // If lang invalid (or empty), use default
-        if (!$this->isLangValid($lang)) {
-            $lang = $this->getDefaultLang();
-        }
-
-        return $lang;
-    }
-
-
-    private function getBrowserLang(string $default = ''): string
+    private function getBrowserLang(): ?string
     {
         $request = $this->getHttpRequest();
 
         if ($request instanceof Nette\Http\Request) {
-            $detectedLanguage = $request->detectLanguage(array_keys(self::LANGS));
-            return $detectedLanguage ?? $default;
+            return $request->detectLanguage(array_keys(self::LANGS));
         }
 
-        return substr($request->getHeader('Accept-Language') ?? $default, 0, 2);
+        if (($header = $request->getHeader('Accept-Language')) !== null) {
+            return substr($header, 0, 2);
+        }
+
+        return null;
     }
 
 
-    private function getCookiesLang(string $default = ''): string
+    private function getCookiesLang(): ?string
     {
-        $cookie = $this->getHttpRequest()->getCookie(self::LANG_COOKIE);
-        return $cookie ?? $default;
+        return $this->getHttpRequest()->getCookie(self::LANG_COOKIE);
     }
 
 
@@ -207,12 +199,12 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             return $reversedMap[$keyUrl];
         }
 
-        throw new PageNotFoundException("Unknown page $keyUrl in pageMap");
+        throw new PageNotFoundException("Unknown page '$keyUrl' in PAGE_MAP");
     }
 
 
     /**
-     * Return 1D array with simplified pair url=>key from $pageMap
+     * Return 1D array with simplified pair url=>key from PAGE_MAP
      * @return array
      */
     private function getReversedPageMap(): array
@@ -220,7 +212,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         $reversedMap = [];
 
         foreach (self::PAGE_MAP as $pageKey => $keyUrls) {
-            foreach ($keyUrls as $langId => $keyUrl) {
+            foreach ($keyUrls as $keyUrl) {
                 $reversedMap[$keyUrl] = $pageKey;
             }
         }
@@ -237,25 +229,14 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     {
         $keyUrls = self::PAGE_MAP[$pageKey];
         $links = [];
-        if (count($keyUrls) && key($keyUrls) === -1) {
-            $keyUrl = current($keyUrls);
-            foreach (self::LANGS as $lang => $fullLang) {
-                $url = $this->link('//default', [
-                    'lang' => $lang,
-                    'page' => $keyUrl,
-                ]);
-                $links[$lang] = $url;
-            }
-        } else {
-            $langKeys = array_keys(self::LANGS);
-            foreach ($keyUrls as $langId => $keyUrl) {
-                $lang = $langKeys[$langId];
-                $url = $this->link('//default', [
-                    'lang' => $lang,
-                    'page' => $keyUrl,
-                ]);
-                $links[$lang] = $url;
-            }
+        $langKeys = array_keys(self::LANGS);
+        foreach ($keyUrls as $langId => $keyUrl) {
+            $lang = $langKeys[$langId];
+            $url = $this->link('//default', [
+                'lang' => $lang,
+                'page' => $keyUrl,
+            ]);
+            $links[$lang] = $url;
         }
         return $links;
     }
