@@ -16,7 +16,7 @@ use Nette\Application\UI;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\TextInput;
 use Nette\Mail;
-use Nette\Security\Identity;
+use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
 
 class SignPresenter extends Nette\Application\UI\Presenter
@@ -60,7 +60,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function renderReset(): void
     {
         if ($this->getUser()->isLoggedIn()) {
-            /** @var Identity $identity */
+            /** @var SimpleIdentity $identity */
             $identity = $this->getUser()->getIdentity();
             $email = $identity->email;
 

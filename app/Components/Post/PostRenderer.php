@@ -8,18 +8,19 @@ use App\Model;
 use Nette\Application\ApplicationException;
 use Nette\Application\UI\Control;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Caching;
+use Nette\Caching\Cache;
+use Nette\Caching\Storage;
 
 class PostRenderer extends Control
 {
     private Model\Post $postModel;
-    private Caching\Cache $cache;
+    private Cache $cache;
 
 
-    public function __construct(Model\Post $postModel, Caching\IStorage $storage)
+    public function __construct(Model\Post $postModel, Storage $storage)
     {
         $this->postModel = $postModel;
-        $this->cache = new Caching\Cache($storage, 'post');
+        $this->cache = new Cache($storage, 'post');
     }
 
 
@@ -49,9 +50,9 @@ class PostRenderer extends Control
 
     private function getPost(string $key): array
     {
-        return $this->cache->load($key, function (& $dependencies) use ($key) {
+        return $this->cache->load($key, function (&$dependencies) use ($key) {
             $dependencies = [
-                Caching\Cache::EXPIRE => '20 minutes',
+                Cache::EXPIRE => '20 minutes',
             ];
 
             $post = $this->postModel->tryFindPostByKey($key, true);

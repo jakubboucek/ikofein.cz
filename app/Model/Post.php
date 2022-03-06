@@ -6,9 +6,9 @@ namespace App\Model;
 
 use DateTime;
 use Nette;
-use Nette\Caching;
-use Nette\Caching\IStorage;
-use Nette\Database\Context;
+use Nette\Caching\Cache;
+use Nette\Caching\Storage;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\User;
 
@@ -20,15 +20,15 @@ class Post
     private const VERSION_COLUMN = 'version';
 
 
-    private Context $database;
-    private Caching\Cache $cache;
+    private Explorer $database;
+    private Cache $cache;
     private User $user;
 
 
-    public function __construct(Context $database, IStorage $storage, User $user)
+    public function __construct(Explorer $database, Storage $storage, User $user)
     {
         $this->database = $database;
-        $this->cache = new Caching\Cache($storage, 'post');
+        $this->cache = new Cache($storage, 'post');
         $this->user = $user;
     }
 
