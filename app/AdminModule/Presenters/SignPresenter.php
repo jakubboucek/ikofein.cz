@@ -24,7 +24,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
     private const RESET_PASSWORD_AUDIENCE = 'reset-password';
 
     /** @persistent */
-    public ?string $backlink;
+    public ?string $backlink = null;
     private UserManager $userManager;
     private Jwt $jwt;
     private SesMailer $mailer;
@@ -70,6 +70,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
             $emailFiels = $resetForm['email'];
             $emailFiels->setDefaultValue($email);
         }
+
+        // Force start session before send content (need to protection)
+        $this->getSession()->start();
     }
 
 
@@ -267,8 +270,8 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $mail = new Mail\Message;
 
         $abuseLink = (new Nette\Http\UrlImmutable('mailto:pan@jakubboucek.cz'))
-            ->withQueryParameter('subject','Bounce: Remove unwanted notifications (ikofein.cz)')
-            ->withQueryParameter('body','Dostávám e-maily [ikofein.cz/admin/sign/resetPessword], žádám o zrušení!');
+            ->withQueryParameter('subject', 'Bounce: Remove unwanted notifications (ikofein.cz)')
+            ->withQueryParameter('body', 'Dostávám e-maily [ikofein.cz/admin/sign/resetPessword], žádám o zrušení!');
 
         $params = [
             'title' => "Reset hesla k webu ikofein.cz",
@@ -309,14 +312,11 @@ class SignPresenter extends Nette\Application\UI\Presenter
         try {
             $user = $this->userManager->getUserByEmail($email);
         } catch (UserNotFoundException $e) {
-            throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán', 0);
+            throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán');
         }
 
-        if ($this->userManager->verifyResetPasswordToken($email, $token)) {
-            throw new SignResetPasswordTokenException(
-                'Odkaz na reset hesla byl zneplatněn, zkuste jej poslat znovu.',
-                0
-            );
+        if ($this->userManager->verifyResetPasswordToken($email, $token) === false) {
+            throw new SignResetPasswordTokenException('Odkaz na reset hesla byl zneplatněn, zkuste jej poslat znovu.');
         }
 
         return $user;
