@@ -34,8 +34,8 @@
 				<img src="{$basePath}/img/layout/header-logo-print.png" alt="Kofein restaurant">
 			</a>
 			<nav n:ifset="$altLangs" class="language-switcher">
-				{if $lang=='cs'}<a href="{$basePath}{$altLangs['en']}"><img src="{$basePath}/img/layout/header-flag.en.png" alt="English" title="English"></a>{/if}
-				{if $lang=='en'}<a href="{$basePath}{$altLangs['cs']}"><img src="{$basePath}/img/layout/header-flag.cs.png" alt="Česky" title="Česky"></a>{/if}
+				{if $lang!=='en'}<a href="{$basePath}{$altLangs['en']}">🇺🇸</a>{/if}
+				{if $lang!=='cs'}<a href="{$basePath}{$altLangs['cs']}">🇨🇿</a>{/if}
 			</nav>
 		</div>
 	</header>
