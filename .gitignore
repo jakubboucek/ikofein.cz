@@ -1,5 +1,5 @@
+.docker/
 bower_components
-docker/
 local/*
 !local/Config/.gitignore
 log/*

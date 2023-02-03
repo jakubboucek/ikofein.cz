@@ -1,7 +1,7 @@
 version: '3'
 services:
     web:
-        image: jakubboucek/lamp-devstack-php:7.4-debug
+        image: jakubboucek/lamp-devstack-php:8.2-debug
         environment:
             APP_DEBUG: 1
             TZ: Europe/Prague
@@ -23,4 +23,4 @@ services:
             - "127.0.0.1:33060:3306"
         restart: always
         volumes:
-            - "./docker/mysql/data:/var/lib/mysql"
+            - "./.docker/mysql/data:/var/lib/mysql"
