@@ -1,8 +1,10 @@
 {
 	"name": "jakubboucek/ikofein.cz",
 	"description": "Kofein restaurant",
+	"license": [
+		"MIT"
+	],
 	"type": "project",
-	"license": ["MIT"],
 	"require": {
 		"php": ">= 7.4",
 		"aws/aws-sdk-php": "^3.212",
@@ -22,6 +24,8 @@
 		"redbitcz/debug-mode-enabler": "^3.2",
 		"tracy/tracy": "^2.9"
 	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"autoload": {
 		"classmap": [
 			"app/Bootstrap.php"
@@ -36,7 +40,5 @@
 	"config": {
 		"optimize-autoloader": true,
 		"sort-packages": true
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true
+	}
 }
