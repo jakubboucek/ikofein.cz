@@ -41,8 +41,6 @@ class AwsExtension extends Nette\DI\CompilerExtension
 
         $builder->addDefinition($this->prefix('sdk'))
             ->setFactory(\Aws\Sdk::class, [$this->config]);
-
-        $this->initialization->addBody('putenv(\'AWS_CSM_ENABLED=false\');');
     }
 
 }
