@@ -17,13 +17,13 @@ class UserManager implements Nette\Security\IAuthenticator
 {
     use Nette\SmartObject;
 
-    private const TABLE_NAME = 'user';
-    private const COLUMN_ID = 'id';
-    private const COLUMN_NAME = 'name';
-    private const COLUMN_EMAIL = 'email';
-    private const COLUMN_PASSWORD_HASH = 'password';
-    private const COLUMN_ROLE = 'role';
-    private const COLUMN_RESET_TOKEN = 'reset_hash';
+    private const string TABLE_NAME = 'user';
+    private const string COLUMN_ID = 'id';
+    private const string COLUMN_NAME = 'name';
+    private const string COLUMN_EMAIL = 'email';
+    private const string COLUMN_PASSWORD_HASH = 'password';
+    private const string COLUMN_ROLE = 'role';
+    private const string COLUMN_RESET_TOKEN = 'reset_hash';
 
     private Explorer $database;
     private Passwords $passwords;
@@ -46,7 +46,7 @@ class UserManager implements Nette\Security\IAuthenticator
 
         try {
             $row = $this->getUserByEmail($email);
-        } catch (UserNotFoundException $e) {
+        } catch (UserNotFoundException) {
             throw new AuthenticationException(
                 'The email is incorrect',
                 self::IDENTITY_NOT_FOUND

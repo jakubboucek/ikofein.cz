@@ -42,6 +42,7 @@ class SesMailer implements IMailer
      * @param Message $message
      * @return void
      */
+    #[\Override]
     public function send(Message $message): void
     {
         $tmp = clone $message;

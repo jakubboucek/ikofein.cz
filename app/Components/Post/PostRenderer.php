@@ -13,8 +13,8 @@ use Nette\Caching\Storage;
 
 class PostRenderer extends Control
 {
-    private Model\Post $postModel;
-    private Cache $cache;
+    private readonly Model\Post $postModel;
+    private readonly Cache $cache;
 
 
     public function __construct(Model\Post $postModel, Storage $storage)

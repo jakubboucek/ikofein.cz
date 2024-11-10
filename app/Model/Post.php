@@ -14,15 +14,15 @@ use Nette\Security\User;
 
 class Post
 {
-    private const CURRENT = 'current';
-    private const TABLE_NAME = 'post';
-    private const KEY_COLUMN = 'key';
-    private const VERSION_COLUMN = 'version';
+    private const string CURRENT = 'current';
+    private const string TABLE_NAME = 'post';
+    private const string KEY_COLUMN = 'key';
+    private const string VERSION_COLUMN = 'version';
 
 
-    private Explorer $database;
-    private Cache $cache;
-    private User $user;
+    private readonly Explorer $database;
+    private readonly Cache $cache;
+    private readonly User $user;
 
 
     public function __construct(Explorer $database, Storage $storage, User $user)
@@ -37,7 +37,7 @@ class Post
     {
         try {
             return $this->getPostByKey($key, $publishedOnly, $version);
-        } catch (PostNotFoundException $e) {
+        } catch (PostNotFoundException) {
             return null;
         }
     }

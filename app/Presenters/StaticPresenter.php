@@ -15,12 +15,12 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 {
     public const LANG_COOKIE = 'lang';
 
-    private const LANGS = [
+    private const array LANGS = [
         'en' => 'en-US',
         'cs' => 'cs-CZ'
     ];
 
-    private const PAGE_MAP = [
+    private const array PAGE_MAP = [
         'homepage' => ['homepage', 'homepage'],
         'lunch' => ['lunch', 'poledne'],
         'dinner' => ['dinner', 'vecer'],
@@ -29,8 +29,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         'contact' => ['contact', 'kontakt'],
     ];
 
-    private PostRenderer $postRenderer;
-    private WebDir $wwwDir;
+    private readonly PostRenderer $postRenderer;
+    private readonly WebDir $wwwDir;
 
 
     public function __construct(PostRenderer $postRenderer, WebDir $wwwDir)
@@ -41,6 +41,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
+    #[\Override]
     public function beforeRender(): void
     {
         $this->template->readyForPost = true;
@@ -96,7 +97,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             if (($lang = $this->getCookiesLang()) === null) {
                 // otherwise detect it by browser
                 $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
-                $lang = $this->getBrowserLang($this->getDefaultLang());
+                $lang = $this->getBrowserLang();
             }
 
             // If detected lang invalid (or empty), use default

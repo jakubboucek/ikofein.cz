@@ -13,14 +13,14 @@ use UnexpectedValueException;
 class Jwt
 {
     public const ISSUER_ID = 'ikofein.cz';
-    private const ALGORITHM = 'HS256';
-    private string $key;
+    private const string ALGORITHM = 'HS256';
+    private readonly string $key;
 
     public function __construct(string $base64Key)
     {
         $key = base64_decode($base64Key, true);
         if ($key === false) {
-            throw new LogicException("Unable to decode invalid Base64 key for " . __CLASS__);
+            throw new LogicException("Unable to decode invalid Base64 key for " . self::class);
         }
 
         $this->key = $key;
