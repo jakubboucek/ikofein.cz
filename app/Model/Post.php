@@ -158,7 +158,7 @@ class Post
     {
         $current = new DateTime();
 
-        return (bool)$post['published_from'] &&
+        return $post['published_from'] &&
             $post['published_from'] > $current;
     }
 
@@ -167,7 +167,7 @@ class Post
     {
         $current = new DateTime();
 
-        return (bool)$post['published_to'] &&
+        return $post['published_to'] &&
             $post['published_to'] < $current;
     }
 }

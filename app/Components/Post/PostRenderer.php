@@ -52,7 +52,7 @@ class PostRenderer extends Control
     {
         return $this->cache->load($key, function (&$dependencies) use ($key) {
             $dependencies = [
-                Cache::EXPIRE => '20 minutes',
+                Cache::Expire => '20 minutes',
             ];
 
             $post = $this->postModel->tryFindPostByKey($key, true);

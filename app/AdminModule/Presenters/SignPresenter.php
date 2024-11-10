@@ -96,12 +96,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @throws Nette\Application\AbortException
-     */
-    public function actionOut(): void
+    public function actionOut(): never
     {
-        $this->user->logout(true);
+        $this->getUser()->logout(true);
         $this->redirect(':Static:');
     }
 
@@ -150,8 +147,8 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function signInFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         try {
-            $this->user->setExpiration($values->remember ? '14 days' : '20 minutes');
-            $this->user->login($values['email'], $values['password']);
+            $this->getUser()->setExpiration($values->remember ? '14 days' : '20 minutes');
+            $this->getUser()->login($values['email'], $values['password']);
         } catch (Nette\Security\AuthenticationException) {
             $form->addError('The username or password you entered is incorrect.');
             return;
@@ -182,11 +179,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @throws Nette\Application\AbortException
-     * @throws Nette\InvalidArgumentException
-     * @throws UI\InvalidLinkException
-     */
     public function resetFormSuccess(UI\Form $form): void
     {
         $values = $form->values;
@@ -225,7 +217,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
-            ->addRule(UI\Form::EQUAL, 'Hesla se neshodují', $form['password'])
+            ->addRule(UI\Form::Equal, 'Hesla se neshodují', $form['password'])
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addSubmit('send', 'Nastavit nové heslo');

@@ -8,6 +8,7 @@ use Nette;
 use Nette\Application\Response;
 use Nette\Application\Request;
 use Nette\Application\Responses;
+use Override;
 use Tracy\ILogger;
 
 class ErrorPresenter implements Nette\Application\IPresenter
@@ -23,7 +24,7 @@ class ErrorPresenter implements Nette\Application\IPresenter
     }
 
 
-    #[\Override]
+    #[Override]
     public function run(Request $request): Response
     {
         $exception = $request->getParameter('exception');

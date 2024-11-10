@@ -10,10 +10,11 @@ use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
 use OutOfRangeException;
+use Override;
 
 class StaticPresenter extends Nette\Application\UI\Presenter
 {
-    public const LANG_COOKIE = 'lang';
+    public const string LANG_COOKIE = 'lang';
 
     private const array LANGS = [
         'en' => 'en-US',
@@ -41,11 +42,11 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    #[\Override]
+    #[Override]
     public function beforeRender(): void
     {
-        $this->template->readyForPost = true;
-        $this->template->wwwDir = $this->wwwDir->getPath();
+        $this->getTemplate()->readyForPost = true;
+        $this->getTemplate()->wwwDir = $this->wwwDir->getPath();
     }
 
 
@@ -62,9 +63,9 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             throw new BadRequestException("Page '$lang/$page' does not found", 0, $e);
         }
 
-        $this->template->lang = $realLang;
-        $this->template->title = $pageKey;
-        $this->template->altLangs = $this->getAllLangsLinks($pageKey);
+        $this->getTemplate()->lang = $realLang;
+        $this->getTemplate()->title = $pageKey;
+        $this->getTemplate()->altLangs = $this->getAllLangsLinks($pageKey);
 
         $this->getHttpResponse()->addHeader('Content-Language', self::LANGS[$realLang]);
 
@@ -137,7 +138,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    private function redirectTo(string $page, string $lang): void
+    private function redirectTo(string $page, string $lang): never
     {
         $queryParameters = $this->getHttpRequest()->getQuery();
         $this->redirect(

@@ -13,6 +13,7 @@ use Latte;
 use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI;
+use Nette\Application\UI\Form;
 use Nette\Mail;
 use Nette\Utils\ArrayHash;
 
@@ -56,7 +57,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
         ];
         $form->setDefaults($defaults);
 
-        $this->template->post = $post;
+        $this->getTemplate()->post = $post;
     }
 
 
@@ -98,9 +99,8 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
 
     /**
-     * @param UI\Form $form
+     * @param Form $form
      * @param ArrayHash $values
-     * @throws Nette\Application\AbortException
      */
     public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
     {

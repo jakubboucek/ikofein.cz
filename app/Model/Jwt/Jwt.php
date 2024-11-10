@@ -12,7 +12,7 @@ use UnexpectedValueException;
 
 class Jwt
 {
-    public const ISSUER_ID = 'ikofein.cz';
+    public const string ISSUER_ID = 'ikofein.cz';
     private const string ALGORITHM = 'HS256';
     private readonly string $key;
 
