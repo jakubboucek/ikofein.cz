@@ -17,11 +17,9 @@ return [
         ],
         'ignore' => [
             '/www/.well-known',
-            '/temp/*',
-            '/log',
         ],
         'allowDelete' => true,
-        //'after' => ['https://www.ikofein.cz/deployment.php?after'],
+        'after' => ['https://ikofein.cz/deployment.php?after'],
     ],
     'tempDir' => __DIR__ . '/temp',
     'colors' => true,
