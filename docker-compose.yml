@@ -1,6 +1,6 @@
 services:
     web:
-        image: jakubboucek/lamp-devstack-php:8.2-debug
+        image: jakubboucek/lamp-devstack-php:8.3-debug
         environment:
             APP_DEBUG: 1
             TZ: Europe/Prague
