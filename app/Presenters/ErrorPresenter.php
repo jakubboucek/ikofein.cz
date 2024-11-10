@@ -8,6 +8,7 @@ use Nette;
 use Nette\Application\Response;
 use Nette\Application\Request;
 use Nette\Application\Responses;
+use Override;
 use Tracy\ILogger;
 
 class ErrorPresenter implements Nette\Application\IPresenter
@@ -23,6 +24,7 @@ class ErrorPresenter implements Nette\Application\IPresenter
     }
 
 
+    #[Override]
     public function run(Request $request): Response
     {
         $exception = $request->getParameter('exception');
@@ -33,7 +35,7 @@ class ErrorPresenter implements Nette\Application\IPresenter
         }
 
         $this->logger->log($exception, ILogger::EXCEPTION);
-        return new Responses\CallbackResponse(function () {
+        return new Responses\CallbackResponse(function (): void {
             require __DIR__ . '/templates/Error/500.phtml';
         });
     }

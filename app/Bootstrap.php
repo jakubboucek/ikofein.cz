@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Nette\Configurator;
+use Nette\Bootstrap\Configurator;
 use Redbitcz\DebugMode\Detector;
 
 class Bootstrap
@@ -14,7 +14,7 @@ class Bootstrap
         $configurator = new Configurator;
 
         $configurator->setDebugMode(Detector::detect());
-        $configurator->enableDebugger(__DIR__ . '/../log', 'pan@jakubboucek.cz');
+        $configurator->enableTracy(__DIR__ . '/../log', 'pan@jakubboucek.cz');
 
         $configurator->setTimeZone('Europe/Prague');
         $configurator->setTempDirectory(__DIR__ . '/../temp');

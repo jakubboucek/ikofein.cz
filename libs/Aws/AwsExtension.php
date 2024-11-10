@@ -19,6 +19,7 @@ use Nette\Schema\Expect;
 class AwsExtension extends Nette\DI\CompilerExtension
 {
 
+    #[\Override]
     public function getConfigSchema(): Nette\Schema\Schema
     {
         return Expect::structure(
@@ -35,6 +36,7 @@ class AwsExtension extends Nette\DI\CompilerExtension
         )->castTo('array');
     }
 
+    #[\Override]
     public function loadConfiguration(): void
     {
         $builder = $this->getContainerBuilder();

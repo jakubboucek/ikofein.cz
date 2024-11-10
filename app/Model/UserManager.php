@@ -13,17 +13,17 @@ use Nette\Security\Passwords;
 use Nette\Security\SimpleIdentity;
 use Nette\Utils\Random;
 
-class UserManager implements Nette\Security\IAuthenticator
+class UserManager implements Nette\Security\Authenticator
 {
     use Nette\SmartObject;
 
-    private const TABLE_NAME = 'user';
-    private const COLUMN_ID = 'id';
-    private const COLUMN_NAME = 'name';
-    private const COLUMN_EMAIL = 'email';
-    private const COLUMN_PASSWORD_HASH = 'password';
-    private const COLUMN_ROLE = 'role';
-    private const COLUMN_RESET_TOKEN = 'reset_hash';
+    private const string TABLE_NAME = 'user';
+    private const string COLUMN_ID = 'id';
+    private const string COLUMN_NAME = 'name';
+    private const string COLUMN_EMAIL = 'email';
+    private const string COLUMN_PASSWORD_HASH = 'password';
+    private const string COLUMN_ROLE = 'role';
+    private const string COLUMN_RESET_TOKEN = 'reset_hash';
 
     private Explorer $database;
     private Passwords $passwords;
@@ -38,25 +38,22 @@ class UserManager implements Nette\Security\IAuthenticator
 
     /**
      * Performs an authentication.
-     * @throws AuthenticationException
      */
-    public function authenticate(array $credentials): IIdentity
+    public function authenticate(string $username, string $password): IIdentity
     {
-        [$email, $password] = $credentials;
-
         try {
-            $row = $this->getUserByEmail($email);
-        } catch (UserNotFoundException $e) {
+            $row = $this->getUserByEmail($username);
+        } catch (UserNotFoundException) {
             throw new AuthenticationException(
                 'The email is incorrect',
-                self::IDENTITY_NOT_FOUND
+                self::IdentityNotFound
             );
         }
 
         if (!$this->passwords->verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
             throw new AuthenticationException(
                 'The password is incorrect',
-                self::INVALID_CREDENTIAL
+                self::IdentityNotFound
             );
         }
 
@@ -74,9 +71,6 @@ class UserManager implements Nette\Security\IAuthenticator
     }
 
 
-    /**
-     * @throws UserNotFoundException
-     */
     public function getUserByEmail(string $email): ActiveRow
     {
         $row = $this->database
@@ -92,9 +86,6 @@ class UserManager implements Nette\Security\IAuthenticator
     }
 
 
-    /**
-     * @throws UserNotFoundException
-     */
     public function startResetPassword(string $email): string
     {
         $row = $this->getUserByEmail($email);

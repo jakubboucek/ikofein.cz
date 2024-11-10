@@ -10,17 +10,18 @@ use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
 use OutOfRangeException;
+use Override;
 
 class StaticPresenter extends Nette\Application\UI\Presenter
 {
-    public const LANG_COOKIE = 'lang';
+    public const string LANG_COOKIE = 'lang';
 
-    private const LANGS = [
+    private const array LANGS = [
         'en' => 'en-US',
         'cs' => 'cs-CZ'
     ];
 
-    private const PAGE_MAP = [
+    private const array PAGE_MAP = [
         'homepage' => ['homepage', 'homepage'],
         'lunch' => ['lunch', 'poledne'],
         'dinner' => ['dinner', 'vecer'],
@@ -29,8 +30,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         'contact' => ['contact', 'kontakt'],
     ];
 
-    private PostRenderer $postRenderer;
-    private WebDir $wwwDir;
+    private readonly PostRenderer $postRenderer;
+    private readonly WebDir $wwwDir;
 
 
     public function __construct(PostRenderer $postRenderer, WebDir $wwwDir)
@@ -41,10 +42,11 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     }
 
 
+    #[Override]
     public function beforeRender(): void
     {
-        $this->template->readyForPost = true;
-        $this->template->wwwDir = $this->wwwDir->getPath();
+        $this->getTemplate()->readyForPost = true;
+        $this->getTemplate()->wwwDir = $this->wwwDir->getPath();
     }
 
 
@@ -61,9 +63,9 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             throw new BadRequestException("Page '$lang/$page' does not found", 0, $e);
         }
 
-        $this->template->lang = $realLang;
-        $this->template->title = $pageKey;
-        $this->template->altLangs = $this->getAllLangsLinks($pageKey);
+        $this->getTemplate()->lang = $realLang;
+        $this->getTemplate()->title = $pageKey;
+        $this->getTemplate()->altLangs = $this->getAllLangsLinks($pageKey);
 
         $this->getHttpResponse()->addHeader('Content-Language', self::LANGS[$realLang]);
 
@@ -96,7 +98,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             if (($lang = $this->getCookiesLang()) === null) {
                 // otherwise detect it by browser
                 $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
-                $lang = $this->getBrowserLang($this->getDefaultLang());
+                $lang = $this->getBrowserLang();
             }
 
             // If detected lang invalid (or empty), use default
@@ -136,7 +138,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    private function redirectTo(string $page, string $lang): void
+    private function redirectTo(string $page, string $lang): never
     {
         $queryParameters = $this->getHttpRequest()->getQuery();
         $this->redirect(

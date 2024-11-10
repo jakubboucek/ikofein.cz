@@ -13,6 +13,7 @@ use Latte;
 use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI;
+use Nette\Application\UI\Form;
 use Nette\Mail;
 use Nette\Utils\ArrayHash;
 
@@ -56,7 +57,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
         ];
         $form->setDefaults($defaults);
 
-        $this->template->post = $post;
+        $this->getTemplate()->post = $post;
     }
 
 
@@ -91,16 +92,15 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
         $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
 
-        $form->onSuccess[] = [$this, 'postEditFormSuccess'];
+        $form->onSuccess[] = $this->postEditFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
         return $form;
     }
 
 
     /**
-     * @param UI\Form $form
+     * @param Form $form
      * @param ArrayHash $values
-     * @throws Nette\Application\AbortException
      */
     public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
     {

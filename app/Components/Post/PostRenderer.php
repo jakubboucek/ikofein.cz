@@ -13,8 +13,8 @@ use Nette\Caching\Storage;
 
 class PostRenderer extends Control
 {
-    private Model\Post $postModel;
-    private Cache $cache;
+    private readonly Model\Post $postModel;
+    private readonly Cache $cache;
 
 
     public function __construct(Model\Post $postModel, Storage $storage)
@@ -52,7 +52,7 @@ class PostRenderer extends Control
     {
         return $this->cache->load($key, function (&$dependencies) use ($key) {
             $dependencies = [
-                Cache::EXPIRE => '20 minutes',
+                Cache::Expire => '20 minutes',
             ];
 
             $post = $this->postModel->tryFindPostByKey($key, true);

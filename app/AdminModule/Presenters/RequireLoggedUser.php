@@ -12,7 +12,7 @@ trait RequireLoggedUser
         /** @var Presenter $presenter */
         $presenter = $this;
 
-        $presenter->onStartup[] = static function () use ($presenter) {
+        $presenter->onStartup[] = static function () use ($presenter): void {
             if (!$presenter->getUser()->isLoggedIn()) {
                 $presenter->redirect('Sign:in', ['backlink' => $presenter->storeRequest()]);
             }

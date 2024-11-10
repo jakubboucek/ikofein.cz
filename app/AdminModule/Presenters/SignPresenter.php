@@ -21,13 +21,13 @@ use Nette\Utils\ArrayHash;
 
 class SignPresenter extends Nette\Application\UI\Presenter
 {
-    private const RESET_PASSWORD_AUDIENCE = 'reset-password';
+    private const string RESET_PASSWORD_AUDIENCE = 'reset-password';
 
     /** @persistent */
     public ?string $backlink = null;
-    private UserManager $userManager;
-    private Jwt $jwt;
-    private SesMailer $mailer;
+    private readonly UserManager $userManager;
+    private readonly Jwt $jwt;
+    private readonly SesMailer $mailer;
 
 
     public function __construct(UserManager $userManager, Jwt $jwt, SesMailer $mailer)
@@ -96,12 +96,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @throws Nette\Application\AbortException
-     */
-    public function actionOut(): void
+    public function actionOut(): never
     {
-        $this->user->logout(true);
+        $this->getUser()->logout(true);
         $this->redirect(':Static:');
     }
 
@@ -110,7 +107,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
         try {
             $user = $this->getUserActiveRowFromToken($token);
             $this->userManager->stopResetPassword($user->email);
-        } catch (SignResetPasswordTokenException $e) {
+        } catch (SignResetPasswordTokenException) {
             // User doesn't exists, just fake response
             /** @noinspection PhpUnhandledExceptionInspection */
             usleep(random_int(10_000, 200_000));
@@ -138,7 +135,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
 
-        $form->onSuccess[] = [$this, 'signInFormSuccess'];
+        $form->onSuccess[] = $this->signInFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
         return $form;
     }
@@ -150,9 +147,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function signInFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         try {
-            $this->user->setExpiration($values->remember ? '14 days' : '20 minutes');
-            $this->user->login($values['email'], $values['password']);
-        } catch (Nette\Security\AuthenticationException $e) {
+            $this->getUser()->setExpiration($values->remember ? '14 days' : '20 minutes');
+            $this->getUser()->login($values['email'], $values['password']);
+        } catch (Nette\Security\AuthenticationException) {
             $form->addError('The username or password you entered is incorrect.');
             return;
         }
@@ -176,17 +173,12 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
 
-        $form->onSuccess[] = [$this, 'resetFormSuccess'];
+        $form->onSuccess[] = $this->resetFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
         return $form;
     }
 
 
-    /**
-     * @throws Nette\Application\AbortException
-     * @throws Nette\InvalidArgumentException
-     * @throws UI\InvalidLinkException
-     */
     public function resetFormSuccess(UI\Form $form): void
     {
         $values = $form->values;
@@ -196,7 +188,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
             $token = $this->userManager->startResetPassword($email);
             $jwt = $this->jwt->encode($email, $token, '+1 hour', $this->getResetPasswordAudience());
             $this->sendChangeNotification($email, $jwt);
-        } catch (UserNotFoundException $e) {
+        } catch (UserNotFoundException) {
             // User doesn't exists, just fake response
             /** @noinspection PhpUnhandledExceptionInspection */
             usleep(random_int(10_000, 200_000));
@@ -225,14 +217,14 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
-            ->addRule(UI\Form::EQUAL, 'Hesla se neshodují', $form['password'])
+            ->addRule(UI\Form::Equal, 'Hesla se neshodují', $form['password'])
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addSubmit('send', 'Nastavit nové heslo');
 
         $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
 
-        $form->onSuccess[] = [$this, 'setPasswordFormSuccess'];
+        $form->onSuccess[] = $this->setPasswordFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
         return $form;
     }
@@ -311,7 +303,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         try {
             $user = $this->userManager->getUserByEmail($email);
-        } catch (UserNotFoundException $e) {
+        } catch (UserNotFoundException) {
             throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán');
         }
 
