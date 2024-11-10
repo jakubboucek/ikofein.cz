@@ -1,5 +1,0 @@
-.git
-.gitignore
-.DS_Store
-.idea
-/app/Config/config.local.neon
