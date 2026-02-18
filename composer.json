@@ -8,7 +8,7 @@
 	"require": {
 		"php": "^8.3",
 		"aws/aws-sdk-php": "^3.325",
-		"firebase/php-jwt": "^6.10",
+		"firebase/php-jwt": "^7.0",
 		"latte/latte": "^3.0",
 		"nette/application": "^3.2",
 		"nette/bootstrap": "^3.2",
