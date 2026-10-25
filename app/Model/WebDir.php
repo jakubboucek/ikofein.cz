@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class WebDir
+readonly class WebDir
 {
     public function __construct(
-        private readonly string $wwwDir,
+        private string $wwwDir,
     ) {
     }
 

@@ -100,7 +100,7 @@ final readonly class PasswordReset
         #[SensitiveParameter] string $token,
         bool $lock = false,
     ): array {
-        if (!preg_match('/\A([A-Za-z0-9_-]{22})\.([A-Za-z0-9_-]{43})\z/D', $token, $parts)) {
+        if (!preg_match('/\A([A-Za-z0-9_-]{22})\.([A-Za-z0-9_-]{43})\z/', $token, $parts)) {
             throw new InvalidPasswordResetException;
         }
         self::decode($parts[1]);
@@ -148,11 +148,11 @@ final readonly class PasswordReset
         $key = hash('sha256', $scope);
         $now = time();
         return $this->database->transaction(function () use ($key, $now, $limit, $seconds): bool {
-            $this->database->query('DELETE FROM password_reset_limit WHERE window_start < ?', $now - 86400);
-            $this->database->query('INSERT IGNORE INTO password_reset_limit', [
+            $this->database->query('DELETE FROM `password_reset_limit` WHERE `window_start` < ?', $now - 86400);
+            $this->database->query('INSERT IGNORE INTO `password_reset_limit`', [
                 'key' => $key, 'window_start' => $now, 'attempts' => 0,
             ]);
-            $row = $this->database->query('SELECT * FROM password_reset_limit WHERE `key` = ? FOR UPDATE', $key)->fetch();
+            $row = $this->database->query('SELECT * FROM `password_reset_limit` WHERE `key` = ? FOR UPDATE', $key)->fetch();
             if (!$row) {
                 return false;
             }

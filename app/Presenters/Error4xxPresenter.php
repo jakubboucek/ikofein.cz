@@ -17,9 +17,6 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @throws BadRequestException
-     */
     #[\Override]
     public function startup(): void
     {

@@ -53,7 +53,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      * @throws OutOfRangeException
      * @throws Nette\Application\UI\InvalidLinkException
      */
-    public function renderDefault(?string $page = null, ?string $lang = null): void
+    public function renderDefault(string $page = 'homepage', ?string $lang = null): void
     {
         try {
             [$pageKey, $realLang] = $this->match($page, $lang);
@@ -102,7 +102,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
             // If detected lang invalid (or empty), use default
             // prevent mystery 404 by invalid HTTP header or cookie
-            if ($this->isLangValid($lang) === false) {
+            if ($lang === null || !isset(self::LANGS[$lang])) {
                 $lang = $this->getDefaultLang();
             }
         }
@@ -163,6 +163,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     {
         $request = $this->getHttpRequest();
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection False positive - IRequest != Request */
         if ($request instanceof Nette\Http\Request) {
             return $request->detectLanguage(array_keys(self::LANGS));
         }
@@ -190,7 +191,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws PageNotFoundException
      */
-    private function getPageKeyByUrl(?string $keyUrl): string
+    private function getPageKeyByUrl(string $keyUrl): string
     {
         $reversedMap = $this->getReversedPageMap();
 
@@ -239,11 +240,5 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             $links[$lang] = $url;
         }
         return $links;
-    }
-
-
-    private function isLangValid(?string $lang): bool
-    {
-        return $lang !== null && isset(self::LANGS[$lang]);
     }
 }
