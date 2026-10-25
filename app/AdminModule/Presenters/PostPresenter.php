@@ -89,8 +89,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
         $form->addHidden('key');
 
-        $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
-
         $form->onSuccess[] = $this->postEditFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
         return $form;

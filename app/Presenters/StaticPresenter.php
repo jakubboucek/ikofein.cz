@@ -55,7 +55,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      * @throws OutOfRangeException
      * @throws Nette\Application\UI\InvalidLinkException
      */
-    public function renderDefault(string $page = null, ?string $lang = null): void
+    public function renderDefault(?string $page = null, ?string $lang = null): void
     {
         try {
             [$pageKey, $realLang] = $this->match($page, $lang);

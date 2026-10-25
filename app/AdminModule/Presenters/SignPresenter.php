@@ -10,7 +10,9 @@ use App\Model\InvalidPasswordResetException;
 use App\Model\UserManager;
 use Latte;
 use Nette;
+use Nette\Application\Attributes\Persistent;
 use Nette\Application\UI;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\TextInput;
 use Nette\Mail;
 use Nette\Security\SimpleIdentity;
@@ -18,7 +20,7 @@ use Nette\Utils\ArrayHash;
 
 class SignPresenter extends Nette\Application\UI\Presenter
 {
-    /** @persistent */
+    #[Persistent]
     public ?string $backlink = null;
     private readonly UserManager $userManager;
     private readonly PasswordReset $passwordReset;
@@ -46,9 +48,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
             }
             $this->redirect('Dashboard:');
         }
-
-        // Force start session before send content (need to protection)
-        $this->getSession()->start();
     }
 
 
@@ -65,9 +64,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
             $emailFiels = $resetForm['email'];
             $emailFiels->setDefaultValue($email);
         }
-
-        // Force start session before send content (need to protection)
-        $this->getSession()->start();
     }
 
 
@@ -119,7 +115,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $form = new UI\Form;
         $form->addHidden('token');
         $form->addSubmit('send', 'Zrušit žádost o změnu hesla');
-        $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
         $form->onSuccess[] = function (UI\Form $form, ArrayHash $values): void {
             try {
                 $this->passwordReset->cancel($values['token'], $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
@@ -148,8 +143,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $form->addCheckbox('remember', 'Zůstat přihlášen');
 
         $form->addSubmit('send', 'Přihlásit');
-
-        $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
 
         $form->onSuccess[] = $this->signInFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
@@ -187,8 +180,6 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addSubmit('send', 'Zahájit reset hesla');
 
-        $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
-
         $form->onSuccess[] = $this->resetFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
         return $form;
@@ -225,20 +216,18 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $form->addPassword('password', 'Heslo:')
             ->setRequired('Heslo musí být vyplněno')
             ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 15)
-            ->addRule(static fn(\Nette\Forms\Controls\TextInput $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
+            ->addRule(static fn(Control $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
             ->setHtmlAttribute('autofocus')
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
             ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 15)
-            ->addRule(static fn(\Nette\Forms\Controls\TextInput $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
+            ->addRule(static fn(Control $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
             ->addRule(UI\Form::Equal, 'Hesla se neshodují', $form['password'])
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addSubmit('send', 'Nastavit nové heslo');
-
-        $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
 
         $form->onSuccess[] = $this->setPasswordFormSuccess(...);
         BootstrapizeForm::bootstrapize($form);
