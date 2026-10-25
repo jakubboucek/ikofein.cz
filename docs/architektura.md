@@ -68,3 +68,5 @@ Presentery přijímají rozhraní `Nette\Mail\Mailer`. Výchozí `SmtpMailer` od
 Veřejný web používá jQuery a Magnific Popup z Boweru, vlastní skripty a LESS. Grunt vytváří `www/js/main.js`, `www/css/main.css` a `www/css/admin.css`. Veřejný layout přidává k URL CSS a JS čas změny souboru.
 
 Administrace načítá Bootstrap 3, jQuery, TinyMCE 5 a Nette Forms z externích zdrojů. Veřejný web používá Google Tag Manager a na kontaktní stránce Google Maps. CSP je nastavena ve společné konfiguraci; skripty v šablonách používají nonce.
+
+Nette Forms mapuje hodnoty editace článku, přihlášení a nastavení hesla podle typu argumentu handleru do `PostEditFormData`, `SignInFormData` a `SetPasswordFormData` v `app/Forms/`. Jména vlastností odpovídají názvům controls; datumy formuláře jsou řetězce a presenter je převádí na `DateTimeImmutable` před sestavením částečné entity článku.

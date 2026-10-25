@@ -95,6 +95,7 @@ final readonly class PasswordReset
         });
     }
 
+    /** @return array{id: int, email: string, auth_version: int} */
     private function find(
         #[SensitiveParameter] string $token,
         bool $lock = false,
@@ -113,7 +114,11 @@ final readonly class PasswordReset
             || !hash_equals($row->reset_hash, self::encode(hash('sha256', $verifier, true)))) {
             throw new InvalidPasswordResetException;
         }
-        return (array) $row;
+        return [
+            'id' => $row->id,
+            'email' => $row->email,
+            'auth_version' => $row->auth_version,
+        ];
     }
 
     private function checkAttempt(string $ip): void

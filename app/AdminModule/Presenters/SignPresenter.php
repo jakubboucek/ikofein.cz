@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\Forms\BootstrapizeForm;
+use App\Forms\SignInFormData;
+use App\Forms\SetPasswordFormData;
 use App\Model\PasswordReset;
 use App\Model\InvalidPasswordResetException;
 use App\Model\UserManager;
@@ -150,11 +152,11 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    public function signInFormSuccess(UI\Form $form, ArrayHash $values): void
+    public function signInFormSuccess(UI\Form $form, SignInFormData $values): void
     {
         try {
             $this->getUser()->setExpiration($values->remember ? '14 days' : '20 minutes');
-            $this->getUser()->login($values['email'], $values['password']);
+            $this->getUser()->login($values->email, $values->password);
         } catch (Nette\Security\AuthenticationException) {
             $form->addError('The username or password you entered is incorrect.');
             return;
@@ -235,10 +237,10 @@ class SignPresenter extends Nette\Application\UI\Presenter
     /**
      * @throws Nette\Application\AbortException
      */
-    public function setPasswordFormSuccess(UI\Form $form, ArrayHash $values): void
+    public function setPasswordFormSuccess(UI\Form $form, SetPasswordFormData $values): void
     {
         try {
-            $email = $this->passwordReset->complete($values['token'], $values['password'], $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
+            $email = $this->passwordReset->complete($values->token, $values->password, $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
         } catch (InvalidPasswordResetException $e) {
             $form->addError($e->getMessage());
             return;

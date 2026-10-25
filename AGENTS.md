@@ -3,6 +3,7 @@
 - Komunikace a dokumentace jsou česky. Identifikátory, komentáře v kódu a commit messages jsou anglicky.
 - Kód, šablony a konfiguraci odsazuj čtyřmi mezerami, nikoli tabulátory; toto pravidlo má přednost před formátovacími konvencemi Nette.
 - Konstruktory s deklarací vlastností v parametrech a funkce/metody s atributy parametrů (např. `#[SensitiveParameter]`) zapisuj vždy víceřádkově: každý parametr na vlastní řádek s koncovou čárkou, i když je parametr jediný.
+- Třídy nesoucí formulářová data pojmenovávej se suffixem `FormData` (např. `PostEditFormData`).
 - Dokumentace má být stručná a popisovat aktuální konečný stav aplikace. Průběžné poznámky a changelog patří do commit messages nebo PR. Dokumentaci vícefázového refaktoringu po dokončení konsoliduj.
 - Poznatky o kódu a projektu zapisuj sem nebo do odkazovaných souborů v `docs/`. Paměť (`MEMORY.md`, `memory/`) je výhradně pro osobní preference a zpětnou vazbu uživatele.
 - Testy, aplikační skripty a nástroje PHP/Composer, Node/npm i databázové příkazy spouštěj výhradně v Dockeru. PHP ani MySQL nespouštěj na hostu. Základem prostředí je `docker-compose.yml`.

@@ -51,7 +51,7 @@
     },
     "scripts": {
         "latte-lint": "latte-lint app",
-        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app",
+        "phpstan": "phpstan analyse -c phpstan.neon --level 6 app",
         "rector": "rector process",
         "rector:check": "rector process --dry-run",
         "test": "tester -s tests"

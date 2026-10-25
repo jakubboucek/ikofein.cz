@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\Forms\BootstrapizeForm;
+use App\Forms\PostEditFormData;
 use App\Model;
 use App\Entity\Post;
 use DateTimeImmutable;
@@ -14,7 +15,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Mail;
-use Nette\Utils\ArrayHash;
 
 /** @property-read DefaultTemplate $template */
 class PostPresenter extends Nette\Application\UI\Presenter
@@ -93,26 +93,17 @@ class PostPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
+    public function postEditFormSuccess(UI\Form $form, PostEditFormData $values): void
     {
         $currentDate = new DateTimeImmutable();
 
-        if ($values['published_from']) {
-            $values['published_from'] = new DateTimeImmutable($values['published_from']);
-        } else {
-            $values['published_from'] = null;
-        }
+        $publishedFrom = $values->published_from !== '' ? new DateTimeImmutable($values->published_from) : null;
+        $publishedTo = $values->published_to !== '' ? new DateTimeImmutable($values->published_to) : null;
 
-        if ($values['published_to']) {
-            $values['published_to'] = new DateTimeImmutable($values['published_to']);
-        } else {
-            $values['published_to'] = null;
-        }
-
-        if ($values['published']) {
-            if (empty($values['published_from'])) {
-                $values['published_from'] = $currentDate;
-            } elseif ($values['published_from'] > $currentDate) {
+        if ($values->published) {
+            if ($publishedFrom === null) {
+                $publishedFrom = $currentDate;
+            } elseif ($publishedFrom > $currentDate) {
                 $form->addError(
                     'Čas publikování je nastaven do budoucna, ale současně máte uvedeno, že se má nyní publikovat.'
                     . ' Buď zrušte volbu publikovat a nebo smažte datum publikování.'
@@ -120,7 +111,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
             }
         }
 
-        if ($values['published'] && $values['published_to'] && $values['published_to'] < $currentDate) {
+        if ($values->published && $publishedTo && $publishedTo < $currentDate) {
             $form->addError(
                 'Čas konce publikování již nastal, ale současně máte uvedeno, že se má nyní publikovat.'
                 . ' Buď zrušte volbu publikovat a nebo smažte datum publikování.'
@@ -132,12 +123,12 @@ class PostPresenter extends Nette\Application\UI\Presenter
         }
 
         $changes = new Post;
-        $changes->publishedFrom = $values['published_from'];
-        $changes->publishedTo = $values['published_to'];
-        $changes->contentCs = $values['content_cs'];
-        $changes->contentEn = $values['content_en'];
+        $changes->publishedFrom = $publishedFrom;
+        $changes->publishedTo = $publishedTo;
+        $changes->contentCs = $values->content_cs;
+        $changes->contentEn = $values->content_en;
 
-        $current = $this->postManager->save($values['key'], $changes);
+        $current = $this->postManager->save($values->key, $changes);
         $this->sendChangeNotification($current);
 
         $this->flashMessage('Uloženo', 'success');

@@ -78,6 +78,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
 
     /**
+     * @return array{string, string}
      * @throws PageNotFoundException|OutOfRangeException
      */
     private function match(string $page, ?string $lang): array
@@ -203,6 +204,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     /**
      * Return 1D array with simplified pair url=>key from PAGE_MAP
+     * @return array<string, string>
      */
     private function getReversedPageMap(): array
     {
@@ -220,6 +222,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     /**
      * Return array of absolute URLs to Static::default presenter for all available langs
+     * @return array<string, string>
      * @throws Nette\Application\UI\InvalidLinkException
      */
     private function getAllLangsLinks(string $pageKey): array

@@ -69,7 +69,7 @@ Pro příkaz bez běžících služeb lze použít `docker compose run --rm --no
 
 `composer latte-lint` kontroluje syntaxi všech Latte šablon v `app/`. Vlastní proměnné mají deklarace `{varType}`; standardní proměnné presenterů dodává Nette. Deklarace pomáhají IDE, lint neověřuje skutečné typy předaných hodnot. Jazyk veřejného layoutu vždy předává presenter, u chybových stránek je explicitně `en`.
 
-PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; vlastní testovací data po dokončení odstraní. Bootstrap zamyká běh DB testů proti souběhu. Jednorázovost resetovacího tokenu ověřuje test jeho opakovaného použití. Tester standardně načítá konfiguraci PHP kontejneru. Pro běh bez Xdebugu použij `docker compose exec -e XDEBUG_MODE=off -T web composer test`. `npm test` končí záměrně chybou.
+PHPStan 2 používá úroveň 6 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; vlastní testovací data po dokončení odstraní. Bootstrap zamyká běh DB testů proti souběhu. Jednorázovost resetovacího tokenu ověřuje test jeho opakovaného použití. Tester standardně načítá konfiguraci PHP kontejneru. Pro běh bez Xdebugu použij `docker compose exec -e XDEBUG_MODE=off -T web composer test`. `npm test` končí záměrně chybou.
 
 Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
 
@@ -78,6 +78,8 @@ HTTP integrační testy vyžadují běžící Apache ve službě `web` a rozší
 `tests/PublicPages.phpt` ověřuje volbu jazyka podle cookie a `Accept-Language`, včetně výchozí angličtiny při chybějící nebo nepodporované preferenci.
 
 `tests/Post.phpt` ověřuje hydrataci, částečné aktualizace, explicitní `null`, historii, cache a publikační hranice. Vytváří a odstraňuje vlastní obsahové klíče.
+
+`tests/FormData.phpt` ověřuje mapování skutečných controls do typovaných tříd `FormData`, včetně prázdných řetězců a nezaškrtnutých checkboxů, a shodu s typy argumentů handlerů.
 
 Současné šablony a databázové řádky používají dynamické vlastnosti. `universalObjectCratesClasses` v `phpstan.neon` proto povoluje tyto vlastnosti pro `Nette\Application\UI\Template`, `Nette\Bridges\ApplicationLatte\Template` a `Nette\Database\Table\ActiveRow`. Jejich názvy a hodnoty nejsou tímto nastavením typově ověřované; pro ostatní objekty kontrola vlastností zůstává aktivní.
 
