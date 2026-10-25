@@ -16,11 +16,11 @@ class UserManager implements Nette\Security\Authenticator
 {
     use Nette\SmartObject;
 
-    private const string TABLE_NAME = 'user';
-    private const string COLUMN_ID = 'id';
-    private const string COLUMN_EMAIL = 'email';
-    private const string COLUMN_PASSWORD_HASH = 'password';
-    private const string COLUMN_ROLE = 'role';
+    private const string TableName = 'user';
+    private const string ColumnId = 'id';
+    private const string ColumnEmail = 'email';
+    private const string ColumnPasswordHash = 'password';
+    private const string ColumnRole = 'role';
 
 
     public function __construct(
@@ -50,32 +50,32 @@ class UserManager implements Nette\Security\Authenticator
             );
         }
 
-        if (!$this->passwords->verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
+        if (!$this->passwords->verify($password, $row[self::ColumnPasswordHash])) {
             throw new AuthenticationException(
                 'The password is incorrect',
                 self::IdentityNotFound
             );
         }
 
-        if ($this->passwords->needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
+        if ($this->passwords->needsRehash($row[self::ColumnPasswordHash])) {
             $row->update(
                 [
-                    self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
+                    self::ColumnPasswordHash => $this->passwords->hash($password),
                 ]
             );
         }
 
         $arr = $row->toArray();
-        unset($arr[self::COLUMN_PASSWORD_HASH], $arr['reset_hash'], $arr['reset_selector'], $arr['reset_expires_at'], $arr['reset_requested_at']);
-        return new SimpleIdentity($row[self::COLUMN_ID], $row[self::COLUMN_ROLE], $arr);
+        unset($arr[self::ColumnPasswordHash], $arr['reset_hash'], $arr['reset_selector'], $arr['reset_expires_at'], $arr['reset_requested_at']);
+        return new SimpleIdentity($row[self::ColumnId], $row[self::ColumnRole], $arr);
     }
 
 
     public function getUserByEmail(string $email): ActiveRow
     {
         $row = $this->database
-            ->table(self::TABLE_NAME)
-            ->where(self::COLUMN_EMAIL, $email)
+            ->table(self::TableName)
+            ->where(self::ColumnEmail, $email)
             ->fetch();
 
         if ($row === null) {

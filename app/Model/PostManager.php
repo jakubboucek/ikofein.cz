@@ -16,7 +16,8 @@ use Nette\Utils\Random;
 
 class PostManager
 {
-    private const string CURRENT = 'current';
+    private const string Current = 'current';
+
     private readonly Cache $cache;
     /** @var Hydrator<Post> */
     private readonly Hydrator $hydrator;
@@ -31,7 +32,7 @@ class PostManager
         $this->hydrator = $hydrators->for(Post::class);
     }
 
-    public function tryFindPostByKey(string $key, bool $publishedOnly = false, string $version = self::CURRENT): ?Post
+    public function tryFindPostByKey(string $key, bool $publishedOnly = false, string $version = self::Current): ?Post
     {
         try {
             return $this->getPostByKey($key, $publishedOnly, $version);
@@ -40,7 +41,7 @@ class PostManager
         }
     }
 
-    public function getPostByKey(string $key, bool $publishedOnly = false, string $version = self::CURRENT): Post
+    public function getPostByKey(string $key, bool $publishedOnly = false, string $version = self::Current): Post
     {
         $row = $this->database->table('post')->where('key', $key)->where('version', $version)->fetch();
         if (!$row) {
@@ -54,7 +55,7 @@ class PostManager
     }
 
     /** @return array<int|string, Post> */
-    public function getPosts(bool $publishedOnly = false, string $version = self::CURRENT): array
+    public function getPosts(bool $publishedOnly = false, string $version = self::Current): array
     {
         $rows = $this->database->table('post')->where('version', $version);
         $posts = [];
@@ -87,19 +88,19 @@ class PostManager
         }
         $snapshot = $this->database->transaction(function () use ($key, $data): Post {
             $row = $this->database->query(
-                'SELECT * FROM post WHERE `key` = ? AND version = ? FOR UPDATE', $key, self::CURRENT,
+                'SELECT * FROM post WHERE `key` = ? AND version = ? FOR UPDATE', $key, self::Current,
             )->fetch();
             if (!$row) {
                 throw new PostNotFoundException('Post not found', 404);
             }
             $now = new DateTimeImmutable;
             $data = [
-                'version' => self::CURRENT,
+                'version' => self::Current,
                 'hash' => Random::generate(16),
                 'created_at' => $now,
                 'created_by' => $this->user->getId(),
             ] + $data;
-            $this->database->table('post')->where('key', $key)->where('version', self::CURRENT)->update($data);
+            $this->database->table('post')->where('key', $key)->where('version', self::Current)->update($data);
             $snapshot = $this->getPostByKey($key);
             $snapshot->version = $now->format('Y-m-d\TH:i:s.uP');
             $this->database->table('post')->insert($this->hydrator->toData($snapshot));

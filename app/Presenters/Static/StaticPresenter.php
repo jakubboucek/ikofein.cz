@@ -16,14 +16,14 @@ use Override;
 /** @property-read DefaultTemplate $template */
 class StaticPresenter extends Nette\Application\UI\Presenter
 {
-    public const string LANG_COOKIE = 'lang';
+    public const string LangCookie = 'lang';
 
-    private const array LANGS = [
+    private const array Langs = [
         'en' => 'en-US',
         'cs' => 'cs-CZ'
     ];
 
-    private const array PAGE_MAP = [
+    private const array PageMap = [
         'homepage' => ['homepage', 'homepage'],
         'lunch' => ['lunch', 'poledne'],
         'dinner' => ['dinner', 'vecer'],
@@ -65,7 +65,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         $this->template->title = $pageKey;
         $this->template->altLangs = $this->getAllLangsLinks($pageKey);
 
-        $this->getHttpResponse()->addHeader('Content-Language', self::LANGS[$realLang]);
+        $this->getHttpResponse()->addHeader('Content-Language', self::Langs[$realLang]);
 
         $this->setView("$realLang-$pageKey");
     }
@@ -102,21 +102,21 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
             // If detected lang invalid (or empty), use default
             // prevent mystery 404 by invalid HTTP header or cookie
-            if ($lang === null || !isset(self::LANGS[$lang])) {
+            if ($lang === null || !isset(self::Langs[$lang])) {
                 $lang = $this->getDefaultLang();
             }
         }
 
         $langKey = $this->getLangKey($lang);
 
-        if (isset(self::PAGE_MAP[$pageKey][$langKey]) === false) {
-            throw new OutOfRangeException("Unable to search PAGE_MAP[$pageKey][$langKey]");
+        if (isset(self::PageMap[$pageKey][$langKey]) === false) {
+            throw new OutOfRangeException("Unable to search PageMap[$pageKey][$langKey]");
         }
 
-        $page = self::PAGE_MAP[$pageKey][$langKey];
+        $page = self::PageMap[$pageKey][$langKey];
 
         $this->getHttpResponse()->setCookie(
-            self::LANG_COOKIE,
+            self::LangCookie,
             $lang,
             '+1 month',
             secure: $this->getHttpRequest()->isSecured(),
@@ -150,10 +150,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     private function getLangKey(string $lang): int
     {
-        $langKey = array_search($lang, array_keys(self::LANGS), true);
+        $langKey = array_search($lang, array_keys(self::Langs), true);
 
         if ($langKey === false) {
-            throw new PageNotFoundException("Unknown lang '$lang' in LANGS");
+            throw new PageNotFoundException("Unknown lang '$lang' in Langs");
         }
 
         return (int)$langKey;
@@ -165,7 +165,7 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
         /** @noinspection PhpConditionAlreadyCheckedInspection False positive - IRequest != Request */
         if ($request instanceof Nette\Http\Request) {
-            return $request->detectLanguage(array_keys(self::LANGS));
+            return $request->detectLanguage(array_keys(self::Langs));
         }
 
         if (($header = $request->getHeader('Accept-Language')) !== null) {
@@ -178,13 +178,13 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     private function getCookiesLang(): ?string
     {
-        return $this->getHttpRequest()->getCookie(self::LANG_COOKIE);
+        return $this->getHttpRequest()->getCookie(self::LangCookie);
     }
 
 
     private function getDefaultLang(): string
     {
-        return array_key_first(self::LANGS);
+        return array_key_first(self::Langs);
     }
 
 
@@ -199,19 +199,19 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             return $reversedMap[$keyUrl];
         }
 
-        throw new PageNotFoundException("Unknown page '$keyUrl' in PAGE_MAP");
+        throw new PageNotFoundException("Unknown page '$keyUrl' in PageMap");
     }
 
 
     /**
-     * Return 1D array with simplified pair url=>key from PAGE_MAP
+     * Return 1D array with simplified pair url=>key from PageMap
      * @return array<string, string>
      */
     private function getReversedPageMap(): array
     {
         $reversedMap = [];
 
-        foreach (self::PAGE_MAP as $pageKey => $keyUrls) {
+        foreach (self::PageMap as $pageKey => $keyUrls) {
             foreach ($keyUrls as $keyUrl) {
                 $reversedMap[$keyUrl] = $pageKey;
             }
@@ -228,9 +228,9 @@ class StaticPresenter extends Nette\Application\UI\Presenter
      */
     private function getAllLangsLinks(string $pageKey): array
     {
-        $keyUrls = self::PAGE_MAP[$pageKey];
+        $keyUrls = self::PageMap[$pageKey];
         $links = [];
-        $langKeys = array_keys(self::LANGS);
+        $langKeys = array_keys(self::Langs);
         foreach ($keyUrls as $langId => $keyUrl) {
             $lang = $langKeys[$langId];
             $url = $this->link('//default', [
