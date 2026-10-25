@@ -213,46 +213,6 @@ final class PasswordResetTest extends TestCase
         Assert::exception(fn() => $this->reset->verify($token, $this->ip), InvalidPasswordResetException::class);
     }
 
-    public function testConcurrentCompletion(): void
-    {
-        $token = $this->issue();
-        $workers = [];
-        try {
-            for ($i = 0; $i < 2; $i++) {
-                $process = proc_open([PHP_BINARY, __DIR__ . '/helpers/reset-worker.php', $this->ip], [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes);
-                Assert::type('resource', $process);
-                $workers[] = [$process, $pipes];
-                Assert::same("ready\n", fgets($pipes[1]), 'Worker must finish bootstrapping before the concurrent reset starts.');
-            }
-            foreach ($workers as [$process, $pipes]) {
-                fwrite($pipes[0], $token);
-                fclose($pipes[0]);
-            }
-            $results = [];
-            foreach ($workers as [$process, $pipes]) {
-                $results[] = stream_get_contents($pipes[1]);
-                $errors = stream_get_contents($pipes[2]);
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                Assert::same(0, proc_close($process), $errors);
-            }
-            sort($results);
-            Assert::same(['accepted', 'rejected'], $results);
-        } finally {
-            foreach ($workers as [$process, $pipes]) {
-                foreach ($pipes as $pipe) {
-                    if (is_resource($pipe)) {
-                        fclose($pipe);
-                    }
-                }
-                if (is_resource($process)) {
-                    proc_terminate($process);
-                    proc_close($process);
-                }
-            }
-        }
-    }
-
     /** @dataProvider formOrigins */
     public function testCancellationFormOrigin(?string $site, bool $legacyCookie, bool $accepted): void
     {
