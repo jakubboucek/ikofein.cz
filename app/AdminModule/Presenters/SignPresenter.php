@@ -24,8 +24,11 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public ?string $backlink = null;
 
 
-    public function __construct(private readonly UserManager $userManager, private readonly PasswordReset $passwordReset, private readonly Mail\Mailer $mailer)
-    {
+    public function __construct(
+        private readonly UserManager $userManager,
+        private readonly PasswordReset $passwordReset,
+        private readonly Mail\Mailer $mailer,
+    ) {
         parent::__construct();
     }
 
@@ -54,9 +57,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
             /** @var UI\Form $resetForm */
             $resetForm = $this['resetForm'];
-            /** @var TextInput $emailFiels */
-            $emailFiels = $resetForm['email'];
-            $emailFiels->setDefaultValue($email);
+            /** @var TextInput $emailField */
+            $emailField = $resetForm['email'];
+            $emailField->setDefaultValue($email);
         }
     }
 
@@ -71,9 +74,9 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
             /** @var UI\Form $passwordForm */
             $passwordForm = $this['setPasswordForm'];
-            /** @var Nette\Forms\Controls\HiddenField $tokenFiled */
-            $tokenFiled = $passwordForm['token'];
-            $tokenFiled->setDefaultValue($token);
+            /** @var Nette\Forms\Controls\HiddenField $tokenField */
+            $tokenField = $passwordForm['token'];
+            $tokenField->setDefaultValue($token);
         } catch (InvalidPasswordResetException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
             $this->redirect('Dashboard:');
@@ -182,7 +185,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     public function resetFormSuccess(UI\Form $form): void
     {
-        $values = $form->values;
+        $values = $form->getValues();
         $email = $values['email'];
 
         $request = $this->passwordReset->request($email, $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
@@ -281,8 +284,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
             ->setSubject($params['title'])
             ->addTo($email)
             ->setHtmlBody($latte->renderToString($templateFile, $params));
-        $mailer = $this->mailer;
-        $mailer->send($mail);
+        $this->mailer->send($mail);
     }
 
 

@@ -10,8 +10,9 @@ use Nette\Application\BadRequestException;
 
 class Error4xxPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private readonly WebDir $wwwDir)
-    {
+    public function __construct(
+        private readonly WebDir $wwwDir,
+    ) {
         parent::__construct();
     }
 

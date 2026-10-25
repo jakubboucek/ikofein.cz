@@ -12,17 +12,16 @@ use Latte;
 use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI;
-use Nette\Application\UI\Form;
 use Nette\Mail;
 use Nette\Utils\ArrayHash;
 
 class PostPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
-
-
-    public function __construct(private Model\Post $postModel, private Mail\Mailer $mailer)
-    {
+    public function __construct(
+        private readonly Model\Post $postModel,
+        private readonly Mail\Mailer $mailer,
+    ) {
         parent::__construct();
     }
 
@@ -159,7 +158,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
             ->setSubject($params['title'])
             ->addTo('pan@jakubboucek.cz', 'Jakub Bouček')
             ->setHtmlBody($latte->renderToString($templateFile, $params));
-        $mailer = $this->mailer;
-        $mailer->send($mail);
+        $this->mailer->send($mail);
     }
 }

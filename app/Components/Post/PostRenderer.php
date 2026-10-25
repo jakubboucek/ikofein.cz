@@ -16,8 +16,10 @@ class PostRenderer extends Control
     private readonly Cache $cache;
 
 
-    public function __construct(private readonly Model\Post $postModel, Storage $storage)
-    {
+    public function __construct(
+        private readonly Model\Post $postModel,
+        Storage $storage,
+    ) {
         $this->cache = new Cache($storage, 'post');
     }
 
@@ -34,13 +36,7 @@ class PostRenderer extends Control
 
         $template->isEmpty = $postInfo['isEmpty'];
 
-        $field = 'content_' . $lang;
-
-        $content = '';
-        if ($post && isset($post[$field])) {
-            $content = $post[$field];
-        }
-        $template->content = $content;
+        $template->content = $post['content_' . $lang] ?? '';
 
         $template->render();
     }

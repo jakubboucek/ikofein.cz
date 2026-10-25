@@ -6,8 +6,9 @@ namespace App\Model;
 
 class WebDir
 {
-    public function __construct(private readonly string $wwwDir)
-    {
+    public function __construct(
+        private readonly string $wwwDir,
+    ) {
     }
 
 

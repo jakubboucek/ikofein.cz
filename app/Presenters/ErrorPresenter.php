@@ -14,10 +14,9 @@ use Tracy\ILogger;
 class ErrorPresenter implements Nette\Application\IPresenter
 {
     use Nette\SmartObject;
-
-
-    public function __construct(private ILogger $logger)
-    {
+    public function __construct(
+        private readonly ILogger $logger,
+    ) {
     }
 
 

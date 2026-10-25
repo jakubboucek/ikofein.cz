@@ -50,14 +50,19 @@ final readonly class PasswordReset
         });
     }
 
-    public function verify(#[SensitiveParameter] string $token, string $ip): void
-    {
+    public function verify(
+        #[SensitiveParameter] string $token,
+        string $ip,
+    ): void {
         $this->checkAttempt($ip);
         $this->find($token);
     }
 
-    public function complete(#[SensitiveParameter] string $token, #[SensitiveParameter] string $password, string $ip): string
-    {
+    public function complete(
+        #[SensitiveParameter] string $token,
+        #[SensitiveParameter] string $password,
+        string $ip,
+    ): string {
         $this->checkAttempt($ip);
         $this->find($token);
         // Hash before locking the row; token validation is repeated under the lock.
@@ -75,8 +80,10 @@ final readonly class PasswordReset
         });
     }
 
-    public function cancel(#[SensitiveParameter] string $token, string $ip): void
-    {
+    public function cancel(
+        #[SensitiveParameter] string $token,
+        string $ip,
+    ): void {
         $this->checkAttempt($ip);
         $this->database->transaction(function () use ($token): void {
             $row = $this->find($token, true);
@@ -88,8 +95,10 @@ final readonly class PasswordReset
         });
     }
 
-    private function find(#[SensitiveParameter] string $token, bool $lock = false): array
-    {
+    private function find(
+        #[SensitiveParameter] string $token,
+        bool $lock = false,
+    ): array {
         if (!preg_match('/\A([A-Za-z0-9_-]{22})\.([A-Za-z0-9_-]{43})\z/D', $token, $parts)) {
             throw new InvalidPasswordResetException;
         }
@@ -119,8 +128,9 @@ final readonly class PasswordReset
         return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
     }
 
-    private static function decode(#[SensitiveParameter] string $encoded): string
-    {
+    private static function decode(
+        #[SensitiveParameter] string $encoded,
+    ): string {
         $bytes = base64_decode(strtr($encoded, '-_', '+/'), true);
         if ($bytes === false || self::encode($bytes) !== $encoded) {
             throw new InvalidPasswordResetException;

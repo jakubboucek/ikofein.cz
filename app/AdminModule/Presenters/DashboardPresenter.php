@@ -10,10 +10,9 @@ use Nette;
 class DashboardPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
-
-
-    public function __construct(private Model\Post $postModel)
-    {
+    public function __construct(
+        private readonly Model\Post $postModel,
+    ) {
         parent::__construct();
     }
 

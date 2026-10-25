@@ -74,6 +74,8 @@ Rector používá pravidla do PHP 8.5 včetně odstranění mrtvého kódu a zje
 
 HTTP integrační testy vyžadují běžící Apache ve službě `web` a rozšíření `curl`. Zevnitř kontejneru volají `http://localhost` (port 80). Ověřují ochranu formuláře proti cizímu originu, fallback `_nss` pro starší prohlížeče a otevření resetovacích odkazů bez spotřebování tokenu. Rozšíření `curl` je vývojový požadavek Composeru; projektový PHP image jej obsahuje.
 
+`tests/PublicPages.phpt` ověřuje volbu jazyka podle cookie a `Accept-Language`, včetně výchozí angličtiny při chybějící nebo nepodporované preferenci.
+
 Současné šablony a databázové řádky používají dynamické vlastnosti. `universalObjectCratesClasses` v `phpstan.neon` proto povoluje tyto vlastnosti pro `Nette\Application\UI\Template`, `Nette\Bridges\ApplicationLatte\Template` a `Nette\Database\Table\ActiveRow`. Jejich názvy a hodnoty nejsou tímto nastavením typově ověřované; pro ostatní objekty kontrola vlastností zůstává aktivní.
 
 ### Účet pro ruční testování

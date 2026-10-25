@@ -26,9 +26,10 @@ class BootstrapizeForm
         // make form and controls compatible with Twitter Bootstrap
         $form->getElementPrototype()->class('form-horizontal');
 
+        $usedPrimary = false;
         foreach ($form->getControls() as $control) {
             if ($control instanceof Controls\Button) {
-                $control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn btn-primary' : 'btn btn-default');
+                $control->getControlPrototype()->addClass($usedPrimary ? 'btn btn-default' : 'btn btn-primary');
                 $usedPrimary = true;
             } elseif ($control instanceof Controls\TextBase
                 || $control instanceof Controls\SelectBox

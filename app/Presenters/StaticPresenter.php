@@ -30,9 +30,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         'contact' => ['contact', 'kontakt'],
     ];
 
-
-    public function __construct(private readonly PostRenderer $postRenderer, private readonly WebDir $wwwDir)
-    {
+    public function __construct(
+        private readonly PostRenderer $postRenderer,
+        private readonly WebDir $wwwDir,
+    ) {
         parent::__construct();
     }
 
@@ -115,10 +116,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             self::LANG_COOKIE,
             $lang,
             '+1 month',
-            null,
-            null,
-            $this->getHttpRequest()->isSecured(),
-            true
+            secure: $this->getHttpRequest()->isSecured(),
+            httpOnly: true,
         );
 
         //check and fix canonical URL
@@ -240,6 +239,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     private function isLangValid(?string $lang): bool
     {
-        return array_key_exists((string) $lang, self::LANGS);
+        return $lang !== null && isset(self::LANGS[$lang]);
     }
 }

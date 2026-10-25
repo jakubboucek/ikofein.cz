@@ -23,8 +23,10 @@ class UserManager implements Nette\Security\Authenticator
     private const string COLUMN_ROLE = 'role';
 
 
-    public function __construct(private Explorer $database, private Passwords $passwords)
-    {
+    public function __construct(
+        private readonly Explorer $database,
+        private readonly Passwords $passwords,
+    ) {
     }
 
 

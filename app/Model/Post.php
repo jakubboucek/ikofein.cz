@@ -21,8 +21,11 @@ class Post
     private readonly Cache $cache;
 
 
-    public function __construct(private readonly Explorer $database, Storage $storage, private readonly User $user)
-    {
+    public function __construct(
+        private readonly Explorer $database,
+        Storage $storage,
+        private readonly User $user,
+    ) {
         $this->cache = new Cache($storage, 'post');
     }
 

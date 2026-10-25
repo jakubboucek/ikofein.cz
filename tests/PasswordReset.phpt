@@ -27,8 +27,9 @@ final class PasswordResetTest extends TestCase
     private string $ip;
     private array $keys;
 
-    public function __construct(private readonly Container $container)
-    {
+    public function __construct(
+        private readonly Container $container,
+    ) {
     }
 
     protected function setUp(): void
