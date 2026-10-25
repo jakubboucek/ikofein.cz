@@ -6,8 +6,8 @@ namespace App\AdminModule\Presenters;
 
 use App\Forms\BootstrapizeForm;
 use App\Model;
-use DateTime;
-use DateTimeInterface;
+use App\Entity\Post;
+use DateTimeImmutable;
 use Latte;
 use Nette;
 use Nette\Application\BadRequestException;
@@ -23,7 +23,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
 
     public function __construct(
-        private readonly Model\Post $postModel,
+        private readonly Model\PostManager $postManager,
         private readonly Mail\Mailer $mailer,
     ) {
         parent::__construct();
@@ -36,7 +36,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
     public function renderDetail(string $key): void
     {
         try {
-            $post = $this->postModel->getPostByKey($key);
+            $post = $this->postManager->getPostByKey($key);
         } catch (Model\PostNotFoundException $e) {
             throw new BadRequestException("Post with key \"$key\" doesn't exists.", 404, $e);
         }
@@ -46,11 +46,11 @@ class PostPresenter extends Nette\Application\UI\Presenter
         $form = $this['postEditForm'];
         $defaults = [
             'key' => $key,
-            'published' => $post['info']['isPublished'],
-            'published_from' => $post['published_from'] instanceof DateTimeInterface ? $post['published_from']->format('Y-m-d') : null,
-            'published_to' => $post['published_to'] instanceof DateTimeInterface ? $post['published_to']->format('Y-m-d') : null,
-            'content_cs' => $post['content_cs'],
-            'content_en' => $post['content_en'],
+            'published' => $post->isPublished(),
+            'published_from' => $post->publishedFrom?->format('Y-m-d'),
+            'published_to' => $post->publishedTo?->format('Y-m-d'),
+            'content_cs' => $post->contentCs,
+            'content_en' => $post->contentEn,
         ];
         $form->setDefaults($defaults);
 
@@ -95,16 +95,16 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
     public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
     {
-        $currentDate = new DateTime();
+        $currentDate = new DateTimeImmutable();
 
         if ($values['published_from']) {
-            $values['published_from'] = new DateTime($values['published_from']);
+            $values['published_from'] = new DateTimeImmutable($values['published_from']);
         } else {
             $values['published_from'] = null;
         }
 
         if ($values['published_to']) {
-            $values['published_to'] = new DateTime($values['published_to']);
+            $values['published_to'] = new DateTimeImmutable($values['published_to']);
         } else {
             $values['published_to'] = null;
         }
@@ -131,15 +131,13 @@ class PostPresenter extends Nette\Application\UI\Presenter
             return;
         }
 
-        $data = [
-            'published_from' => $values['published_from'],
-            'published_to' => $values['published_to'],
-            'content_cs' => $values['content_cs'],
-            'content_en' => $values['content_en'],
-        ];
+        $changes = new Post;
+        $changes->publishedFrom = $values['published_from'];
+        $changes->publishedTo = $values['published_to'];
+        $changes->contentCs = $values['content_cs'];
+        $changes->contentEn = $values['content_en'];
 
-        $current = $this->postModel->save($values['key'], $data);
-
+        $current = $this->postManager->save($values['key'], $changes);
         $this->sendChangeNotification($current);
 
         $this->flashMessage('Uloženo', 'success');
@@ -147,14 +145,14 @@ class PostPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    private function sendChangeNotification(array $post): void
+    private function sendChangeNotification(Post $post): void
     {
         $templateFile = __DIR__ . '/templates/Post/changeNotificationMail.latte';
         $latte = new Latte\Engine;
         $mail = new Mail\Message;
 
         $params = [
-            'title' => "Změna na webu ikofein.cz ($post[title])",
+            'title' => "Změna na webu ikofein.cz ({$post->title})",
             'post' => $post,
         ];
 

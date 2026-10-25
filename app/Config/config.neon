@@ -47,7 +47,8 @@ tracy:
     fromEmail: noreply@ikofein.cz
 
 services:
-    - App\Model\Post
+    - JakubBoucek\Hydrator\HydratorFactory(JakubBoucek\Hydrator\Format\NetteDatabase)
+    - App\Model\PostManager
     - App\Model\WebDir(%wwwDir%)
     - App\Model\PasswordReset
     postRenderer: App\Component\PostRenderer

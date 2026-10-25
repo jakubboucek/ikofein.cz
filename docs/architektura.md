@@ -12,7 +12,8 @@
 | `app/Presenters/` | Veřejné stránky, chybové presentery a jejich šablony |
 | `app/AdminModule/Presenters/` | Přihlášení, obnova hesel, přehled a editace obsahu |
 | `app/Model/` | Obsah, uživatelé, obnova hesla a cesta k veřejným souborům |
-| `app/Components/Post/` | Vykreslování a cache dynamického obsahu |
+| `app/Entity/` | Typovaná data článku pro čtení i částečné změny |
+| `app/Components/Post/` | Vykreslování dynamického obsahu |
 | `app/Forms/` | Úprava vykreslování Nette Forms pro Bootstrap |
 | `asset/` | Zdrojový JavaScript a LESS |
 | `temp/`, `log/` | Cache a diagnostika; obsah se neverzuje |
@@ -44,9 +45,10 @@ Databázový přístup používá Nette Database Explorer. Následující přehl
 | `user` | `id`, `name`, `email`, `password`, `role`, `reset_hash`, `reset_selector`, `reset_expires_at`, `reset_requested_at`, `auth_version` |
 
 - Šablony používají obsahové klíče `lunch`, `dinner`, `beverages` a `alert`.
-- Aktivní řádek má `version = current`. `Post::save()` aktualizuje existující aktivní řádek, doplní autora, čas a náhodný hash a vloží historickou kopii s verzí ve formátu `DateTime::ATOM`. Nevytváří nový obsahový klíč.
+- Aktivní řádek má `version = current`. `PostManager::save()` v transakci zamkne existující aktivní řádek, aktualizuje jej, doplní autora, čas a náhodný hash a vloží historickou kopii. Vrací úplnou entitu historické kopie pro notifikační e-mail; její verze obsahuje ISO datum s mikrosekundami a časovým pásmem. Nevytváří nový obsahový klíč. Prázdná změna pouze vrátí aktuální článek.
+- `App\Model\PostManager` převádí řádky přes `jakubboucek/hydrator` (`NetteDatabase`) na `App\Entity\Post`. Čtení je úplné; částečná entita při ukládání mění jen inicializované vlastnosti. Explicitní `null` vymaže hodnotu. Model povoluje změnu titulku, technické poznámky, obsahů a termínů publikace; klíč a technická metadata řídí sám. Datumové vlastnosti jsou `DateTimeImmutable`, názvy vlastností camelCase. Vlastnosti nemají výchozí hodnoty.
 - Publikovaný obsah musí mít `published_from`, nesmí být naplánován do budoucna ani mít prošlé `published_to`. Samostatný databázový příznak publikování model nepoužívá.
-- `PostRenderer` vybírá `content_cs` nebo `content_en` a cachuje výsledek včetně chybějícího obsahu na 20 minut. Uložení zneplatní cache daného klíče. Časové hranice publikace se tak mohou na veřejném webu projevit až po expiraci cache.
+- `PostRenderer` vybírá jazykový obsah entity. Model cachuje publikovanou entitu nebo nepřítomnost obsahu na 20 minut v namespace `post-entity-v1`, odděleném od staré cache polí. Uložení po dokončení transakce zneplatní cache daného klíče. Časové hranice publikace se tak mohou na veřejném webu projevit až po expiraci cache.
 - Obsah z editoru se vykresluje jako HTML pomocí `noescape`.
 
 ## Administrace a e-maily

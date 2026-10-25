@@ -7,6 +7,7 @@
     "type": "project",
     "require": {
         "php": "^8.5",
+        "jakubboucek/hydrator": "^0.7.0",
         "latte/latte": "^3.1",
         "nette/application": "^3.3",
         "nette/bootstrap": "^3.3",
@@ -49,9 +50,10 @@
         "sort-packages": true
     },
     "scripts": {
+        "latte-lint": "latte-lint app",
         "phpstan": "phpstan analyse -c phpstan.neon --level 5 app",
         "rector": "rector process",
         "rector:check": "rector process --dry-run",
-        "test": "tester -C -s tests"
+        "test": "tester -s tests"
     }
 }

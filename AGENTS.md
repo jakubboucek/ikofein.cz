@@ -23,7 +23,8 @@ Web restaurace Kofein používá PHP 8.5, Nette Application/Forms 3.3, Nette HTT
 - `local/Config/config.neon` se načítá povinně po společné konfiguraci. Lokální tajné hodnoty a `.deployment-credentials.php` nepatří do Gitu ani dokumentace.
 - Veřejný kořen je `www/`, nikoli kořen repozitáře. `temp/` a `log/` musí být zapisovatelné.
 - `www/css/*.css` a `www/js/main.js` jsou verzované výstupy Gruntu. Zdroje upravuj v `asset/` a související výstupy přegeneruj v Dockeru.
-- Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `Post`.
+- Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `PostManager`.
+- `App\Entity\Post` slouží i pro partial update: nepřidávej výchozí hodnoty vlastností a šablonám předávej pouze úplně hydratované entity. Viz [datový model](docs/architektura.md#obsah-a-databáze) a [ochrana entit před Rectorem](docs/vyvoj.md#rector-a-entity).
 - Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.
 - SQL migrace jsou v `migrations/structures/`, integrační testy `Nette\Tester\TestCase` v `tests/` (spuštění `composer test` v Dockeru). Kompletní výchozí schéma ani seed nejsou v repozitáři. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
 - Uložení obsahu i obnova hesla odesílají e-mail přes Nette Mailer. Výchozí SMTP míří do lokálního MailDev (`http://localhost:1080/`); produkční konfigurace přepíná na sendmail pomocí `mail.smtp: false`.

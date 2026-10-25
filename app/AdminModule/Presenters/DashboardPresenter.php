@@ -15,7 +15,7 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
 
 
     public function __construct(
-        private readonly Model\Post $postModel,
+        private readonly Model\PostManager $postManager,
     ) {
         parent::__construct();
     }
@@ -23,7 +23,7 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
 
     public function renderDefault(): void
     {
-        $posts = $this->postModel->getPosts();
+        $posts = $this->postManager->getPosts();
         $this->template->posts = $posts;
     }
 }

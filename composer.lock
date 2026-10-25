@@ -4,8 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c7928deb1a9b5fb6f184fa54d637a2b",
+    "content-hash": "efc1837eb86b7c00cf266a568f3fdbe6",
     "packages": [
+        {
+            "name": "jakubboucek/hydrator",
+            "version": "v0.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jakubboucek/hydrator.git",
+                "reference": "8624996f8075419fa67c0f9b6d30b05639381116"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jakubboucek/hydrator/zipball/8624996f8075419fa67c0f9b6d30b05639381116",
+                "reference": "8624996f8075419fa67c0f9b6d30b05639381116",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~8.4"
+            },
+            "require-dev": {
+                "ext-pdo_sqlite": "*",
+                "nette/database": "^3.2.8 || ^4.0",
+                "nette/tester": "2.6.1",
+                "phpstan/phpstan": "2.2.7"
+            },
+            "suggest": {
+                "nette/database": "Seamless hydration of Row, ActiveRow and Selection with the NetteDatabase format"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JakubBoucek\\Hydrator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Bouček",
+                    "email": "pan@jakubboucek.cz"
+                }
+            ],
+            "description": "Fast bidirectional hydrator between typed PHP entities and database rows or other data formats, built for modern PHP with property hooks support",
+            "keywords": [
+                "database",
+                "entity",
+                "hydration",
+                "hydrator",
+                "mapping",
+                "nette"
+            ],
+            "support": {
+                "issues": "https://github.com/jakubboucek/hydrator/issues",
+                "source": "https://github.com/jakubboucek/hydrator/tree/v0.7.1"
+            },
+            "time": "2026-10-25T17:28:41+00:00"
+        },
         {
             "name": "latte/latte",
             "version": "v3.1.7",
@@ -972,22 +1029,22 @@
         },
         {
             "name": "nette/robot-loader",
-            "version": "v4.1.3",
+            "version": "v4.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/robot-loader.git",
-                "reference": "44dba0bbb9cb521a3fed15046d3294c85dabe516"
+                "reference": "7198a7e9108b6dedb5929c78c68f68b087cbec7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/robot-loader/zipball/44dba0bbb9cb521a3fed15046d3294c85dabe516",
-                "reference": "44dba0bbb9cb521a3fed15046d3294c85dabe516",
+                "url": "https://api.github.com/repos/nette/robot-loader/zipball/7198a7e9108b6dedb5929c78c68f68b087cbec7e",
+                "reference": "7198a7e9108b6dedb5929c78c68f68b087cbec7e",
                 "shasum": ""
             },
             "require": {
                 "ext-tokenizer": "*",
                 "nette/utils": "^4.0.6",
-                "php": "8.1 - 8.5"
+                "php": "8.1 - 8.6"
             },
             "require-dev": {
                 "nette/phpstan-rules": "^1.0",
@@ -1020,26 +1077,22 @@
                 {
                     "name": "David Grudl",
                     "homepage": "https://davidgrudl.com"
-                },
-                {
-                    "name": "Nette Community",
-                    "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "🍀 Nette RobotLoader: high performance and comfortable autoloader that will search and autoload classes within your application.",
-            "homepage": "https://nette.org",
+            "description": "🍀 Nette RobotLoader: autoloads every class, interface, trait and enum in your directories, with no PSR-4 and no naming rules, and remembers where it found them.",
+            "homepage": "https://doc.nette.org/robot-loader",
             "keywords": [
                 "autoload",
-                "class",
-                "interface",
-                "nette",
-                "trait"
+                "autoloader",
+                "class loader",
+                "classmap",
+                "nette"
             ],
             "support": {
                 "issues": "https://github.com/nette/robot-loader/issues",
-                "source": "https://github.com/nette/robot-loader/tree/v4.1.3"
+                "source": "https://github.com/nette/robot-loader/tree/v4.1.4"
             },
-            "time": "2026-08-18T10:23:46+00:00"
+            "time": "2026-10-25T16:47:05+00:00"
         },
         {
             "name": "nette/routing",

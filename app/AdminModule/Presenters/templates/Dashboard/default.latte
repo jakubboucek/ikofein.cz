@@ -1,3 +1,5 @@
+{varType App\Entity\Post[] $posts}
+
 {block content}
 <div class="row">
     <div class="panel panel-default">
@@ -9,25 +11,25 @@
                 <th>Zveřeněno</th>
             </tr>
             {foreach $posts as $post}
-            <tr n:class="$post['info']['isPublished'] ? : 'gray'">
+            <tr n:class="$post->isPublished() ? : 'gray'">
                 <td>
-                    <a n:href="Post:detail key=>$post['key']">{$post['title']}</a>
-                    <br><small>{$post['tech_note']}</small>
+                    <a n:href="Post:detail key=>$post->key">{$post->title}</a>
+                    <br><small>{$post->techNote}</small>
                 </td>
                 <td>
-                    <strong>Česky: </strong>{$post['content_cs']|striphtml|truncate:100}<br>
-                    <strong>Anglicky: </strong>{$post['content_en']|striphtml|truncate:100}<br>
+                    <strong>Česky: </strong>{$post->contentCs|stripHtml|truncate:100}<br>
+                    <strong>Anglicky: </strong>{$post->contentEn|stripHtml|truncate:100}<br>
                 </td>
                 <td>
-                    {if $post['info']['isPublished']}
+                    {if $post->isPublished()}
                         <strong class="text-success">Ano</strong>
-                        {ifset $post['published_to']}
-                            <br><small>až do {$post['published_to']}</small>
+                        {ifset $post->publishedTo}
+                            <br><small>až do {$post->publishedTo|date:'Y-m-d H:i:s'}</small>
                         {/ifset}
                     {else}
                         <strong class="text-danger">Ne</strong>
-                        {if $post['info']['isPlanned']}
-                            <br><small>až od {$post['published_from']}</small>
+                        {if $post->isPlanned()}
+                            <br><small>až od {$post->publishedFrom|date:'Y-m-d H:i:s'}</small>
                         {/if}
                     {/if}
                 </td>

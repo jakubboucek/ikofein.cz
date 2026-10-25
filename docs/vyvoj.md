@@ -60,23 +60,32 @@ Příkazy spouštěj z kořene projektu. PHP, Composer a aplikační skripty nik
 docker compose exec web php --version
 docker compose exec web composer check-platform-reqs
 docker compose exec web composer phpstan
+docker compose exec web composer latte-lint
 docker compose logs --tail=100 web mysqldb
 docker compose stop
 ```
 
 Pro příkaz bez běžících služeb lze použít `docker compose run --rm --no-deps web <command>`; tento režim nezajišťuje databázi ani zpřístupnění webu.
 
-PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. `rector.php` konfiguruje Rector 2 pro `app/` a `www/`; jeho spuštění není součástí běžného startu. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; pro každý případ vytvoří vlastní účet a čítače, které poté odstraní. Bootstrap zamyká běh DB testů proti souběhu; test jednorázovosti spouští dva samostatné PHP procesy. Parametr `-C` zachovává konfiguraci PHP kontejneru včetně databázových rozšíření. `npm test` končí záměrně chybou.
+`composer latte-lint` kontroluje syntaxi všech Latte šablon v `app/`. Vlastní proměnné mají deklarace `{varType}`; standardní proměnné presenterů dodává Nette. Deklarace pomáhají IDE, lint neověřuje skutečné typy předaných hodnot. Jazyk veřejného layoutu vždy předává presenter, u chybových stránek je explicitně `en`.
+
+PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; vlastní testovací data po dokončení odstraní. Bootstrap zamyká běh DB testů proti souběhu; test jednorázovosti spouští dva samostatné PHP procesy. Tester standardně načítá konfiguraci PHP kontejneru. Pro běh bez Xdebugu použij `docker compose exec -e XDEBUG_MODE=off -T web composer test`. `npm test` končí záměrně chybou.
 
 Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
-
-Rector používá pravidla do PHP 8.5 včetně odstranění mrtvého kódu a zjednodušování konstrukcí. Návrhy zobrazí `docker compose exec -T web composer rector:check`, změny aplikuje `docker compose exec -T web composer rector`. Zachovává čtyři mezery. Záměrně nemění kontroly `null` na `instanceof` ani statické pomocné metody na instanční; výsledek vždy projdi z hlediska čitelnosti a ověř testy a PHPStanem.
 
 HTTP integrační testy vyžadují běžící Apache ve službě `web` a rozšíření `curl`. Zevnitř kontejneru volají `http://localhost` (port 80). Ověřují ochranu formuláře proti cizímu originu, fallback `_nss` pro starší prohlížeče a otevření resetovacích odkazů bez spotřebování tokenu. Rozšíření `curl` je vývojový požadavek Composeru; projektový PHP image jej obsahuje.
 
 `tests/PublicPages.phpt` ověřuje volbu jazyka podle cookie a `Accept-Language`, včetně výchozí angličtiny při chybějící nebo nepodporované preferenci.
 
+`tests/Post.phpt` ověřuje hydrataci, částečné aktualizace, explicitní `null`, historii, cache a publikační hranice. Vytváří a odstraňuje vlastní obsahové klíče.
+
 Současné šablony a databázové řádky používají dynamické vlastnosti. `universalObjectCratesClasses` v `phpstan.neon` proto povoluje tyto vlastnosti pro `Nette\Application\UI\Template`, `Nette\Bridges\ApplicationLatte\Template` a `Nette\Database\Table\ActiveRow`. Jejich názvy a hodnoty nejsou tímto nastavením typově ověřované; pro ostatní objekty kontrola vlastností zůstává aktivní.
+
+### Rector a entity
+
+`rector.php` používá pravidla do PHP 8.5 nad `app/` a `www/`, včetně odstranění mrtvého kódu a zjednodušování konstrukcí. Návrhy zobrazí `docker compose exec -T web composer rector:check`, změny aplikuje `docker compose exec -T web composer rector`. Zachovává čtyři mezery. Záměrně nemění kontroly `null` na `instanceof` ani statické pomocné metody na instanční; výsledek vždy projdi z hlediska čitelnosti a ověř testy a PHPStanem.
+
+Pro `app/Entity` je vypnuto pouze pravidlo `RestoreDefaultNullToNullableTypePropertyRector`, podle [README hydratoru](https://github.com/jakubboucek/hydrator/blob/v0.7.1/README.md#rector-configuration). Ostatní pravidla se na entity vztahují. Pokud vzniknou entity nebo jejich společné předky mimo tento adresář, rozšiř výjimku i na ně. Samotné rozhraní `Entity` před doplněním výchozího `null` nechrání a výjimka neodstraní hodnoty doplněné dříve.
 
 ### Účet pro ruční testování
 
