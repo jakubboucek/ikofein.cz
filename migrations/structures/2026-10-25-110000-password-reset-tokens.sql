@@ -4,8 +4,8 @@ ALTER TABLE `post` ENGINE = InnoDB;
 UPDATE `user` SET `reset_hash` = NULL;
 ALTER TABLE `user`
     MODIFY `password` VARCHAR(255) NOT NULL DEFAULT '',
-    MODIFY `reset_hash` BINARY(32) NULL,
-    ADD `reset_selector` BINARY(16) NULL,
+    MODIFY `reset_hash` VARCHAR(43) CHARACTER SET ascii COLLATE ascii_bin NULL,
+    ADD `reset_selector` VARCHAR(22) CHARACTER SET ascii COLLATE ascii_bin NULL,
     ADD `reset_expires_at` DATETIME NULL,
     ADD `reset_requested_at` DATETIME NULL,
     ADD `auth_version` INT UNSIGNED NOT NULL DEFAULT 1,
