@@ -56,6 +56,16 @@ Lokální databáze obsahuje testovací data, která lze při testování měnit
 
 Současné šablony a databázové řádky používají dynamické vlastnosti. `universalObjectCratesClasses` v `phpstan.neon` proto povoluje tyto vlastnosti pro `Nette\Application\UI\Template`, `Nette\Bridges\ApplicationLatte\Template` a `Nette\Database\Table\ActiveRow`. Jejich názvy a hodnoty nejsou tímto nastavením typově ověřované; pro ostatní objekty kontrola vlastností zůstává aktivní.
 
+### Účet pro ruční testování
+
+V lokální testovací databázi je ponechán účet `Codex Test` (role `admin`):
+
+- Přihlášení: `http://localhost:8080/admin`
+- E-mail: `codex-test@example.test`
+- Heslo: `Kofein-Local-Test-2026!`
+
+Jde výhradně o lokální testovací přihlašovací údaje. Databáze ani tento účet se nemigrují na produkci. Účet lze opakovaně používat při kontrolách přes Chrome MCP. Uložení obsahu a zahájení obnovy hesla používají AWS SES; bez lokálního zachytávání pošty tyto akce při běžné kontrole neodesílej.
+
 ## Sestavení frontendu
 
 Zdroje jsou v `asset/`, závislosti Boweru určuje `bower.json`. Grunt vyžaduje současně `node_modules/` a `bower_components/`. Výstupy v `www/css/` a `www/js/main.js` jsou verzované. Compose nemá službu pro Node ani projekt neurčuje jeho verzi.
@@ -81,6 +91,8 @@ docker compose exec -e XDEBUG_TRIGGER=1 web php path/to/script.php
 ```
 
 Tracy zapisuje do `log/`, Nette používá `temp/`. Image umožňuje změnit PHP nastavení proměnnými jako `PHP_MEMORY_LIMIT`; další INI nastavení lze připojit do `/usr/local/etc/php/conf.d/`. Projekt vlastní INI soubor nepřipojuje.
+
+V debug režimu se neexistující stránka zobrazí jako Tracy výjimka s HTTP 500. Pro ověření běžné chybové stránky lze pouze v testovacím prohlížeči nastavit cookie `app-debug-mode=0` pro cestu `/`; bez debug režimu vrací aplikace HTTP 404. Po kontrole cookie odstraň.
 
 ## Nasazení
 
