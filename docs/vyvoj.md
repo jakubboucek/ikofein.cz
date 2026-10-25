@@ -27,7 +27,7 @@ mail:
     smtp: false
 ```
 
-Tím se použije `Nette\Mail\SendmailMailer` a systémové odesílání pošty nakonfigurované na serveru. Před nasazením odstraň z produkční lokální konfigurace starou sekci `aws`; aplikace již toto rozšíření neregistruje. Produkční přepsání konfigurace se nepřenáší deploymentem.
+Tím se použije `Nette\Mail\SendmailMailer` a systémové odesílání pošty nakonfigurované na serveru. Konfigurace neobsahuje sekci `aws`; aplikace toto rozšíření neregistruje. Produkční přepsání konfigurace se nepřenáší deploymentem.
 
 ## První spuštění
 
@@ -73,6 +73,8 @@ PHPStan 2 používá úroveň 8 nad `app/`. V `phpstan.neon` se ručně načíta
 
 Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
 
+PHPStan, Rector a Tester jsou vývojové závislosti. Po instalaci s `--no-dev` je pro lokální kontroly obnov příkazem `docker compose exec web composer install`. Úrovně PHPStanu vyšší než 8 nejsou součástí projektové kontroly.
+
 HTTP integrační testy vyžadují běžící Apache ve službě `web` a rozšíření `curl`. Zevnitř kontejneru volají `http://localhost` (port 80). Ověřují ochranu formuláře proti cizímu originu, fallback `_nss` pro starší prohlížeče a otevření resetovacích odkazů bez spotřebování tokenu. Rozšíření `curl` je vývojový požadavek Composeru; projektový PHP image jej obsahuje.
 
 `tests/PublicPages.phpt` ověřuje volbu jazyka podle cookie a `Accept-Language`, včetně výchozí angličtiny při chybějící nebo nepodporované preferenci.
@@ -115,7 +117,7 @@ Po změně zdrojů zkontroluj diff vygenerovaných souborů. Frontend ověřuj v
 
 ## Ladění
 
-Compose nastavuje `XDEBUG_CONFIG=client_host=host.docker.internal` a `PHP_IDE_CONFIG=serverName=docker-cli`. V PhpStormu odpovídá serveru `docker-cli` mapování kořene projektu na `/var/www/html`. Pro spuštění kódu používej Docker interpreter pro PHP 8.5.
+Compose nastavuje `XDEBUG_CONFIG=client_host=host.docker.internal`; `PHP_IDE_CONFIG` je zakomentované. Pro ladění se serverem `docker-cli` odkomentuj `PHP_IDE_CONFIG=serverName=docker-cli` a v PhpStormu nastav mapování kořene projektu na `/var/www/html`. Pro spuštění kódu používej Docker interpreter pro PHP 8.5.
 
 Podle [dokumentace Xdebugu v image](https://github.com/jakubboucek/docker-lamp-devstack#xdebug) se ladění aktivuje triggerem; profiler a trace zapisují do `/var/www/html/log`. Příklad pro CLI:
 
@@ -128,6 +130,8 @@ Tracy zapisuje do `log/`, Nette používá `temp/`. Image umožňuje změnit PHP
 V debug režimu se neexistující stránka zobrazí jako Tracy výjimka s HTTP 500. Pro ověření běžné chybové stránky lze pouze v testovacím prohlížeči nastavit cookie `app-debug-mode=0` pro cestu `/`; bez debug režimu vrací aplikace HTTP 404. Po kontrole cookie odstraň.
 
 ## Nasazení
+
+Produkce používá Cloudflare. Ochrana e-mailových adres přes Email Address Obfuscation je vypnutá. Aplikace zachovává CSP s nonce a `strict-dynamic`; automaticky vložené skripty bez odpovídajícího povolení mohou být blokované. Cloudflare Web Analytics není v aplikaci integrované.
 
 `deployment.php` nastavuje FTPS přenos na produkci. Přenáší `app/`, `www/` a `vendor/`, vynechává `www/.well-known` a dovoluje mazání vzdálených souborů. Přihlašovací údaje bere z `.deployment-credentials.php`. Lokální konfigurace se nepřenáší.
 
