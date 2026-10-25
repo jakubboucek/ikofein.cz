@@ -9,7 +9,7 @@
 
 ## Orientace
 
-Web restaurace Kofein používá PHP 8.3, Nette Application/Forms 3.3, Nette HTTP 3.4, Latte 3.1, MariaDB a frontend sestavovaný přes Grunt/LESS. Veřejný web má českou a anglickou verzi; administrace upravuje obsah uložený v databázi.
+Web restaurace Kofein používá PHP 8.5, Nette Application/Forms 3.3, Nette HTTP 3.4, Latte 3.1, MariaDB a frontend sestavovaný přes Grunt/LESS. Veřejný web má českou a anglickou verzi; administrace upravuje obsah uložený v databázi.
 
 - [README.md](README.md): vstupní přehled.
 - [docs/architektura.md](docs/architektura.md): struktura, routování, obsah, přihlášení a integrace.

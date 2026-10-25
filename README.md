@@ -2,7 +2,7 @@
 
 Web restaurace Kofein s českou a anglickou verzí, jídelními lístky, galerií, kontakty a administrací obsahu.
 
-Technologie: PHP 8.3, Nette Application/Forms 3.3, Nette HTTP 3.4, Latte 3.1, MariaDB, Grunt, LESS a jQuery. PHP závislosti určuje `composer.lock`, npm závislosti `package-lock.json`.
+Technologie: PHP 8.5, Nette Application/Forms 3.3, Nette HTTP 3.4, Latte 3.1, MariaDB, Grunt, LESS a jQuery. PHP závislosti určuje `composer.lock`, npm závislosti `package-lock.json`.
 
 ## Lokální provoz
 
