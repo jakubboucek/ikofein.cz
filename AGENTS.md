@@ -24,7 +24,7 @@ Web restaurace Kofein používá PHP 8.5, Nette Application/Forms 3.3, Nette HTT
 
 - `local/Config/config.neon` se načítá povinně po společné konfiguraci. Lokální tajné hodnoty a `.deployment-credentials.php` nepatří do Gitu ani dokumentace.
 - Veřejný kořen je `www/`, nikoli kořen repozitáře. `temp/` a `log/` musí být zapisovatelné.
-- Frontendové zdroje jsou v `assets/`, build v ignorovaném `www/assets/`. Node určuje `.nvmrc`; build spouštěj na hostu přes `nvm`. Před PHP HTTP testy a nasazením spusť `npm ci && npm run build`; podrobnosti a ochrana starších chunků jsou v [návodu](docs/vyvoj.md#sestavení-frontendu).
+- Frontendové zdroje jsou v `assets/`, produkční build včetně manifestu je verzovaný v `www/assets/`. Po změně zdrojů nebo závislostí spusť `npm run build` a commituj i přegenerované výstupy. Node určuje `.nvmrc`; build spouštěj na hostu přes `nvm`. Podrobnosti jsou v [návodu](docs/vyvoj.md#sestavení-frontendu).
 - Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `PostManager`.
 - `App\Entity\Post` slouží i pro partial update: nepřidávej výchozí hodnoty vlastností a šablonám předávej pouze úplně hydratované entity. Viz [datový model](docs/architektura.md#obsah-a-databáze) a [ochrana entit před Rectorem](docs/vyvoj.md#rector-a-entity).
 - Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.

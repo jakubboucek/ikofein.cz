@@ -104,7 +104,7 @@ Jde výhradně o lokální testovací přihlašovací údaje. Databáze ani tent
 
 ## Sestavení frontendu
 
-Node/npm se spouštějí na hostu přes `nvm`, verzi určuje `.nvmrc`. PHP a databáze zůstávají v Dockeru. Závislosti jsou zamčené v `package-lock.json`; zdroje v `assets/`, konfigurace ve `vite.config.js`. Výstupy `www/assets/` nejsou verzované a vytvářejí se před spuštěním aplikace, HTTP testů i nasazením:
+Node/npm se spouštějí na hostu přes `nvm`, verzi určuje `.nvmrc`. PHP a databáze zůstávají v Dockeru. Závislosti jsou zamčené v `package-lock.json`; zdroje v `assets/`, konfigurace ve `vite.config.js`. Produkční výstupy `www/assets/` včetně `.vite/manifest.json` jsou verzované. Po změně zdrojů nebo závislostí je přegeneruj a commituj společně se zdroji; čistý checkout tak obsahuje hotový build:
 
 ```sh
 source ~/.nvm/nvm.sh
@@ -112,12 +112,11 @@ nvm install
 nvm use
 npm ci
 npm run build
-npm run check:assets
 ```
 
-`npm run check:assets` spouští kontrolu manifestu v PHP kontejneru. Ověřuje oba entry pointy, všechny uvedené soubory a vazby mezi chunky. Jodit tvoří samostatný větší chunk (přibližně 185 kB gzip JS a 36 kB gzip CSS); Vite na jeho velikost upozorňuje, ale dashboard ani veřejné stránky jej nestahují.
+Jodit tvoří samostatný větší chunk (přibližně 185 kB gzip JS a 36 kB gzip CSS); Vite na jeho velikost upozorňuje, ale dashboard ani veřejné stránky jej nestahují.
 
-Pro vývoj spusť `npm run dev`. Vite poslouchá na `http://localhost:5173`, aplikaci dál otevírej na `http://localhost:8080/`. Pevný port a CORS jsou nastavené pro tuto adresu. Plugin zapisuje `www/assets/.vite/nette.json`; Nette Assets jej používá jen v debug režimu. Změny SCSS/JS se načítají přes HMR, změny Latte vyvolají obnovení stránky. Před produkčním buildem zastav dev server; při jeho násilném ukončení může zůstat marker, který odstraní nový build.
+Pro vývoj spusť `npm run dev`. Vite poslouchá na `http://localhost:5173`, aplikaci dál otevírej na `http://localhost:8080/`. Pevný port a CORS jsou nastavené pro tuto adresu. Plugin zapisuje `www/assets/.vite/nette.json`; tento vývojový marker je vyloučen z Gitu i deploye a Nette Assets jej používá jen v debug režimu. Změny SCSS/JS se načítají přes HMR, změny Latte vyvolají obnovení stránky. Před produkčním buildem zastav dev server; při jeho násilném ukončení může zůstat marker, který odstraní nový build.
 
 Frontend ověřuj ve vlastní instanci Chrome přes MCP; pokud nejsou přímé nástroje dostupné, lze použít Chrome DevTools MCP CLI přes `npm exec --yes --package=chrome-devtools-mcp -- chrome-devtools …`. Recykluj záložky a ponech samostatnou pro MailDev. Kontroluj obě jazykové verze, mobil, tisk, klávesnici galerie, konzoli/CSP, přihlášení/reset a ukládání editoru. Testovací obsah po ověření obnov se zachováním historie.
 
@@ -139,9 +138,9 @@ V debug režimu se neexistující stránka zobrazí jako Tracy výjimka s HTTP 5
 
 Produkce používá Cloudflare. Ochrana e-mailových adres přes Email Address Obfuscation je vypnutá. Aplikace zachovává CSP s nonce a `strict-dynamic`; automaticky vložené skripty bez odpovídajícího povolení mohou být blokované. Cloudflare Web Analytics není v aplikaci integrované.
 
-`deployment.php` před připojením kontroluje build pomocí `bin/check-assets.php`; chybějící manifest, chunk nebo vývojový marker nasazení zastaví. Nejdřív sekce `Assets` přenese celý `www/assets/` včetně manifestu a používá samostatný `.htdeployment-assets`. Má `allowDelete: false`, takže staré otevřené stránky mohou dál stáhnout své lazy chunky. Starší hashované soubory se na serveru hromadí; jejich případný úklid je samostatná provozní operace po zohlednění otevřených stránek.
+`deployment.php` používá jedinou sekci `Production`, která přenáší `app/`, `www/` včetně verzovaného buildu a `vendor/`. Vynechává `www/.well-known` a vývojový marker `www/assets/.vite/nette.json`. Nastavení `allowDelete: true` odstraňuje i staré hashované assety; cílem je čistý deploy bez hromadění minulých buildů.
 
-Následná sekce `Production` přenáší `app/`, `www/` a `vendor/`, vynechává `www/.well-known` a `www/assets` a dovoluje mazání ostatních vzdálených souborů. Nasazuj vždy obě sekce ve stanoveném pořadí. Přihlašovací údaje bere z `.deployment-credentials.php`, lokální konfigurace se nepřenáší. Build dělej z téhož checkoutu jako nasazení; během přenosu jej nepřegenerovávej.
+Přihlašovací údaje bere z `.deployment-credentials.php`, lokální konfigurace se nepřenáší. Nasazuj zdroje a odpovídající commitovaný build ze stejného checkoutu; během přenosu jej nepřegenerovávej.
 
 `bin/deploy-dry.sh` spouští testovací režim nasazovacího nástroje, `bin/deploy.sh` skutečné nasazení. Oba vyžadují globálně dostupný Composer příkaz `deployment` uvnitř kontejneru; není projektovou Composer závislostí. I tyto skripty spouštěj pouze v Dockeru.
 

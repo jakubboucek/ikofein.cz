@@ -1,0 +1,2 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["./gallery-D7OWQ1ep.js","./preload-helper-CRzLMJPS.js","./gallery-DOg8h1BU.css"])))=>i.map(i=>d[i]);
+import{t as e}from"./preload-helper-CRzLMJPS.js";document.querySelector(`article.gallery`)&&e(()=>import(`./gallery-D7OWQ1ep.js`),__vite__mapDeps([0,1,2]),import.meta.url).catch(e=>console.error(`Gallery could not be loaded.`,e));

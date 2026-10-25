@@ -3,8 +3,7 @@
     "description": "Website ikofein.cz",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "check:assets": "docker compose exec -T web php bin/check-assets.php"
+        "build": "vite build"
     },
     "repository": {
         "type": "git",
