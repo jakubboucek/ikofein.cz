@@ -9,8 +9,9 @@
 | `app/Config/config.neon` | Společná konfigurace a DI služby |
 | `local/Config/config.neon` | Povinné lokální přepsání konfigurace, mimo Git |
 | `app/Router/` | Definice rout |
-| `app/Presenters/` | Veřejné stránky, chybové presentery a jejich šablony |
-| `app/AdminModule/Presenters/` | Přihlášení, obnova hesel, přehled a editace obsahu |
+| `app/Presenters/Static/` | Veřejné stránky a jejich šablony |
+| `app/Presenters/Admin/` | Přihlášení, obnova hesel, přehled a editace obsahu |
+| `app/Presenters/Error/` | Samostatné presentery a šablony pro chyby 4xx a 5xx |
 | `app/Model/` | Obsah, uživatelé, obnova hesla a cesta k veřejným souborům |
 | `app/Entity/` | Typovaná data článku pro čtení i částečné změny |
 | `app/Components/Post/` | Vykreslování dynamického obsahu |
@@ -21,6 +22,10 @@
 `www/index.php` načte Composer a spustí aplikaci přes `App\Bootstrap`. RobotLoader prochází `app/`. Společná konfigurace se načítá před lokální. Časové pásmo aplikace je `Europe/Prague`; debug režim určuje `redbitcz/debug-mode-enabler`.
 
 ## Stránky a routování
+
+Mapování presenterů je `App\Presenters\*\**Presenter`. Každý presenter má vlastní adresář se šablonami a případnými třídami `FormData`. Sdílené layouty jsou v `app/Presenters/@layout.latte` a `app/Presenters/Admin/@layout.latte`. Chyby obsluhují `Error:Error4xx` a `Error:Error5xx` přímo podle konfigurace aplikace.
+
+E-mailové šablony jsou v podadresáři `mail` příslušného presenteru, aby je Nette nenabízelo jako samostatné stránky.
 
 První routa obsluhuje `admin/<presenter>/<action>`, s výchozím `Dashboard:default`. Druhá obsluhuje veřejné stránky přes `Static:default`.
 

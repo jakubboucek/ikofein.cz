@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 /** @testCase */
 
-use App\Forms\PostEditFormData;
-use App\Forms\SetPasswordFormData;
-use App\Forms\SignInFormData;
+use App\Presenters\Admin\Post\PostEditFormData;
+use App\Presenters\Admin\Sign\SetPasswordFormData;
+use App\Presenters\Admin\Sign\SignInFormData;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\Container;
 use Tester\Assert;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presenters;
+namespace App\Presenters\Static;
 
 use App\Component\PostRenderer;
 use App\Model\PageNotFoundException;

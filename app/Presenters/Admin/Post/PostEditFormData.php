@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Forms;
+namespace App\Presenters\Admin\Post;
 
 final readonly class PostEditFormData
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Presenters;
+namespace App\Presenters\Admin\Post;
 
 use App\Forms\BootstrapizeForm;
-use App\Forms\PostEditFormData;
+use App\Presenters\Admin\RequireLoggedUser;
 use App\Model;
 use App\Entity\Post;
 use DateTimeImmutable;
@@ -138,7 +138,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
 
     private function sendChangeNotification(Post $post): void
     {
-        $templateFile = __DIR__ . '/templates/Post/changeNotificationMail.latte';
+        $templateFile = __DIR__ . '/mail/changeNotificationMail.latte';
         $latte = new Latte\Engine;
         $mail = new Mail\Message;
 

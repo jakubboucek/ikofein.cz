@@ -1,7 +1,8 @@
 application:
-    errorPresenter: Error
-    mapping:
-        *: App\*Module\Presenters\*Presenter
+    errorPresenter:
+        4xx: Error:Error4xx
+        5xx: Error:Error5xx
+    mapping: App\Presenters\*\**Presenter
 
 session:
     expiration: 14 days

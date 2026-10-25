@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Presenters;
+namespace App\Presenters\Error\Error5xx;
 
 use Nette;
 use Nette\Application\Response;
@@ -11,7 +11,7 @@ use Nette\Application\Responses;
 use Override;
 use Tracy\ILogger;
 
-class ErrorPresenter implements Nette\Application\IPresenter
+class Error5xxPresenter implements Nette\Application\IPresenter
 {
     use Nette\SmartObject;
 
@@ -27,14 +27,9 @@ class ErrorPresenter implements Nette\Application\IPresenter
     {
         $exception = $request->getParameter('exception');
 
-        if ($exception instanceof Nette\Application\BadRequestException) {
-            [$module, , $sep] = Nette\Application\Helpers::splitName($request->getPresenterName());
-            return new Responses\ForwardResponse($request->setPresenterName($module . $sep . 'Error4xx'));
-        }
-
         $this->logger->log($exception, ILogger::EXCEPTION);
         return new Responses\CallbackResponse(function (): void {
-            require __DIR__ . '/templates/Error/500.phtml';
+            require __DIR__ . '/500.phtml';
         });
     }
 }

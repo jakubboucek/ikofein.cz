@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\AdminModule\Presenters;
+namespace App\Presenters\Admin\Sign;
 
 use App\Forms\BootstrapizeForm;
-use App\Forms\SignInFormData;
-use App\Forms\SetPasswordFormData;
 use App\Model\PasswordReset;
 use App\Model\InvalidPasswordResetException;
 use App\Model\UserManager;
@@ -267,7 +265,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
      */
     private function sendChangeNotification(string $email, string $token): void
     {
-        $templateFile = __DIR__ . '/templates/Sign/resetMail.latte';
+        $templateFile = __DIR__ . '/mail/resetMail.latte';
         $latte = new Latte\Engine;
         $mail = new Mail\Message;
 
