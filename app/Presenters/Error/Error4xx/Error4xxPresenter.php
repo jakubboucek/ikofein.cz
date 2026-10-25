@@ -28,6 +28,5 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
         $template->setFile(is_file($file) ? $file : __DIR__ . '/4xx.latte');
 
         $template->lang = 'en';
-        $template->dataLayer = [['errorCode' => $exception->getCode()]];
     }
 }
