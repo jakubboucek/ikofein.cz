@@ -53,7 +53,7 @@ class PostManager
         return $post;
     }
 
-    /** @return array<string, Post> */
+    /** @return array<int|string, Post> */
     public function getPosts(bool $publishedOnly = false, string $version = self::CURRENT): array
     {
         $rows = $this->database->table('post')->where('version', $version);
