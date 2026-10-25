@@ -7,7 +7,7 @@
 - Projektové PHP konstanty pojmenovávej v PascalCase.
 - Dokumentace má být stručná a popisovat aktuální konečný stav aplikace. Průběžné poznámky a changelog patří do commit messages nebo PR. Dokumentaci vícefázového refaktoringu po dokončení konsoliduj.
 - Poznatky o kódu a projektu zapisuj sem nebo do odkazovaných souborů v `docs/`. Paměť (`MEMORY.md`, `memory/`) je výhradně pro osobní preference a zpětnou vazbu uživatele.
-- Testy, aplikační skripty a nástroje PHP/Composer, Node/npm i databázové příkazy spouštěj výhradně v Dockeru. PHP ani MySQL nespouštěj na hostu. Základem prostředí je `docker-compose.yml`.
+- PHP/Composer, PHP testy, aplikační PHP skripty a databázové příkazy spouštěj výhradně v Dockeru. Node/npm a frontendové nástroje spouštěj na hostu přes `nvm`; Compose zatím nemá Node službu. PHP ani MySQL nespouštěj na hostu. Základem PHP prostředí je `docker-compose.yml`.
 - Frontend ověřuj ve vlastní instanci Chrome přes MCP. Recykluj existující okna a záložky; nevytvářej nové pro každý krok či iteraci. Pro odlišná prostředí (například aplikaci a MailDev) používej samostatné současně otevřené záložky. Aplikace je po spuštění dostupná na `http://localhost:8080/`.
 
 ## Orientace
@@ -25,7 +25,7 @@ Web restaurace Kofein používá PHP 8.5, Nette Application/Forms 3.3, Nette HTT
 
 - `local/Config/config.neon` se načítá povinně po společné konfiguraci. Lokální tajné hodnoty a `.deployment-credentials.php` nepatří do Gitu ani dokumentace.
 - Veřejný kořen je `www/`, nikoli kořen repozitáře. `temp/` a `log/` musí být zapisovatelné.
-- `www/css/*.css` a `www/js/main.js` jsou verzované výstupy Gruntu. Zdroje upravuj v `asset/` a související výstupy přegeneruj v Dockeru.
+- `www/css/*.css` a `www/js/main.js` jsou verzované výstupy Gruntu. Zdroje upravuj v `asset/` a související výstupy přegeneruj na hostu přes `nvm`.
 - Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `PostManager`.
 - `App\Entity\Post` slouží i pro partial update: nepřidávej výchozí hodnoty vlastností a šablonám předávej pouze úplně hydratované entity. Viz [datový model](docs/architektura.md#obsah-a-databáze) a [ochrana entit před Rectorem](docs/vyvoj.md#rector-a-entity).
 - Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.

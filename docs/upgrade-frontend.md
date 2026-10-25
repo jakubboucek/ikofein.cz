@@ -7,7 +7,7 @@ Tento dokument je zadání a plán vícefázového refaktoringu, nikoli popis ho
 - Upgrade PHP na 8.5 je dokončen. Nová práce se týká frontendu a nezbytné integrace do PHP.
 - Větev `fe-update` je již založena z `update`, výchozí commit `9a8001a`. Implementace frontendu dosud nezačala.
 - Uživatel schválil realizaci a samostatné commity ucelených kroků. Kvůli provázanosti akceptuje i nefunkční mezilehlé commity; konečný stav musí být ověřený.
-- Před implementací zůstává otevřená volba náhrady TinyMCE. Poslední doporučení bylo vyzkoušet Jodit na skutečném obsahu; uživatel zatím editor nevybral.
+- Náhradou TinyMCE je uživatelem zvolený Jodit; praktický pokus s verzí 4.18.10 prošel. Tiptap zůstává záložní možností při problémech během integrace.
 - Zachovat veřejný vzhled, českou i anglickou verzi, tiskové styly, obsah a historii úprav. Nejde o redesign ani další backendový refaktoring.
 
 ## Zadání
@@ -46,7 +46,7 @@ Tento dokument je zadání a plán vícefázového refaktoringu, nikoli popis ho
 
 ### Prostředí a nasazení
 
-- Docker Compose má PHP 8.5, MariaDB 11.8 a MailDev, zatím nemá Node službu. Veškeré npm/build/lint příkazy spouštět v Dockeru, stejně jako PHP a databázi.
+- Docker Compose má PHP 8.5, MariaDB 11.8 a MailDev, zatím nemá Node službu. Podle upřesnění uživatele spouštět Node/npm/build/lint na hostu přes `nvm`; PHP a databázi nadále výhradně v Dockeru. Při pokusu byl na hostu Node 26.12.1 a npm 11.20.0.
 - Aplikace: `http://localhost:8080/`, MailDev: `http://localhost:1080/`.
 - Po minulém deployi byly ve `vendor/` jen produkční závislosti. Před PHP kontrolami ověřit stav a případně obnovit dev závislosti pomocí `composer install` v Dockeru.
 - Dosavadní build výstupy jsou verzované. U nového buildu výslovně rozhodnout a dokumentovat způsob distribuce; deploy nesmí skončit bez manifestu nebo jeho souborů.
@@ -71,9 +71,18 @@ Doporučení je ponechat Bootstrap a přejít na stabilní řadu 5, nikoli zavá
 
 [basicLightbox](https://github.com/electerious/basicLightbox) je malý modal pro obrázky/HTML/video, ale kompletní galerijní chování by vyžadovalo další práci. [PhotoSwipe](https://photoswipe.com/getting-started/) nabízí galerii a oddělené načítání jádra: `photoswipe/lightbox`, CSS `photoswipe/style.css`, jádro přes `() => import('photoswipe')`. Vyžaduje rozměry obrázků. Při analýze byla stabilní řada 5 a řada 6 ve vývoji; instalovat ověřenou stabilní verzi.
 
-### Otevřené rozhodnutí: editor
+### Zvolený editor: Jodit
 
-Poslední doporučení: **nejprve ověřit Jodit na reálném HTML**, jako alternativu ponechat Tiptap. Definitivní volba nebyla schválena.
+Uživatel zvolil **Jodit**, Tiptap je záložní alternativa. Balíček `jodit@4.18.10` má licenci MIT; pro požadované formátování a tabulky není potřeba Pro. Výchozí stavový řádek zobrazuje odkaz „Powered by Jodit“.
+
+Prakticky ověřeno v Chrome přes Chrome DevTools MCP CLI na lokální aplikaci:
+
+- Všech osm obsahů (`alert`, `beverages`, `dinner`, `lunch`, vždy česky a anglicky), celkem 48 tabulek, má po načtení a serializaci shodný DOM včetně atributů, tříd a inline stylů. Porovnávalo se HTML parsované prohlížečem; nejde o shodu původního řetězce, protože NBSP se zapisuje jako `&nbsp;`.
+- Pro zachování historického HTML použít `cleanHTML: {fillEmptyParagraph: false, removeEmptyElements: false, replaceOldTags: false, replaceNBSP: false}`. Výchozí konfigurace přidávala `<br>` do prázdných odstavců a buněk. Ochrany proti skriptům, event atributům a nebezpečným odkazům ponechat zapnuté.
+- Český jazykový modul je `esm/langs/cs_cz.js`, konfigurace `language: 'cs_cz'`. Testovaný UMD export používá `Jodit.lang.cs_cz`; při ESM integraci ověřit skutečné API instalované verze místo slepého převzetí `Jodit.langs` z README.
+- Ověřeno české ovládání a vložení tabulky 3 × 3 přes toolbar. Změna buňky existující tabulky, `synchronizeValues()`, odeslání formuláře a nové načtení z DB zachovaly přesně odeslané HTML obou jazyků. Původní obsah byl obnoven standardním formulářem a ověřen přesnou shodou; historie zůstala zachovaná. MailDev zachytil obě oznámení.
+- Na veřejné české stránce poledního menu mělo původní a serializované HTML shodné rozměry a pozice všech 38 elementů, barvy, tučnost a zarovnání (po odečtení testovacího textu). Původní obsah je obnovený i na veřejné stránce.
+- Pokus používal lokální UMD JS/CSS na stávající administraci a načtení skriptu s nonce. Nenahrazuje závěrečnou kontrolu ESM buildu, lazy loadingu, CSP, mobilního ovládání a klávesnicové přístupnosti. Pro zdrojový režim použít `sourceEditor: 'area'`, aby nebyl potřeba externí Ace editor.
 
 | Varianta | Přínos | Co ověřit / náklady |
 | --- | --- | --- |
@@ -90,8 +99,8 @@ Navržené minimum toolbaru (upřesnit podle reálného použití): odstavce/nad
 
 ## Pořadí realizace
 
-0. Uzavřít s uživatelem volbu editoru. Doporučený praktický pokus: načíst existující menu, upravit buňku tabulky, uložit, znovu otevřít a porovnat HTML i veřejný vzhled. Neslibovat bezeztrátovost bez ověření.
-1. Zavést Docker Node, Vite, Nette Assets a manifest, rozdělit entry pointy. Stanovit build/deploy workflow.
+0. Hotovo: zvolen a prakticky ověřen Jodit; podmínky integrace jsou výše.
+1. Zavést Vite, Nette Assets a manifest, rozdělit entry pointy. Node spouštět na hostu přes `nvm`. Stanovit build/deploy workflow.
 2. Převést veřejné styly na SCSS, migrovat galerii a odstranit veřejné jQuery i redundantní cookie skript.
 3. Převést administraci na Bootstrap 5, upravit renderer a šablony, přidat lokální Nette Forms.
 4. Integrovat vybraný editor, jeho CSS/jazyk a dynamické načítání jen na editačních stránkách.
@@ -101,7 +110,7 @@ Navržené minimum toolbaru (upřesnit podle reálného použití): odstavce/nad
 ## Ověření a hranice práce
 
 - Přečíst aktuální `AGENTS.md`, `docs/vyvoj.md` a relevantní Nette skills (frontend; před změnami také Latte, konfigurace a Forms).
-- Spouštět všechny nástroje v Dockeru. Existující PHP kontroly: `composer test`, `composer phpstan`, `composer latte-lint`, podle PHP změn také `composer rector:check`.
+- PHP a databázové nástroje spouštět v Dockeru, Node/npm na hostu přes `nvm`. Existující PHP kontroly: `composer test`, `composer phpstan`, `composer latte-lint`, podle PHP změn také `composer rector:check`.
 - Přes MCP Chrome ověřit veřejné stránky v obou jazycích, mobilní rozložení, tisk, galerii včetně klávesnice a zavření, konzoli a síť/CSP.
 - Ověřit dashboard, všechny čtyři editované obsahy, uložení a zobrazení HTML/tabulek, klientskou validaci, přihlášení, odhlášení a reset hesla. Editor se nemá stahovat na dashboardu ani přihlašovacích stránkách.
 - Pro aplikaci a MailDev používat dvě současné záložky a recyklovat je; nevytvářet okna pro každou iteraci. ID záložek z minulé session nejsou trvalá, nejprve zjistit aktuální stav.

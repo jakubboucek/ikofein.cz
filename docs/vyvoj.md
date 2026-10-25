@@ -105,12 +105,13 @@ Jde výhradně o lokální testovací přihlašovací údaje. Databáze ani tent
 
 Zdroje jsou v `asset/`, závislosti Boweru určuje `bower.json`. Grunt vyžaduje současně `node_modules/` a `bower_components/`. Výstupy v `www/css/` a `www/js/main.js` jsou verzované. Compose nemá službu pro Node ani projekt neurčuje jeho verzi.
 
-Následující příklad používá jednorázový Node kontejner; Node 22 je zde volba pro spuštění nástrojů, nikoli deklarovaný požadavek projektu. Sestavení tímto postupem není automaticky ověřováno testy:
+Node a npm se spouštějí na hostu přes `nvm`; PHP a databáze nadále pouze v Dockeru. Projekt zatím nepřipíná verzi Node. Sestavení tímto postupem není automaticky ověřováno testy:
 
 ```sh
-docker run --rm -v "$PWD:/app" -w /app node:22 npm ci
-docker run --rm -v "$PWD:/app" -w /app node:22 npx --yes --package=bower bower install --allow-root
-docker run --rm -v "$PWD:/app" -w /app node:22 ./node_modules/.bin/grunt
+source ~/.nvm/nvm.sh
+npm ci
+npx --yes --package=bower bower install
+./node_modules/.bin/grunt
 ```
 
 Po změně zdrojů zkontroluj diff vygenerovaných souborů. Frontend ověřuj ve vlastní instanci Chrome přes MCP a recykluj otevřená okna a záložky. Aplikaci a MailDev měj v samostatných současně otevřených záložkách; nevytvářej nové pro každou iteraci. Zkontroluj dotčené stránky v obou jazycích, konzoli a načtení assetů. E-maily z uložení obsahu a resetu hesla ověř v MailDev.
