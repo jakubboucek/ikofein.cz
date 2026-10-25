@@ -7,7 +7,6 @@
     "type": "project",
     "require": {
         "php": "^8.3",
-        "aws/aws-sdk-php": "^3.325",
         "firebase/php-jwt": "^6.10",
         "latte/latte": "^3.0",
         "nette/application": "^3.2",
@@ -38,8 +37,7 @@
     },
     "autoload-dev": {
         "classmap": [
-            "app/",
-            "libs/"
+            "app/"
         ]
     },
     "config": {
@@ -49,13 +47,7 @@
         "optimize-autoloader": true,
         "sort-packages": true
     },
-    "extra": {
-        "aws/aws-sdk-php": [
-            "Ses"
-        ]
-    },
     "scripts": {
-        "pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices",
-        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app libs"
+        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app"
     }
 }

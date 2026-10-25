@@ -14,11 +14,10 @@
 | `app/Model/` | Obsah, uživatelé, JWT a cesta k veřejným souborům |
 | `app/Components/Post/` | Vykreslování a cache dynamického obsahu |
 | `app/Forms/` | Úprava vykreslování Nette Forms pro Bootstrap |
-| `libs/Aws/` | DI rozšíření AWS a mailer pro SES |
 | `asset/` | Zdrojový JavaScript a LESS |
 | `temp/`, `log/` | Cache a diagnostika; obsah se neverzuje |
 
-`www/index.php` načte Composer a spustí aplikaci přes `App\Bootstrap`. RobotLoader prochází `app/` a `libs/`. Společná konfigurace se načítá před lokální. Časové pásmo aplikace je `Europe/Prague`; debug režim určuje `redbitcz/debug-mode-enabler`.
+`www/index.php` načte Composer a spustí aplikaci přes `App\Bootstrap`. RobotLoader prochází `app/`. Společná konfigurace se načítá před lokální. Časové pásmo aplikace je `Europe/Prague`; debug režim určuje `redbitcz/debug-mode-enabler`.
 
 ## Stránky a routování
 
@@ -56,7 +55,7 @@ Databázový přístup používá Nette Database Explorer. Následující přehl
 
 Obnova hesla používá JWT s HS256 a platností jedné hodiny. JWT obsahuje e-mail a náhodný token; databáze uchovává jeho SHA-256 hash v Base64. Kontroluje se podpis, expirace, issuer a audience. Nová žádost nahrazuje předchozí token, změna hesla jej zneplatní.
 
-`JakubBoucek\Aws\SesMailer` odesílá přes AWS SES. Výchozí region rozšíření je `eu-west-1`. E-mail se odesílá při obnově hesla a po uložení obsahu; uložení do databáze předchází odeslání oznámení. Composer z AWS SDK ponechává pouze službu SES.
+Presentery přijímají rozhraní `Nette\Mail\Mailer`. Výchozí `SmtpMailer` odesílá do vývojového MailDev na `maildev:1025`; produkční `mail.smtp: false` vybírá `SendmailMailer`. E-mail se odesílá při obnově hesla a po uložení obsahu; uložení do databáze předchází odeslání oznámení.
 
 ## Frontend
 

@@ -11,7 +11,6 @@ return [
         'test' => false,
         'include' => [
             '/app',
-            '/libs',
             '/www',
             '/vendor',
         ],

@@ -8,7 +8,6 @@ use App\Forms\BootstrapizeForm;
 use App\Model;
 use DateTime;
 use DateTimeInterface;
-use JakubBoucek\Aws;
 use Latte;
 use Nette;
 use Nette\Application\BadRequestException;
@@ -22,10 +21,10 @@ class PostPresenter extends Nette\Application\UI\Presenter
     use RequireLoggedUser;
 
     private Model\Post $postModel;
-    private Aws\SesMailer $mailer;
+    private Mail\Mailer $mailer;
 
 
-    public function __construct(Model\Post $postModel, Aws\SesMailer $mailer)
+    public function __construct(Model\Post $postModel, Mail\Mailer $mailer)
     {
         parent::__construct();
         $this->postModel = $postModel;

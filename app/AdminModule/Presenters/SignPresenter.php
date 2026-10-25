@@ -9,7 +9,6 @@ use App\Model\Jwt\Jwt;
 use App\Model\Jwt\JwtException;
 use App\Model\UserManager;
 use App\Model\UserNotFoundException;
-use JakubBoucek\Aws\SesMailer;
 use Latte;
 use Nette;
 use Nette\Application\UI;
@@ -27,10 +26,10 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public ?string $backlink = null;
     private readonly UserManager $userManager;
     private readonly Jwt $jwt;
-    private readonly SesMailer $mailer;
+    private readonly Mail\Mailer $mailer;
 
 
-    public function __construct(UserManager $userManager, Jwt $jwt, SesMailer $mailer)
+    public function __construct(UserManager $userManager, Jwt $jwt, Mail\Mailer $mailer)
     {
         parent::__construct();
         $this->userManager = $userManager;

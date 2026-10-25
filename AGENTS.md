@@ -23,4 +23,5 @@ Web restaurace Kofein používá PHP 8.3, Nette 3.2, Latte 3, MariaDB a frontend
 - Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `Post`.
 - Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.
 - Repozitář neobsahuje databázové migrace, seed ani automatickou testovací sadu. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
-- Uložení obsahu i obnova hesla odesílají skutečný e-mail přes AWS SES. Nasazovací skripty pracují s produkcí, včetně mazání vzdálených souborů.
+- Uložení obsahu i obnova hesla odesílají e-mail přes Nette Mailer. Výchozí SMTP míří do lokálního MailDev (`http://localhost:1080/`); produkční konfigurace přepíná na sendmail pomocí `mail.smtp: false`.
+- Nasazovací skripty pracují s produkcí, včetně mazání vzdálených souborů.
