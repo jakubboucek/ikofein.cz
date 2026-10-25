@@ -1,5 +1,4 @@
 {varType string $lang}
-{varType string $wwwDir}
 {varType string[] $altLangs}
 {varType array[] $dataLayer}
 {varType bool $readyForPost}
@@ -14,13 +13,12 @@
     </title>
     <meta name="author" content="Solar flare s.r.o.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{$basePath}/css/main.css?{=filemtime($wwwDir . '/css/main.css')}">
+    {asset 'front.js'}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico" />
 
     {ifset $altLangs}
     <link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
     {/ifset}
-    <script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
     <script n:nonce>
         dataLayer = {ifset $dataLayer}{$dataLayer}{else}[]{/ifset};
         (function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':

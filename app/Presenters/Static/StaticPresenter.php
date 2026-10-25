@@ -6,7 +6,6 @@ namespace App\Presenters\Static;
 
 use App\Component\PostRenderer;
 use App\Model\PageNotFoundException;
-use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Bridges\ApplicationLatte\DefaultTemplate;
@@ -34,7 +33,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     public function __construct(
         private readonly PostRenderer $postRenderer,
-        private readonly WebDir $wwwDir,
     ) {
         parent::__construct();
     }
@@ -44,7 +42,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     public function beforeRender(): void
     {
         $this->template->readyForPost = true;
-        $this->template->wwwDir = $this->wwwDir->getPath();
     }
 
 
