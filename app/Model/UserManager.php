@@ -11,7 +11,6 @@ use Nette\Security\AuthenticationException;
 use Nette\Security\IIdentity;
 use Nette\Security\Passwords;
 use Nette\Security\SimpleIdentity;
-use Nette\Utils\Random;
 
 class UserManager implements Nette\Security\Authenticator
 {
@@ -23,7 +22,6 @@ class UserManager implements Nette\Security\Authenticator
     private const string COLUMN_EMAIL = 'email';
     private const string COLUMN_PASSWORD_HASH = 'password';
     private const string COLUMN_ROLE = 'role';
-    private const string COLUMN_RESET_TOKEN = 'reset_hash';
 
     private Explorer $database;
     private Passwords $passwords;
@@ -41,6 +39,12 @@ class UserManager implements Nette\Security\Authenticator
      */
     public function authenticate(string $username, string $password): IIdentity
     {
+        return $this->database->transaction(fn(): IIdentity => $this->authenticateLocked($username, $password));
+    }
+
+    private function authenticateLocked(string $username, string $password): IIdentity
+    {
+        $this->database->query('SELECT id FROM `user` WHERE email = ? FOR UPDATE', $username)->fetch();
         try {
             $row = $this->getUserByEmail($username);
         } catch (UserNotFoundException) {
@@ -66,7 +70,7 @@ class UserManager implements Nette\Security\Authenticator
         }
 
         $arr = $row->toArray();
-        unset($arr[self::COLUMN_PASSWORD_HASH]);
+        unset($arr[self::COLUMN_PASSWORD_HASH], $arr['reset_hash'], $arr['reset_selector'], $arr['reset_expires_at'], $arr['reset_requested_at']);
         return new SimpleIdentity($row[self::COLUMN_ID], $row[self::COLUMN_ROLE], $arr);
     }
 
@@ -86,49 +90,9 @@ class UserManager implements Nette\Security\Authenticator
     }
 
 
-    public function startResetPassword(string $email): string
+    public function isIdentityCurrent(IIdentity $identity): bool
     {
-        $row = $this->getUserByEmail($email);
-
-        $token = Random::generate(16);
-
-        $hash = base64_encode(hash('sha256', $token, true));
-
-        $row->update([self::COLUMN_RESET_TOKEN => $hash]);
-
-        return $token;
-    }
-
-
-    public function stopResetPassword(string $email): void
-    {
-        $row = $this->getUserByEmail($email);
-
-        $row->update([self::COLUMN_RESET_TOKEN => null]);
-    }
-
-    public function verifyResetPasswordToken(string $email, string $token): bool
-    {
-        $row = $this->getUserByEmail($email);
-
-        if ($row['reset_hash'] === null) {
-            return false;
-        }
-
-        $hash = base64_encode(hash('sha256', $token, true));
-
-        return hash_equals($row['reset_hash'], $hash);
-    }
-
-
-    public function setPassword(string $email, string $password): void
-    {
-        $row = $this->getUserByEmail($email);
-        $row->update(
-            [
-                self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
-                self::COLUMN_RESET_TOKEN => null,
-            ]
-        );
+        $row = $this->database->table('user')->wherePrimary($identity->getId())->fetch();
+        return $row !== null && ($identity->getData()['auth_version'] ?? null) === $row->auth_version;
     }
 }

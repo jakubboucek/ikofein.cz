@@ -11,7 +11,7 @@
 | `app/Router/` | Definice rout |
 | `app/Presenters/` | Veřejné stránky, chybové presentery a jejich šablony |
 | `app/AdminModule/Presenters/` | Přihlášení, obnova hesel, přehled a editace obsahu |
-| `app/Model/` | Obsah, uživatelé, JWT a cesta k veřejným souborům |
+| `app/Model/` | Obsah, uživatelé, obnova hesla a cesta k veřejným souborům |
 | `app/Components/Post/` | Vykreslování a cache dynamického obsahu |
 | `app/Forms/` | Úprava vykreslování Nette Forms pro Bootstrap |
 | `asset/` | Zdrojový JavaScript a LESS |
@@ -36,12 +36,12 @@ První routa obsluhuje `admin/<presenter>/<action>`, s výchozím `Dashboard:def
 
 ## Obsah a databáze
 
-Databázový přístup používá Nette Database Explorer. Následující přehled popisuje pole používaná kódem; SQL schéma, migrace ani seed nejsou v repozitáři.
+Databázový přístup používá Nette Database Explorer. Následující přehled popisuje pole používaná kódem; úplné výchozí SQL schéma ani seed nejsou v repozitáři. Inkrementální migrace jsou v `migrations/structures/`; aplikační tabulky používají InnoDB.
 
 | Tabulka | Pole používaná aplikací |
 | --- | --- |
 | `post` | `key`, `version`, `title`, `content_cs`, `content_en`, `published_from`, `published_to`, `hash`, `created_at`, `created_by` |
-| `user` | `id`, `name`, `email`, `password`, `role`, `reset_hash` |
+| `user` | `id`, `name`, `email`, `password`, `role`, `reset_hash`, `reset_selector`, `reset_expires_at`, `reset_requested_at`, `auth_version` |
 
 - Šablony používají obsahové klíče `lunch`, `dinner`, `beverages` a `alert`.
 - Aktivní řádek má `version = current`. `Post::save()` aktualizuje existující aktivní řádek, doplní autora, čas a náhodný hash a vloží historickou kopii s verzí ve formátu `DateTime::ATOM`. Nevytváří nový obsahový klíč.
@@ -53,7 +53,11 @@ Databázový přístup používá Nette Database Explorer. Následující přehl
 
 `RequireLoggedUser` chrání přehled a editaci obsahu a uchovává návratový odkaz při přesměrování na přihlášení. `UserManager` ověřuje e-mail a hash hesla přes Nette Passwords; při potřebě aktualizuje hash. Role se přenáší do identity, uvedený guard kontroluje přihlášení. Konfigurace session má expiraci 14 dní.
 
-Obnova hesla používá JWT s HS256 a platností jedné hodiny. JWT obsahuje e-mail a náhodný token; databáze uchovává jeho SHA-256 hash v Base64. Kontroluje se podpis, expirace, issuer a audience. Nová žádost nahrazuje předchozí token, změna hesla jej zneplatní.
+Obnovu hesla zajišťuje `PasswordReset`: odkaz obsahuje hexadecimální selector (16 náhodných bajtů) a verifier (32 bajtů). DB uchovává pouze selector a SHA-256 verifieru; porovnání používá `hash_equals()`. Platnost je hodina, časy resetu se ukládají v UTC. Nová přijatá žádost nahrazuje předchozí token. Dokončení a zrušení používají transakci a zámek uživatelského řádku `FOR UPDATE`; dokončení mění heslo, maže token a zvyšuje `auth_version`. Autentizace včetně rehashování používá stejný zámek. Staré sessions a identity bez verze se při dalším chráněném požadavku odhlásí. Do identity se nekopírují resetové údaje ani hash hesla.
+
+Žádosti jsou omezené na 20 za 15 minut na IP, 5 za hodinu na účet a nejméně 60 sekund mezi vydáním tokenů. Ověřování, dokončení a rušení sdílejí limit 60 pokusů za 15 minut na IP. Čítače v `password_reset_limit` se mění pod transakčním zámkem a starší než den se při provozu odstraňují. Neúspěšný verifier token neruší. Odpověď na žádost neprozrazuje existenci účtu, ale synchronní odesílání e-mailu může ovlivnit čas odpovědi.
+
+GET pouze zobrazuje formuláře; změna i zrušení resetu vyžadují POST s CSRF ochranou Nette Forms. Absolutní odkazy vytváří standardní `Presenter::link()`. Stránky přihlášení a resetu mají `no-store`, `no-referrer` a nenačítají externí JavaScript. Nové heslo má alespoň 15 znaků a nejvýše 72 bajtů UTF-8 kvůli současnému bcryptu. Po změně následuje oznámení e-mailem a běžné přihlášení. Selhání oznámení nevrací již provedenou změnu hesla.
 
 Presentery přijímají rozhraní `Nette\Mail\Mailer`. Výchozí `SmtpMailer` odesílá do vývojového MailDev na `maildev:1025`; produkční `mail.smtp: false` vybírá `SendmailMailer`. E-mail se odesílá při obnově hesla a po uložení obsahu; uložení do databáze předchází odeslání oznámení.
 

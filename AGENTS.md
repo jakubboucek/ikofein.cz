@@ -14,6 +14,8 @@ Web restaurace Kofein používá PHP 8.3, Nette 3.2, Latte 3, MariaDB a frontend
 - [README.md](README.md): vstupní přehled.
 - [docs/architektura.md](docs/architektura.md): struktura, routování, obsah, přihlášení a integrace.
 - [docs/vyvoj.md](docs/vyvoj.md): Docker, konfigurace, sestavení, kontroly a nasazení.
+- [migrations/README.md](migrations/README.md): SQL migrace kompatibilní s Nextras Migrations.
+- [docs/upgrade-nette.md](docs/upgrade-nette.md): bezpečnostní návaznosti upgradu Nette.
 
 ## Důležité souvislosti
 
@@ -22,6 +24,6 @@ Web restaurace Kofein používá PHP 8.3, Nette 3.2, Latte 3, MariaDB a frontend
 - `www/css/*.css` a `www/js/main.js` jsou verzované výstupy Gruntu. Zdroje upravuj v `asset/` a související výstupy přegeneruj v Dockeru.
 - Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `Post`.
 - Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.
-- Repozitář neobsahuje databázové migrace, seed ani automatickou testovací sadu. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
+- SQL migrace jsou v `migrations/structures/`, integrační test resetu v `tests/password-reset.php`. Kompletní výchozí schéma ani seed nejsou v repozitáři. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
 - Uložení obsahu i obnova hesla odesílají e-mail přes Nette Mailer. Výchozí SMTP míří do lokálního MailDev (`http://localhost:1080/`); produkční konfigurace přepíná na sendmail pomocí `mail.smtp: false`.
 - Nasazovací skripty pracují s produkcí, včetně mazání vzdálených souborů.

@@ -7,7 +7,6 @@
     "type": "project",
     "require": {
         "php": "^8.3",
-        "firebase/php-jwt": "^6.10",
         "latte/latte": "^3.0",
         "nette/application": "^3.2",
         "nette/bootstrap": "^3.2",

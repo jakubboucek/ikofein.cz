@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\AdminModule\Presenters;
 
 use App\Forms\BootstrapizeForm;
-use App\Model\Jwt\Jwt;
-use App\Model\Jwt\JwtException;
+use App\Model\PasswordReset;
+use App\Model\InvalidPasswordResetException;
 use App\Model\UserManager;
-use App\Model\UserNotFoundException;
 use Latte;
 use Nette;
 use Nette\Application\UI;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\TextInput;
 use Nette\Mail;
 use Nette\Security\SimpleIdentity;
@@ -20,20 +18,18 @@ use Nette\Utils\ArrayHash;
 
 class SignPresenter extends Nette\Application\UI\Presenter
 {
-    private const string RESET_PASSWORD_AUDIENCE = 'reset-password';
-
     /** @persistent */
     public ?string $backlink = null;
     private readonly UserManager $userManager;
-    private readonly Jwt $jwt;
+    private readonly PasswordReset $passwordReset;
     private readonly Mail\Mailer $mailer;
 
 
-    public function __construct(UserManager $userManager, Jwt $jwt, Mail\Mailer $mailer)
+    public function __construct(UserManager $userManager, PasswordReset $passwordReset, Mail\Mailer $mailer)
     {
         parent::__construct();
         $this->userManager = $userManager;
-        $this->jwt = $jwt;
+        $this->passwordReset = $passwordReset;
         $this->mailer = $mailer;
     }
 
@@ -81,14 +77,14 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function renderChangePassword(string $token): void
     {
         try {
-            $this->getUserActiveRowFromToken($token);
+            $this->passwordReset->verify($token, $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
 
             /** @var UI\Form $passwordForm */
             $passwordForm = $this['setPasswordForm'];
             /** @var Nette\Forms\Controls\HiddenField $tokenFiled */
             $tokenFiled = $passwordForm['token'];
             $tokenFiled->setDefaultValue($token);
-        } catch (SignResetPasswordTokenException $e) {
+        } catch (InvalidPasswordResetException $e) {
             $this->flashMessage($e->getMessage(), 'danger');
             $this->redirect('Dashboard:');
         }
@@ -101,19 +97,40 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $this->redirect(':Static:');
     }
 
-    public function actionCancelReset(string $token): void
+    protected function startup(): void
     {
-        try {
-            $user = $this->getUserActiveRowFromToken($token);
-            $this->userManager->stopResetPassword($user->email);
-        } catch (SignResetPasswordTokenException) {
-            // User doesn't exists, just fake response
-            /** @noinspection PhpUnhandledExceptionInspection */
-            usleep(random_int(10_000, 200_000));
+        parent::startup();
+        $this->getSession()->start();
+        $this->getHttpResponse()->setHeader('Referrer-Policy', 'no-referrer');
+        $this->getHttpResponse()->setHeader('Cache-Control', 'no-store');
+        $identity = $this->getUser()->getIdentity();
+        if ($this->getUser()->isLoggedIn() && (!$identity || !$this->userManager->isIdentityCurrent($identity))) {
+            $this->getUser()->logout(true);
         }
+    }
 
-        $this->flashMessage('Proces pro reset hesla byl zrušen, odkaz v e-mailu je nyní neplatný.', 'success');
-        $this->redirect('Dashboard:');
+    public function renderCancelReset(string $token): void
+    {
+        $this['cancelResetForm']->setDefaults(['token' => $token]);
+    }
+
+    public function createComponentCancelResetForm(): UI\Form
+    {
+        $form = new UI\Form;
+        $form->addHidden('token');
+        $form->addSubmit('send', 'Zrušit žádost o změnu hesla');
+        $form->addProtection('Z důvodu ochrany prosím odešlete ještě jednou');
+        $form->onSuccess[] = function (UI\Form $form, ArrayHash $values): void {
+            try {
+                $this->passwordReset->cancel($values['token'], $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
+            } catch (InvalidPasswordResetException) {
+                // Cancellation is deliberately idempotent from the user's perspective.
+            }
+            $this->flashMessage('Žádost byla zrušena nebo již není platná.', 'success');
+            $this->redirect('Sign:in');
+        };
+        BootstrapizeForm::bootstrapize($form);
+        return $form;
     }
 
     public function createComponentSignInForm(): UI\Form
@@ -183,21 +200,17 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $values = $form->values;
         $email = $values['email'];
 
-        try {
-            $token = $this->userManager->startResetPassword($email);
-            $jwt = $this->jwt->encode($email, $token, '+1 hour', $this->getResetPasswordAudience());
-            $this->sendChangeNotification($email, $jwt);
-        } catch (UserNotFoundException) {
-            // User doesn't exists, just fake response
-            /** @noinspection PhpUnhandledExceptionInspection */
-            usleep(random_int(10_000, 200_000));
+        $request = $this->passwordReset->request($email, $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
+        if ($request !== null) {
+            try {
+                $this->sendChangeNotification($request['email'], $request['token']);
+            } catch (Mail\SendException) {
+                // Do not expose account existence or log reset tokens via exception arguments.
+                \Tracy\Debugger::log('Password reset email delivery failed.', \Tracy\ILogger::ERROR);
+            }
         }
-
         $this->flashMessage(
-            'Proces pro reset hesla byl zahájen. Pokud Vámi zadaný e-mail' .
-            ' existuje v databázi, byla na něj právě odeslána zpráva s pokyny pro dokončení procesu. Všechny dříve' .
-            ' odeslané žádosti o reset hesla jsou tímto okamžikem zneplatněny.' .
-            ' Žádost je platná 1 hodinu.',
+            'Pokud účet existuje a nebyl překročen limit žádostí, obdržíte e-mail s odkazem platným jednu hodinu. Nový odkaz nahrazuje předchozí.',
             'success'
         );
         $this->redirect('this');
@@ -211,11 +224,15 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addPassword('password', 'Heslo:')
             ->setRequired('Heslo musí být vyplněno')
+            ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 15)
+            ->addRule(static fn(\Nette\Forms\Controls\TextInput $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
             ->setHtmlAttribute('autofocus')
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
+            ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 15)
+            ->addRule(static fn(\Nette\Forms\Controls\TextInput $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
             ->addRule(UI\Form::Equal, 'Hesla se neshodují', $form['password'])
             ->setHtmlAttribute('autocomplete', 'new-password');
 
@@ -235,17 +252,22 @@ class SignPresenter extends Nette\Application\UI\Presenter
     public function setPasswordFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         try {
-            $user = $this->getUserActiveRowFromToken($values['token']);
-        } catch (SignResetPasswordTokenException $e) {
+            $email = $this->passwordReset->complete($values['token'], $values['password'], $this->getHttpRequest()->getRemoteAddress() ?? 'unknown');
+        } catch (InvalidPasswordResetException $e) {
             $form->addError($e->getMessage());
             return;
         }
-
-        $email = $user->email;
-        $password = $values['password'];
-        $this->userManager->setPassword($email, $password);
-        $this->userManager->stopResetPassword($email);
-
+        $this->getUser()->logout(true);
+        try {
+            $mail = (new Mail\Message)
+                ->setFrom('no-reply@ikofein.cz', 'Kofein automat')
+                ->addTo($email)
+                ->setSubject('Heslo k webu ikofein.cz bylo změněno')
+                ->setBody('Vaše heslo bylo změněno a předchozí přihlášení zneplatněna. Pokud jste změnu neprovedli, kontaktujte správce webu.');
+            $this->mailer->send($mail);
+        } catch (Mail\SendException) {
+            \Tracy\Debugger::log('Password change notification delivery failed.', \Tracy\ILogger::ERROR);
+        }
         $this->flashMessage('Heslo bylo změněno', 'success');
         $this->redirect('Sign:in');
     }
@@ -253,6 +275,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
     /**
      * @throws UI\InvalidLinkException
+     * @throws Mail\SendException
      */
     private function sendChangeNotification(string $email, string $token): void
     {
@@ -280,41 +303,4 @@ class SignPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param string $token
-     * @return ActiveRow
-     * @throws SignResetPasswordTokenException
-     */
-    private function getUserActiveRowFromToken(string $token): ActiveRow
-    {
-        try {
-            $tokenData = $this->jwt->decode($token, $this->getResetPasswordAudience());
-        } catch (JwtException $e) {
-            throw new SignResetPasswordTokenException(
-                'Odkaz na reset hesla je poškozený, zkuste jej poslat znovu.',
-                0,
-                $e
-            );
-        }
-
-        $email = $tokenData['subject'];
-        $token = $tokenData['value'];
-
-        try {
-            $user = $this->userManager->getUserByEmail($email);
-        } catch (UserNotFoundException) {
-            throw new SignResetPasswordTokenException('Uživatel neexistuje, nebo byl smazán');
-        }
-
-        if ($this->userManager->verifyResetPasswordToken($email, $token) === false) {
-            throw new SignResetPasswordTokenException('Odkaz na reset hesla byl zneplatněn, zkuste jej poslat znovu.');
-        }
-
-        return $user;
-    }
-
-    private function getResetPasswordAudience(): string
-    {
-        return Jwt::ISSUER_ID . '/' . self::RESET_PASSWORD_AUDIENCE;
-    }
 }

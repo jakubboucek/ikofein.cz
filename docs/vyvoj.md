@@ -31,10 +31,10 @@ Tím se použije `Nette\Mail\SendmailMailer` a systémové odesílání pošty n
 
 ## První spuštění
 
-1. Připrav neversionovaný `local/Config/config.neon`. Bootstrap jej vždy načítá. Musí doplnit zejména `parameters.jwt.base64-key` (Base64 podpisový klíč); podle prostředí může přepsat databázi.
+1. Připrav neversionovaný `local/Config/config.neon`. Bootstrap jej vždy načítá. Může být prázdný (`[]`) nebo podle prostředí přepsat databázi a mailer.
 2. Zajisti zapisovatelné `temp/` a `log/` a spusť kontejnery.
 3. Nainstaluj Composer závislosti podle lockfile.
-4. Obnov odpovídající databázi z dostupné zálohy. Vytvoření databáze `default` image nenahradí aplikační tabulky ani data. Repozitář nemá SQL schéma, migrace, seed ani výchozí účet.
+4. Obnov odpovídající databázi z dostupné zálohy. Vytvoření databáze `default` image nenahradí aplikační tabulky ani data. Repozitář nemá úplné výchozí SQL schéma ani seed; na obnovenou DB aplikuj chybějící migrace podle `migrations/README.md`.
 
 ```sh
 docker compose up -d
@@ -50,7 +50,7 @@ docker compose exec mysqldb mariadb -u root -p default
 
 Data databáze přetrvávají v `.docker/mysql/data`; tento adresář nemaž při běžném restartu. Lokální konfiguraci, databázová data a přístupové údaje necommituj.
 
-Při přechodu na nižší řadu MariaDB obnov aplikační databázi z logického exportu do nově inicializovaného úložiště; nepoužívej původní datový adresář ani systémové databáze vyšší verze. Tabulky aplikace používají MyISAM, proto export vyžaduje zamezení zápisům a zámky tabulek; samotné `--single-transaction` nestačí. Fyzickou zálohu datového adresáře pořizuj až po čistém zastavení databáze.
+Při přechodu na nižší řadu MariaDB obnov aplikační databázi z logického exportu do nově inicializovaného úložiště; nepoužívej původní datový adresář ani systémové databáze vyšší verze. Aplikační tabulky používají InnoDB; konzistentní logický export může použít `--single-transaction`, během exportu však neměň schéma. Fyzickou zálohu datového adresáře pořizuj až po čistém zastavení databáze.
 
 ## Běžné příkazy
 
@@ -66,7 +66,7 @@ docker compose stop
 
 Pro příkaz bez běžících služeb lze použít `docker compose run --rm --no-deps web <command>`; tento režim nezajišťuje databázi ani zpřístupnění webu.
 
-PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. `rector.php` konfiguruje Rector 2 pro `app/` a `www/`; jeho spuštění není součástí běžného startu. Automatická testovací sada není přítomna a `npm test` končí záměrně chybou.
+PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. `rector.php` konfiguruje Rector 2 pro `app/` a `www/`; jeho spuštění není součástí běžného startu. Integrační test resetu hesla se spouští příkazem `docker compose exec -T web php tests/password-reset.php`. Vyžaduje migrovanou testovací DB; vytvoří vlastní účet a čítače, které po testu odstraní. Testuje i dva souběžné PHP procesy. `npm test` končí záměrně chybou.
 
 Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
 

@@ -1,7 +1,3 @@
-parameters:
-    jwt:
-        base64-key: {put-here-key}
-
 application:
     errorPresenter: Error
     mapping:
@@ -53,7 +49,7 @@ tracy:
 services:
     - App\Model\Post
     - App\Model\WebDir(%wwwDir%)
-    - App\Model\Jwt\Jwt(%jwt.base64-key%)
+    - App\Model\PasswordReset
     postRenderer: App\Component\PostRenderer
     router: App\Router\RouterFactory::createRouter
     authenticator: App\Model\UserManager
