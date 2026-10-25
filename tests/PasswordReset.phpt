@@ -220,9 +220,12 @@ final class PasswordResetTest extends TestCase
             for ($i = 0; $i < 2; $i++) {
                 $process = proc_open([PHP_BINARY, __DIR__ . '/helpers/reset-worker.php', $this->ip], [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes);
                 Assert::type('resource', $process);
+                $workers[] = [$process, $pipes];
+                Assert::same("ready\n", fgets($pipes[1]), 'Worker must finish bootstrapping before the concurrent reset starts.');
+            }
+            foreach ($workers as [$process, $pipes]) {
                 fwrite($pipes[0], $token);
                 fclose($pipes[0]);
-                $workers[] = [$process, $pipes];
             }
             $results = [];
             foreach ($workers as [$process, $pipes]) {

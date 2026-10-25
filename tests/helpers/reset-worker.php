@@ -6,6 +6,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 $container = App\Bootstrap::boot()->createContainer();
 $reset = $container->getByType(App\Model\PasswordReset::class);
+fwrite(STDOUT, "ready\n");
 $token = trim(stream_get_contents(STDIN));
 try {
     $reset->complete($token, 'Concurrent-reset-password!', $argv[1]);
