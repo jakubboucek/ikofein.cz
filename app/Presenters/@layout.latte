@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="{$lang}" class="{$lang}" dir="ltr">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>{ifset #h1}{include h1} - {/ifset}
         {if $lang=='cs'}Kofein restaurant na pražských Vinohradech{/if}
         {if $lang=='en'}Kofein restaurant in Vinohrady - Prague{/if}
@@ -13,7 +13,7 @@
     <meta name="author" content="Solar flare s.r.o.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {asset 'front.js'}
-    <link rel="shortcut icon" href="{$basePath}/favicon.ico" />
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
     {ifset $altLangs}
     <link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
