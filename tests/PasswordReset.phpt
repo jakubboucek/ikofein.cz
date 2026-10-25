@@ -12,6 +12,7 @@ use Nette\DI\Container;
 use Nette\Security\Passwords;
 use Nette\Security\SimpleIdentity;
 use Tester\Assert;
+use Tester\HttpAssert;
 use Tester\TestCase;
 
 $container = require __DIR__ . '/bootstrap.php';
@@ -46,6 +47,7 @@ final class PasswordResetTest extends TestCase
         $this->keys = array_map(fn(string $scope): string => hash('sha256', $scope), [
             'request-ip:' . $this->ip, 'verify-ip:' . $this->ip,
             'request-account:' . $this->id, 'request-account:missing-' . $this->email,
+            'verify-ip:127.0.0.1',
         ]);
     }
 
@@ -244,6 +246,51 @@ final class PasswordResetTest extends TestCase
                     proc_close($process);
                 }
             }
+        }
+    }
+
+    /** @dataProvider formOrigins */
+    public function testCancellationFormOrigin(?string $site, bool $legacyCookie, bool $accepted): void
+    {
+        $token = $this->issue();
+        $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
+        if ($site !== null) {
+            $headers['Sec-Fetch-Site'] = $site;
+        }
+        HttpAssert::fetch(
+            'http://localhost/admin/sign/cancel-reset?token=' . rawurlencode($token),
+            method: 'POST',
+            headers: $headers,
+            cookies: $legacyCookie ? ['_nss' => '1'] : [],
+            body: http_build_query(['token' => $token, '_do' => 'cancelResetForm-submit', 'send' => 'Cancel']),
+        )->expectCode(303);
+
+        $selector = $this->db->table('user')->get($this->id)->reset_selector;
+        Assert::same($accepted ? null : explode('.', $token)[0], $selector);
+    }
+
+    protected function formOrigins(): array
+    {
+        return [
+            'same origin' => ['same-origin', false, true],
+            'same site is not same origin' => ['same-site', true, false],
+            'cross site' => ['cross-site', true, false],
+            'direct POST' => ['none', true, false],
+            'invalid metadata' => ['invalid', true, false],
+            'legacy browser with strict cookie' => [null, true, true],
+            'legacy browser without strict cookie' => [null, false, false],
+        ];
+    }
+
+    public function testEmailNavigationDoesNotConsumeToken(): void
+    {
+        $token = $this->issue();
+        foreach (['change-password', 'cancel-reset'] as $action) {
+            HttpAssert::fetch(
+                'http://localhost/admin/sign/' . $action . '?token=' . rawurlencode($token),
+                headers: ['Sec-Fetch-Site' => 'cross-site', 'Sec-Fetch-Mode' => 'navigate'],
+            )->expectCode(200)->expectHeader('Cache-Control', 'no-store')->expectHeader('Referrer-Policy', 'no-referrer');
+            Assert::same(explode('.', $token)[0], $this->db->table('user')->get($this->id)->reset_selector);
         }
     }
 }
