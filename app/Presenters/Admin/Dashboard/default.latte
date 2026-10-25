@@ -1,14 +1,14 @@
 {varType App\Entity\Post[] $posts}
 
 {block content}
-<div class="row">
-    <div class="panel panel-default">
-        <div class="panel-heading">Texty na stránkách</div>
-        <table class="table">
+<div class="card">
+    <div class="table-responsive">
+        <h1 class="card-header h5">Texty na stránkách</h1>
+        <table class="table mb-0">
             <tr>
                 <th>Typ zprávy</th>
                 <th>Text</th>
-                <th>Zveřeněno</th>
+                <th>Zveřejněno</th>
             </tr>
             {foreach $posts as $post}
             <tr n:class="$post->isPublished() ? : 'gray'">

@@ -45,8 +45,6 @@ http:
         object-src: none
         style-src:
             - self
-            - 'https://maxcdn.bootstrapcdn.com'
-            - 'https://cdn.tiny.cloud'
             - 'unsafe-inline' # because wysiwyg editor
         base-uri: none
 
