@@ -20,15 +20,10 @@ class PostPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
 
-    private Model\Post $postModel;
-    private Mail\Mailer $mailer;
 
-
-    public function __construct(Model\Post $postModel, Mail\Mailer $mailer)
+    public function __construct(private Model\Post $postModel, private Mail\Mailer $mailer)
     {
         parent::__construct();
-        $this->postModel = $postModel;
-        $this->mailer = $mailer;
     }
 
 
@@ -95,10 +90,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     */
     public function postEditFormSuccess(UI\Form $form, ArrayHash $values): void
     {
         $currentDate = new DateTime();
@@ -153,9 +144,6 @@ class PostPresenter extends Nette\Application\UI\Presenter
     }
 
 
-    /**
-     * @param array $post
-     */
     private function sendChangeNotification(array $post): void
     {
         $templateFile = __DIR__ . '/templates/Post/changeNotificationMail.latte';

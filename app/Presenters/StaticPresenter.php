@@ -30,15 +30,10 @@ class StaticPresenter extends Nette\Application\UI\Presenter
         'contact' => ['contact', 'kontakt'],
     ];
 
-    private readonly PostRenderer $postRenderer;
-    private readonly WebDir $wwwDir;
 
-
-    public function __construct(PostRenderer $postRenderer, WebDir $wwwDir)
+    public function __construct(private readonly PostRenderer $postRenderer, private readonly WebDir $wwwDir)
     {
         parent::__construct();
-        $this->postRenderer = $postRenderer;
-        $this->wwwDir = $wwwDir;
     }
 
 
@@ -207,7 +202,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     /**
      * Return 1D array with simplified pair url=>key from PAGE_MAP
-     * @return array
      */
     private function getReversedPageMap(): array
     {
@@ -246,6 +240,6 @@ class StaticPresenter extends Nette\Application\UI\Presenter
 
     private function isLangValid(?string $lang): bool
     {
-        return array_key_exists($lang, self::LANGS);
+        return array_key_exists((string) $lang, self::LANGS);
     }
 }

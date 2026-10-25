@@ -7,8 +7,3 @@ parameters:
         - Nette\Application\UI\Template
         - Nette\Bridges\ApplicationLatte\Template
         - Nette\Database\Table\ActiveRow
-
-    ignoreErrors:
-        -
-            identifier: classConstant.unused
-            path: app/Model/UserManager.php

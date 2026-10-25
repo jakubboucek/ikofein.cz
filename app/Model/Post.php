@@ -18,18 +18,12 @@ class Post
     private const string TABLE_NAME = 'post';
     private const string KEY_COLUMN = 'key';
     private const string VERSION_COLUMN = 'version';
-
-
-    private readonly Explorer $database;
     private readonly Cache $cache;
-    private readonly User $user;
 
 
-    public function __construct(Explorer $database, Storage $storage, User $user)
+    public function __construct(private readonly Explorer $database, Storage $storage, private readonly User $user)
     {
-        $this->database = $database;
         $this->cache = new Cache($storage, 'post');
-        $this->user = $user;
     }
 
 
@@ -145,12 +139,7 @@ class Post
         if (empty($post['published_from'])) {
             return false;
         }
-
-        if ($this->isPlanned($post) || $this->isExpired($post)) {
-            return false;
-        }
-
-        return true;
+        return !$this->isPlanned($post) && !$this->isExpired($post);
     }
 
 

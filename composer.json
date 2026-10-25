@@ -50,6 +50,8 @@
     },
     "scripts": {
         "phpstan": "phpstan analyse -c phpstan.neon --level 5 app",
+        "rector": "rector process",
+        "rector:check": "rector process --dry-run",
         "test": "tester -C -s tests"
     }
 }

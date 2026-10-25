@@ -18,19 +18,13 @@ class UserManager implements Nette\Security\Authenticator
 
     private const string TABLE_NAME = 'user';
     private const string COLUMN_ID = 'id';
-    private const string COLUMN_NAME = 'name';
     private const string COLUMN_EMAIL = 'email';
     private const string COLUMN_PASSWORD_HASH = 'password';
     private const string COLUMN_ROLE = 'role';
 
-    private Explorer $database;
-    private Passwords $passwords;
 
-
-    public function __construct(Explorer $database, Passwords $passwords)
+    public function __construct(private Explorer $database, private Passwords $passwords)
     {
-        $this->database = $database;
-        $this->passwords = $passwords;
     }
 
 

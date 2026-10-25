@@ -8,11 +8,11 @@ use Nette\Database\Explorer;
 use Nette\Security\Passwords;
 use SensitiveParameter;
 
-final class PasswordReset
+final readonly class PasswordReset
 {
     public function __construct(
-        private readonly Explorer $database,
-        private readonly Passwords $passwords,
+        private Explorer $database,
+        private Passwords $passwords,
     ) {
     }
 

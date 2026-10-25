@@ -22,17 +22,11 @@ class SignPresenter extends Nette\Application\UI\Presenter
 {
     #[Persistent]
     public ?string $backlink = null;
-    private readonly UserManager $userManager;
-    private readonly PasswordReset $passwordReset;
-    private readonly Mail\Mailer $mailer;
 
 
-    public function __construct(UserManager $userManager, PasswordReset $passwordReset, Mail\Mailer $mailer)
+    public function __construct(private readonly UserManager $userManager, private readonly PasswordReset $passwordReset, private readonly Mail\Mailer $mailer)
     {
         parent::__construct();
-        $this->userManager = $userManager;
-        $this->passwordReset = $passwordReset;
-        $this->mailer = $mailer;
     }
 
 
@@ -272,7 +266,7 @@ class SignPresenter extends Nette\Application\UI\Presenter
         $latte = new Latte\Engine;
         $mail = new Mail\Message;
 
-        $abuseLink = (new Nette\Http\UrlImmutable('mailto:pan@jakubboucek.cz'))
+        $abuseLink = new Nette\Http\UrlImmutable('mailto:pan@jakubboucek.cz')
             ->withQueryParameter('subject', 'Bounce: Remove unwanted notifications (ikofein.cz)')
             ->withQueryParameter('body', 'Dostávám e-maily [ikofein.cz/admin/sign/resetPessword], žádám o zrušení!');
 
