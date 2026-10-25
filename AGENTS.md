@@ -20,5 +20,6 @@ Web restaurace Kofein používá PHP 8.3, Nette 3.2, Latte 3, MariaDB a frontend
 - Veřejný kořen je `www/`, nikoli kořen repozitáře. `temp/` a `log/` musí být zapisovatelné.
 - `www/css/*.css` a `www/js/main.js` jsou verzované výstupy Gruntu. Zdroje upravuj v `asset/` a související výstupy přegeneruj v Dockeru.
 - Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `Post`.
+- Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.
 - Repozitář neobsahuje databázové migrace, seed ani automatickou testovací sadu. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
 - Uložení obsahu i obnova hesla odesílají skutečný e-mail přes AWS SES. Nasazovací skripty pracují s produkcí, včetně mazání vzdálených souborů.

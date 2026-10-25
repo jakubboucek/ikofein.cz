@@ -50,7 +50,9 @@ docker compose stop
 
 Pro příkaz bez běžících služeb lze použít `docker compose run --rm --no-deps web <command>`; tento režim nezajišťuje databázi ani zpřístupnění webu.
 
-PHPStan používá úroveň 5 nad `app/` a `libs/` a rozšíření pro Nette. `rector.php` konfiguruje Rector pro `app/`, `libs/` a `www/`; jeho spuštění není součástí běžného startu. Automatická testovací sada není přítomna a `npm test` končí záměrně chybou.
+PHPStan 2 používá úroveň 5 nad `app/` a `libs/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. `rector.php` konfiguruje Rector 2 pro `app/`, `libs/` a `www/`; jeho spuštění není součástí běžného startu. Automatická testovací sada není přítomna a `npm test` končí záměrně chybou.
+
+Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
 
 ## Sestavení frontendu
 
