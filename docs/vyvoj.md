@@ -7,11 +7,11 @@ Zdrojem je projektový `docker-compose.yml` a [dokumentace docker-lamp-devstack]
 | Služba | Image | Přístup z hosta | Data |
 | --- | --- | --- | --- |
 | `web` | `jakubboucek/lamp-devstack-php:8.3-debug` | `127.0.0.1:8080` → port 80 | Projekt → `/var/www/html` |
-| `mysqldb` | `jakubboucek/lamp-devstack-mysql` | `127.0.0.1:33060` → port 3306 | `.docker/mysql/data` → `/var/lib/mysql` |
+| `mysqldb` | `jakubboucek/lamp-devstack-mysql:11.8` | `127.0.0.1:33060` → port 3306 | `.docker/mysql/data` → `/var/lib/mysql` |
 
 PHP image obsahuje Apache, Composer, Git a rozšíření včetně `pdo_mysql`; varianta `-debug` přidává Xdebug. Webový kořen je standardně `/var/www/html/www`, takže `app/`, `local/` a `vendor/` nejsou veřejné. Node.js a npm nejsou součástí zde ověřeného PHP image.
 
-Obě služby mají `TZ=Europe/Prague` a `restart: always`. `web` má `APP_DEBUG=1`. PHP tag sleduje řadu 8.3; MariaDB nemá explicitní tag a používá pohyblivé `latest`. Konkrétní verze závisí na staženém image. Upstream publikuje obrazy pro `linux/amd64`; na ARM je potřeba podpora této platformy v Dockeru.
+Obě služby mají `TZ=Europe/Prague` a `restart: always`. `web` má `APP_DEBUG=1`. PHP tag sleduje řadu 8.3; MariaDB je připnutá na řadu 11.8 odpovídající produkci, se zachováním aktualizací záplat při stažení nového image. Upstream publikuje obrazy pro `linux/amd64`; na ARM je potřeba podpora této platformy v Dockeru.
 
 MariaDB má databázi `default`, uživatele `root` a vývojové heslo `devstack`. PHP se připojuje na `mysqldb:3306`, nikoli na hostitelský port 33060. Aplikace v DSN používá `charset=utf8`, přestože image má výchozí charset `utf8mb4`.
 
@@ -35,6 +35,8 @@ docker compose exec mysqldb mariadb -u root -p default
 ```
 
 Data databáze přetrvávají v `.docker/mysql/data`; tento adresář nemaž při běžném restartu. Lokální konfiguraci, databázová data a přístupové údaje necommituj.
+
+Při přechodu na nižší řadu MariaDB obnov aplikační databázi z logického exportu do nově inicializovaného úložiště; nepoužívej původní datový adresář ani systémové databáze vyšší verze. Tabulky aplikace používají MyISAM, proto export vyžaduje zamezení zápisům a zámky tabulek; samotné `--single-transaction` nestačí. Fyzickou zálohu datového adresáře pořizuj až po čistém zastavení databáze.
 
 ## Běžné příkazy
 

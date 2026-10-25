@@ -13,7 +13,7 @@ services:
             - ".:/var/www/html"
 
     mysqldb:
-        image: jakubboucek/lamp-devstack-mysql
+        image: jakubboucek/lamp-devstack-mysql:11.8
         environment:
             MARIADB_DATABASE: default
             MARIADB_ROOT_PASSWORD: devstack
