@@ -1,6 +1,6 @@
 /.deployment-credentials.php
 /.docker/
-/.htdeployment
+/.htdeployment*
 /bower_components
 /local/*
 !/local/Config/.gitignore

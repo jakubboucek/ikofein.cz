@@ -28,6 +28,7 @@ export function initializeEditors(textareas) {
                 buttonsXS: buttons,
                 height: 400,
                 sourceEditor: 'area',
+                beautifyHTML: false,
                 cleanHTML: {
                     fillEmptyParagraph: false,
                     removeEmptyElements: false,
