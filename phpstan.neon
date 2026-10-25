@@ -3,6 +3,11 @@ includes:
 	- vendor/phpstan/phpstan-deprecation-rules/rules.neon
 
 parameters:
+	universalObjectCratesClasses:
+		- Nette\Application\UI\Template
+		- Nette\Bridges\ApplicationLatte\Template
+		- Nette\Database\Table\ActiveRow
+
 	ignoreErrors:
 		-
 			identifier: classConstant.unused

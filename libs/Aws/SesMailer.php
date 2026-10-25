@@ -11,13 +11,13 @@ namespace JakubBoucek\Aws;
 
 use Aws\Sdk as Aws;
 use Nette;
-use Nette\Mail\IMailer;
+use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 
 /**
  * Sends emails via AWS SES serivce
  */
-class SesMailer implements IMailer
+class SesMailer implements Mailer
 {
     use Nette\SmartObject;
 

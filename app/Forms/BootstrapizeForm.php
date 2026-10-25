@@ -34,8 +34,10 @@ class BootstrapizeForm
                 || $control instanceof Controls\SelectBox
                 || $control instanceof Controls\MultiSelectBox) {
                 $control->getControlPrototype()->addClass('form-control');
-            } elseif ($control instanceof Controls\Checkbox
-                || $control instanceof Controls\CheckboxList
+            } elseif ($control instanceof Controls\Checkbox) {
+                $control->getContainerPrototype()
+                    ->setName('div')->addClass($control->getControlPrototype()->type);
+            } elseif ($control instanceof Controls\CheckboxList
                 || $control instanceof Controls\RadioList
             ) {
                 $control->getSeparatorPrototype()
