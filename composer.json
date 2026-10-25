@@ -49,13 +49,13 @@
         "optimize-autoloader": true,
         "sort-packages": true
     },
-    "scripts": {
-        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app libs",
-        "pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices"
-    },
     "extra": {
         "aws/aws-sdk-php": [
             "Ses"
         ]
+    },
+    "scripts": {
+        "pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices",
+        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app libs"
     }
 }
