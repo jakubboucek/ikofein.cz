@@ -6,10 +6,14 @@ namespace App\AdminModule\Presenters;
 
 use App\Model;
 use Nette;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 
+/** @property-read DefaultTemplate $template */
 class DashboardPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
+
+
     public function __construct(
         private readonly Model\Post $postModel,
     ) {
@@ -20,6 +24,6 @@ class DashboardPresenter extends Nette\Application\UI\Presenter
     public function renderDefault(): void
     {
         $posts = $this->postModel->getPosts();
-        $this->getTemplate()->posts = $posts;
+        $this->template->posts = $posts;
     }
 }

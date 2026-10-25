@@ -7,6 +7,7 @@ namespace App\Component;
 use App\Model;
 use Nette\Application\ApplicationException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Caching\Cache;
 use Nette\Caching\Storage;
@@ -32,6 +33,7 @@ class PostRenderer extends Control
         $postInfo = $this->getPost($key);
         $post = $postInfo['post'];
 
+        /** @var DefaultTemplate $template */
         $template = $this->getTemplateFile($templateName);
 
         $template->isEmpty = $postInfo['isEmpty'];

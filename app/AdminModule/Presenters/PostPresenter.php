@@ -12,12 +12,16 @@ use Latte;
 use Nette;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Mail;
 use Nette\Utils\ArrayHash;
 
+/** @property-read DefaultTemplate $template */
 class PostPresenter extends Nette\Application\UI\Presenter
 {
     use RequireLoggedUser;
+
+
     public function __construct(
         private readonly Model\Post $postModel,
         private readonly Mail\Mailer $mailer,
@@ -50,7 +54,7 @@ class PostPresenter extends Nette\Application\UI\Presenter
         ];
         $form->setDefaults($defaults);
 
-        $this->getTemplate()->post = $post;
+        $this->template->post = $post;
     }
 
 

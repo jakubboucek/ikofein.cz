@@ -9,9 +9,11 @@ use App\Model\PageNotFoundException;
 use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use OutOfRangeException;
 use Override;
 
+/** @property-read DefaultTemplate $template */
 class StaticPresenter extends Nette\Application\UI\Presenter
 {
     public const string LANG_COOKIE = 'lang';
@@ -41,8 +43,8 @@ class StaticPresenter extends Nette\Application\UI\Presenter
     #[Override]
     public function beforeRender(): void
     {
-        $this->getTemplate()->readyForPost = true;
-        $this->getTemplate()->wwwDir = $this->wwwDir->getPath();
+        $this->template->readyForPost = true;
+        $this->template->wwwDir = $this->wwwDir->getPath();
     }
 
 
@@ -59,9 +61,9 @@ class StaticPresenter extends Nette\Application\UI\Presenter
             throw new BadRequestException("Page '$lang/$page' does not found", 0, $e);
         }
 
-        $this->getTemplate()->lang = $realLang;
-        $this->getTemplate()->title = $pageKey;
-        $this->getTemplate()->altLangs = $this->getAllLangsLinks($pageKey);
+        $this->template->lang = $realLang;
+        $this->template->title = $pageKey;
+        $this->template->altLangs = $this->getAllLangsLinks($pageKey);
 
         $this->getHttpResponse()->addHeader('Content-Language', self::LANGS[$realLang]);
 
