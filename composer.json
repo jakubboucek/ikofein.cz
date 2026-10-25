@@ -25,6 +25,7 @@
     "require-dev": {
         "ergebnis/composer-normalize": "^2.44",
         "nette/phpstan-rules": "^1.0",
+        "nette/tester": "^2.6",
         "phpstan/phpstan": "^2.3",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "rector/rector": "^2.7"
@@ -47,6 +48,7 @@
         "sort-packages": true
     },
     "scripts": {
-        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app"
+        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app",
+        "test": "tester -C -s tests"
     }
 }

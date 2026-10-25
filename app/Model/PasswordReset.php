@@ -38,15 +38,15 @@ final class PasswordReset
             if ($row->reset_requested_at !== null && (string) $row->reset_requested_at > gmdate('Y-m-d H:i:s', time() - 60)) {
                 return null;
             }
-            $selector = random_bytes(16);
+            $selector = self::encode(random_bytes(16));
             $verifier = random_bytes(32);
             $this->database->table('user')->wherePrimary($row->id)->update([
                 'reset_selector' => $selector,
-                'reset_hash' => hash('sha256', $verifier, true),
+                'reset_hash' => self::encode(hash('sha256', $verifier, true)),
                 'reset_expires_at' => gmdate('Y-m-d H:i:s', time() + 3600),
                 'reset_requested_at' => $now,
             ]);
-            return ['email' => $row->email, 'token' => bin2hex($selector) . '.' . bin2hex($verifier)];
+            return ['email' => $row->email, 'token' => $selector . '.' . self::encode($verifier)];
         });
     }
 
@@ -90,16 +90,18 @@ final class PasswordReset
 
     private function find(#[SensitiveParameter] string $token, bool $lock = false): array
     {
-        if (!preg_match('/\A([a-f0-9]{32})\.([a-f0-9]{64})\z/D', $token, $parts)) {
+        if (!preg_match('/\A([A-Za-z0-9_-]{22})\.([A-Za-z0-9_-]{43})\z/D', $token, $parts)) {
             throw new InvalidPasswordResetException;
         }
+        self::decode($parts[1]);
+        $verifier = self::decode($parts[2]);
         $row = $this->database->query(
             'SELECT * FROM `user` WHERE reset_selector = ?' . ($lock ? ' FOR UPDATE' : ''),
-            hex2bin($parts[1]),
+            $parts[1],
         )->fetch();
         if (!$row || $row->reset_hash === null || $row->reset_expires_at === null
             || (string) $row->reset_expires_at <= gmdate('Y-m-d H:i:s')
-            || !hash_equals($row->reset_hash, hash('sha256', hex2bin($parts[2]), true))) {
+            || !hash_equals($row->reset_hash, self::encode(hash('sha256', $verifier, true)))) {
             throw new InvalidPasswordResetException;
         }
         return (array) $row;
@@ -110,6 +112,20 @@ final class PasswordReset
         if (!$this->allow('verify-ip:' . $ip, 60, 900)) {
             throw new InvalidPasswordResetException;
         }
+    }
+
+    private static function encode(string $bytes): string
+    {
+        return rtrim(strtr(base64_encode($bytes), '+/', '-_'), '=');
+    }
+
+    private static function decode(#[SensitiveParameter] string $encoded): string
+    {
+        $bytes = base64_decode(strtr($encoded, '-_', '+/'), true);
+        if ($bytes === false || self::encode($bytes) !== $encoded) {
+            throw new InvalidPasswordResetException;
+        }
+        return $bytes;
     }
 
     private function allow(string $scope, int $limit, int $seconds): bool

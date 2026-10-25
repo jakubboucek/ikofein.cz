@@ -66,7 +66,7 @@ docker compose stop
 
 Pro příkaz bez běžících služeb lze použít `docker compose run --rm --no-deps web <command>`; tento režim nezajišťuje databázi ani zpřístupnění webu.
 
-PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. `rector.php` konfiguruje Rector 2 pro `app/` a `www/`; jeho spuštění není součástí běžného startu. Integrační test resetu hesla se spouští příkazem `docker compose exec -T web php tests/password-reset.php`. Vyžaduje migrovanou testovací DB; vytvoří vlastní účet a čítače, které po testu odstraní. Testuje i dva souběžné PHP procesy. `npm test` končí záměrně chybou.
+PHPStan 2 používá úroveň 5 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. `rector.php` konfiguruje Rector 2 pro `app/` a `www/`; jeho spuštění není součástí běžného startu. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; pro každý případ vytvoří vlastní účet a čítače, které poté odstraní. Bootstrap zamyká běh DB testů proti souběhu; test jednorázovosti spouští dva samostatné PHP procesy. Parametr `-C` zachovává konfiguraci PHP kontejneru včetně databázových rozšíření. `npm test` končí záměrně chybou.
 
 Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
 
@@ -94,7 +94,7 @@ docker run --rm -v "$PWD:/app" -w /app node:22 npx --yes --package=bower bower i
 docker run --rm -v "$PWD:/app" -w /app node:22 ./node_modules/.bin/grunt
 ```
 
-Po změně zdrojů zkontroluj diff vygenerovaných souborů. Frontend ověřuj ve vlastní instanci Chrome přes MCP a recykluj stejné okno. Zkontroluj dotčené stránky v obou jazycích, konzoli a načtení assetů. E-maily z uložení obsahu a resetu hesla ověř v MailDev.
+Po změně zdrojů zkontroluj diff vygenerovaných souborů. Frontend ověřuj ve vlastní instanci Chrome přes MCP a recykluj otevřená okna a záložky. Aplikaci a MailDev měj v samostatných současně otevřených záložkách; nevytvářej nové pro každou iteraci. Zkontroluj dotčené stránky v obou jazycích, konzoli a načtení assetů. E-maily z uložení obsahu a resetu hesla ověř v MailDev.
 
 ## Ladění
 

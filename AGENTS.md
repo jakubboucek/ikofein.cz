@@ -5,7 +5,7 @@
 - Dokumentace má být stručná a popisovat aktuální konečný stav aplikace. Průběžné poznámky a changelog patří do commit messages nebo PR. Dokumentaci vícefázového refaktoringu po dokončení konsoliduj.
 - Poznatky o kódu a projektu zapisuj sem nebo do odkazovaných souborů v `docs/`. Paměť (`MEMORY.md`, `memory/`) je výhradně pro osobní preference a zpětnou vazbu uživatele.
 - Testy, aplikační skripty a nástroje PHP/Composer, Node/npm i databázové příkazy spouštěj výhradně v Dockeru. PHP ani MySQL nespouštěj na hostu. Základem prostředí je `docker-compose.yml`.
-- Frontend ověřuj ve vlastní instanci Chrome přes MCP, opakovaně používej stejné okno. Aplikace je po spuštění dostupná na `http://localhost:8080/`.
+- Frontend ověřuj ve vlastní instanci Chrome přes MCP. Recykluj existující okna a záložky; nevytvářej nové pro každý krok či iteraci. Pro odlišná prostředí (například aplikaci a MailDev) používej samostatné současně otevřené záložky. Aplikace je po spuštění dostupná na `http://localhost:8080/`.
 
 ## Orientace
 
@@ -24,6 +24,6 @@ Web restaurace Kofein používá PHP 8.3, Nette 3.2, Latte 3, MariaDB a frontend
 - `www/css/*.css` a `www/js/main.js` jsou verzované výstupy Gruntu. Zdroje upravuj v `asset/` a související výstupy přegeneruj v Dockeru.
 - Obsah má aktivní verzi `current` a historické kopie. Zachovej historii a invalidaci cache při změnách modelu `Post`.
 - Lokální databáze je testovací a její data lze při testování libovolně měnit; další testovací databáze není nutná.
-- SQL migrace jsou v `migrations/structures/`, integrační test resetu v `tests/password-reset.php`. Kompletní výchozí schéma ani seed nejsou v repozitáři. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
+- SQL migrace jsou v `migrations/structures/`, integrační testy `Nette\Tester\TestCase` v `tests/PasswordReset.phpt` (spuštění `composer test` v Dockeru). Kompletní výchozí schéma ani seed nejsou v repozitáři. `npm test` je pouze neúspěšný zástupný příkaz; PHPStan se spouští pomocí Composeru.
 - Uložení obsahu i obnova hesla odesílají e-mail přes Nette Mailer. Výchozí SMTP míří do lokálního MailDev (`http://localhost:1080/`); produkční konfigurace přepíná na sendmail pomocí `mail.smtp: false`.
 - Nasazovací skripty pracují s produkcí, včetně mazání vzdálených souborů.

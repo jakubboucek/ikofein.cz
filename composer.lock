@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10352dcd5e714bad0abc04c319806dc4",
+    "content-hash": "b177516a379757e9a3477c3216f6e132",
     "packages": [
         {
             "name": "latte/latte",
@@ -2005,6 +2005,78 @@
                 "source": "https://github.com/nette/phpstan-rules/tree/v1.0.7"
             },
             "time": "2026-10-22T02:05:00+00:00"
+        },
+        {
+            "name": "nette/tester",
+            "version": "v2.6.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/tester.git",
+                "reference": "d784f539cfb6bb425a1aa58124973fb2d8689372"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/tester/zipball/d784f539cfb6bb425a1aa58124973fb2d8689372",
+                "reference": "d784f539cfb6bb425a1aa58124973fb2d8689372",
+                "shasum": ""
+            },
+            "require": {
+                "php": "8.0 - 8.6"
+            },
+            "require-dev": {
+                "ext-simplexml": "*",
+                "phpstan/phpstan": "^2.0@stable"
+            },
+            "bin": [
+                "src/tester"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tester\\": "src"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0-only",
+                "GPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Miloslav Hůla",
+                    "homepage": "https://github.com/milo"
+                }
+            ],
+            "description": "🍏 Nette Tester: enjoyable unit testing in PHP. Tests are plain PHP scripts that run in parallel, with readable assertions and code coverage.",
+            "homepage": "https://tester.nette.org",
+            "keywords": [
+                "assertions",
+                "code coverage",
+                "nette",
+                "parallel",
+                "phpunit",
+                "test framework",
+                "testing",
+                "unit testing"
+            ],
+            "support": {
+                "issues": "https://github.com/nette/tester/issues",
+                "source": "https://github.com/nette/tester/tree/v2.6.3"
+            },
+            "time": "2026-10-23T11:17:32+00:00"
         },
         {
             "name": "phpstan/phpstan",
