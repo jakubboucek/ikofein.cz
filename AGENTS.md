@@ -19,6 +19,7 @@ Web restaurace Kofein používá PHP 8.5, Nette Application/Forms 3.3, Nette HTT
 - [docs/vyvoj.md](docs/vyvoj.md): Docker, konfigurace, sestavení, kontroly a nasazení.
 - [migrations/README.md](migrations/README.md): SQL migrace kompatibilní s Nextras Migrations.
 - [docs/upgrade-nette.md](docs/upgrade-nette.md): bezpečnostní pravidla Nette.
+- [docs/upgrade-frontend.md](docs/upgrade-frontend.md): zadání a předání probíhající modernizace frontendu na větvi `fe-update`; po dokončení konsolidovat.
 
 ## Důležité souvislosti
 
