@@ -1,14 +1,14 @@
 includes:
-	- vendor/nette/phpstan-rules/extension.neon
-	- vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - vendor/nette/phpstan-rules/extension.neon
+    - vendor/phpstan/phpstan-deprecation-rules/rules.neon
 
 parameters:
-	universalObjectCratesClasses:
-		- Nette\Application\UI\Template
-		- Nette\Bridges\ApplicationLatte\Template
-		- Nette\Database\Table\ActiveRow
+    universalObjectCratesClasses:
+        - Nette\Application\UI\Template
+        - Nette\Bridges\ApplicationLatte\Template
+        - Nette\Database\Table\ActiveRow
 
-	ignoreErrors:
-		-
-			identifier: classConstant.unused
-			path: app/Model/UserManager.php
+    ignoreErrors:
+        -
+            identifier: classConstant.unused
+            path: app/Model/UserManager.php

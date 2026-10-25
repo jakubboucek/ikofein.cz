@@ -1,61 +1,61 @@
 {
-	"name": "jakubboucek/ikofein.cz",
-	"description": "Kofein restaurant",
-	"license": [
-		"MIT"
-	],
-	"type": "project",
-	"require": {
-		"php": "^8.3",
-		"aws/aws-sdk-php": "^3.325",
-		"firebase/php-jwt": "^6.10",
-		"latte/latte": "^3.0",
-		"nette/application": "^3.2",
-		"nette/bootstrap": "^3.2",
-		"nette/caching": "^3.3",
-		"nette/database": "^3.2",
-		"nette/di": "^3.2",
-		"nette/forms": "^3.2",
-		"nette/http": "^3.3",
-		"nette/mail": "^4.0",
-		"nette/robot-loader": "^4.0",
-		"nette/security": "^3.2",
-		"nette/utils": "^4.0",
-		"redbitcz/debug-mode-enabler": "^5.0",
-		"tracy/tracy": "^2.10.9"
-	},
-	"require-dev": {
-		"ergebnis/composer-normalize": "^2.44",
-		"nette/phpstan-rules": "^1.0",
-		"phpstan/phpstan": "^2.3",
-		"phpstan/phpstan-deprecation-rules": "^2.0",
-		"rector/rector": "^2.7"
-	},
-	"autoload": {
-		"classmap": [
-			"app/Bootstrap.php"
-		]
-	},
-	"autoload-dev": {
-		"classmap": [
-			"app/",
-			"libs/"
-		]
-	},
-	"config": {
-		"allow-plugins": {
-			"ergebnis/composer-normalize": true
-		},
-		"optimize-autoloader": true,
-		"sort-packages": true
-	},
-	"scripts": {
-		"phpstan": "phpstan analyse -c phpstan.neon --level 5 app libs",
-		"pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices"
-	},
-	"extra": {
-		"aws/aws-sdk-php": [
-			"Ses"
-		]
-	}
+    "name": "jakubboucek/ikofein.cz",
+    "description": "Kofein restaurant",
+    "license": [
+        "MIT"
+    ],
+    "type": "project",
+    "require": {
+        "php": "^8.3",
+        "aws/aws-sdk-php": "^3.325",
+        "firebase/php-jwt": "^6.10",
+        "latte/latte": "^3.0",
+        "nette/application": "^3.2",
+        "nette/bootstrap": "^3.2",
+        "nette/caching": "^3.3",
+        "nette/database": "^3.2",
+        "nette/di": "^3.2",
+        "nette/forms": "^3.2",
+        "nette/http": "^3.3",
+        "nette/mail": "^4.0",
+        "nette/robot-loader": "^4.0",
+        "nette/security": "^3.2",
+        "nette/utils": "^4.0",
+        "redbitcz/debug-mode-enabler": "^5.0",
+        "tracy/tracy": "^2.10.9"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.44",
+        "nette/phpstan-rules": "^1.0",
+        "phpstan/phpstan": "^2.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "rector/rector": "^2.7"
+    },
+    "autoload": {
+        "classmap": [
+            "app/Bootstrap.php"
+        ]
+    },
+    "autoload-dev": {
+        "classmap": [
+            "app/",
+            "libs/"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "scripts": {
+        "phpstan": "phpstan analyse -c phpstan.neon --level 5 app libs",
+        "pre-autoload-dump": "Aws\\Script\\Composer\\Composer::removeUnusedServices"
+    },
+    "extra": {
+        "aws/aws-sdk-php": [
+            "Ses"
+        ]
+    }
 }

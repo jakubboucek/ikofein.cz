@@ -2,78 +2,78 @@
 <!DOCTYPE html>
 <html lang="{$lang}" class="{$lang}" dir="ltr">
 <head>
-	<meta charset="utf-8" />
-	<title>{ifset #h1}{include h1} - {/ifset}
-		{if $lang=='cs'}Kofein restaurant na pražských Vinohradech{/if}
-		{if $lang=='en'}Kofein restaurant in Vinohrady - Prague{/if}
-	</title>
-	<meta name="author" content="Solar flare s.r.o.">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="{$basePath}/css/main.css?{=filemtime($wwwDir . '/css/main.css')}">
-	<link rel="shortcut icon" href="{$basePath}/favicon.ico" />
+    <meta charset="utf-8" />
+    <title>{ifset #h1}{include h1} - {/ifset}
+        {if $lang=='cs'}Kofein restaurant na pražských Vinohradech{/if}
+        {if $lang=='en'}Kofein restaurant in Vinohrady - Prague{/if}
+    </title>
+    <meta name="author" content="Solar flare s.r.o.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{$basePath}/css/main.css?{=filemtime($wwwDir . '/css/main.css')}">
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico" />
 
-	{ifset $altLangs}
-	<link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
-	{/ifset}
-	<script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
-	<script n:nonce>
-		dataLayer = {ifset $dataLayer}{$dataLayer}{else}[]{/ifset};
-		(function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-WLWCSG');</script>
+    {ifset $altLangs}
+    <link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
+    {/ifset}
+    <script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
+    <script n:nonce>
+        dataLayer = {ifset $dataLayer}{$dataLayer}{else}[]{/ifset};
+        (function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-WLWCSG');</script>
 </head>
 
 <body>
-	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLWCSG"
-	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-	<header>
-		<div>
-			<a href="{$basePath}/" class="logo">
-				<img src="{$basePath}/img/layout/header-logo-print.png" alt="Kofein restaurant">
-			</a>
-			<nav n:ifset="$altLangs" class="language-switcher">
-				{if $lang!=='en'}<a href="{$basePath}{$altLangs['en']}">🇺🇸</a>{/if}
-				{if $lang!=='cs'}<a href="{$basePath}{$altLangs['cs']}">🇨🇿</a>{/if}
-			</nav>
-		</div>
-	</header>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLWCSG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <header>
+        <div>
+            <a href="{$basePath}/" class="logo">
+                <img src="{$basePath}/img/layout/header-logo-print.png" alt="Kofein restaurant">
+            </a>
+            <nav n:ifset="$altLangs" class="language-switcher">
+                {if $lang!=='en'}<a href="{$basePath}{$altLangs['en']}">🇺🇸</a>{/if}
+                {if $lang!=='cs'}<a href="{$basePath}{$altLangs['cs']}">🇨🇿</a>{/if}
+            </nav>
+        </div>
+    </header>
 
-	<nav class="menu">
-		<ul>
-		{if $lang=='cs'}
-			<li><a class="home" href="{$basePath}/cs/"><span>Úvod</span></a></li>
-			<li><a class="lunch" href="{$basePath}/cs/poledne"><span>Poledne</span></a></li>
-			<li><a class="dinner" href="{$basePath}/cs/vecer"><span>Večer</span></a></li>
-			<li><a class="beverages" href="{$basePath}/cs/napoje"><span>Nápoje</span></a></li>
-			<li><a class="gallery" href="{$basePath}/cs/galerie"><span>Galerie</span></a></li>
-			<li><a class="contact" href="{$basePath}/cs/kontakt"><span>Kontakt</span></a></li>
-		{/if}
-		{if $lang=='en'}
-			<li><a class="home" href="{$basePath}/en/"><span>Home</span></a></li>
-			<li><a class="lunch" href="{$basePath}/en/lunch"><span>Lunch</span></a></li>
-			<li><a class="dinner" href="{$basePath}/en/dinner"><span>Dinner</span></a></li>
-			<li><a class="beverages" href="{$basePath}/en/beverages"><span>Beverages</span></a></li>
-			<li><a class="gallery" href="{$basePath}/en/gallery"><span>Gallery</span></a></li>
-			<li><a class="contact" href="{$basePath}/en/contact"><span>Contact</span></a></li>
-		{/if}
-		</ul>
-	</nav>
+    <nav class="menu">
+        <ul>
+        {if $lang=='cs'}
+            <li><a class="home" href="{$basePath}/cs/"><span>Úvod</span></a></li>
+            <li><a class="lunch" href="{$basePath}/cs/poledne"><span>Poledne</span></a></li>
+            <li><a class="dinner" href="{$basePath}/cs/vecer"><span>Večer</span></a></li>
+            <li><a class="beverages" href="{$basePath}/cs/napoje"><span>Nápoje</span></a></li>
+            <li><a class="gallery" href="{$basePath}/cs/galerie"><span>Galerie</span></a></li>
+            <li><a class="contact" href="{$basePath}/cs/kontakt"><span>Kontakt</span></a></li>
+        {/if}
+        {if $lang=='en'}
+            <li><a class="home" href="{$basePath}/en/"><span>Home</span></a></li>
+            <li><a class="lunch" href="{$basePath}/en/lunch"><span>Lunch</span></a></li>
+            <li><a class="dinner" href="{$basePath}/en/dinner"><span>Dinner</span></a></li>
+            <li><a class="beverages" href="{$basePath}/en/beverages"><span>Beverages</span></a></li>
+            <li><a class="gallery" href="{$basePath}/en/gallery"><span>Gallery</span></a></li>
+            <li><a class="contact" href="{$basePath}/en/contact"><span>Contact</span></a></li>
+        {/if}
+        </ul>
+    </nav>
 
-	<section>
-		<h1>{ifset #h1}{include h1}{else}Kofein restaurant{/ifset}</h1>
-		{ifset $readyForPost}{control post 'alert', $lang, 'alert'}{/ifset}
+    <section>
+        <h1>{ifset #h1}{include h1}{else}Kofein restaurant{/ifset}</h1>
+        {ifset $readyForPost}{control post 'alert', $lang, 'alert'}{/ifset}
 
-		<article>
-			{include content}
-		</article>
-	</section>
+        <article>
+            {include content}
+        </article>
+    </section>
 
-	<footer>
-		<div>
-			Kofein restaurant, Praha 3 – tel.: <a href="tel:+420273132145">+420 273 132 145</a>
-		</div>
-	</footer>
+    <footer>
+        <div>
+            Kofein restaurant, Praha 3 – tel.: <a href="tel:+420273132145">+420 273 132 145</a>
+        </div>
+    </footer>
 </body>
 </html>

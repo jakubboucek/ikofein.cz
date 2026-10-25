@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html lang="cs" class="cs" dir="ltr">
 <head>
-	<meta charset="utf-8" />
-	<meta name="robots" content="noindex, nofollow">
-	<title>Administrace - Kofein</title>
-	<meta name="author" content="Kofein Café s.r.o.">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" href="{$basePath}/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow">
+    <title>Administrace - Kofein</title>
+    <meta name="author" content="Kofein Café s.r.o.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico" />
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha256-ZT4HPpdCOt2lvDkXokHuhJfdOKSPFLzeAJik5U/Q+l4=" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="{$basePath}/css/admin.css">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous" n:nonce></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" n:nonce></script>
-	<script src="https://cdn.tiny.cloud/1/tjoxgf21gnnujm4s7ccedh397sxs7gyesq8mfqpyg728lp21/tinymce/5/tinymce.min.js" referrerpolicy="origin" n:nonce></script>
-	<script src="https://nette.github.io/resources/js/netteForms.js" n:nonce></script>
-	<script n:nonce>
-		tinymce.init({
-		selector:'textarea',
-		entity_encoding: 'raw',
-		language: 'cs'
-	});
-	</script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha256-ZT4HPpdCOt2lvDkXokHuhJfdOKSPFLzeAJik5U/Q+l4=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{$basePath}/css/admin.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous" n:nonce></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" n:nonce></script>
+    <script src="https://cdn.tiny.cloud/1/tjoxgf21gnnujm4s7ccedh397sxs7gyesq8mfqpyg728lp21/tinymce/5/tinymce.min.js" referrerpolicy="origin" n:nonce></script>
+    <script src="https://nette.github.io/resources/js/netteForms.js" n:nonce></script>
+    <script n:nonce>
+        tinymce.init({
+            selector:'textarea',
+            entity_encoding: 'raw',
+            language: 'cs'
+        });
+    </script>
 </head>
 
 <body>
 <nav class="navbar navbar-default">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse-1" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" n:href="Dashboard:">
-				<img alt="Kofein restaurant" src="{$basePath}/img/podpis.png" height="16">
-			</a>
-		</div>
-		<div class="collapse navbar-collapse" id="main-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				<li><p class="navbar-text">Administrace</p></li>
-			</ul>
-			<ul class="nav navbar-nav navbar-right">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" n:href="Dashboard:">
+                <img alt="Kofein restaurant" src="{$basePath}/img/podpis.png" height="16">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="main-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><p class="navbar-text">Administrace</p></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
 
-				<li n:if="$user->isLoggedIn()" class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-user"></i> {$user->getIdentity()->name} <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a n:href="Sign:reset">Změnit heslo</a></li>
-					</ul>
-				</li>
-				<li n:if="$user->isLoggedIn()"><a n:href="Sign:out">Odhlásit</a></li>
-			</ul>
-		</div>
-	</div>
+                <li n:if="$user->isLoggedIn()" class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="glyphicon glyphicon-user"></i> {$user->getIdentity()->name} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a n:href="Sign:reset">Změnit heslo</a></li>
+                    </ul>
+                </li>
+                <li n:if="$user->isLoggedIn()"><a n:href="Sign:out">Odhlásit</a></li>
+            </ul>
+        </div>
+    </div>
 </nav>
 <div class="container">
     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-    	{$flash->message}
+        {$flash->message}
     </div>
-	{include content}
+    {include content}
 </div>
 </body>
 </html>
