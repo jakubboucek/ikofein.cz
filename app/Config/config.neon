@@ -4,6 +4,12 @@ application:
         5xx: Error:Error5xx
     mapping: App\Presenters\*\**Presenter
 
+assets:
+    mapping:
+        default:
+            type: vite
+            path: assets
+
 session:
     expiration: 14 days
 

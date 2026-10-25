@@ -1,27 +1,41 @@
 {
-  "name": "ikofein.cz",
-  "description": "Website ikofein.cz",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jakubboucek/ikofein.cz.git"
-  },
-  "bugs": {
-    "url": "https://github.com/jakubboucek/ikofein.cz/issues",
-    "email": "pan@jakubboucek.cz"
-  },
-  "author": {
-    "name": "Jakub Bouček",
-    "email": "pan@jakubboucek.cz",
-    "url": "https://www.jakub-boucek.cz/"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/jakubboucek/ikofein.cz",
-  "devDependencies": {
-    "grunt": "^1.6.1",
-    "grunt-contrib-less": "^2.1.0",
-    "grunt-contrib-uglify-es": "^3.3.0"
-  }
+    "name": "ikofein.cz",
+    "description": "Website ikofein.cz",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "check:assets": "docker compose exec -T web php bin/check-assets.php"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jakubboucek/ikofein.cz.git"
+    },
+    "bugs": {
+        "url": "https://github.com/jakubboucek/ikofein.cz/issues",
+        "email": "pan@jakubboucek.cz"
+    },
+    "author": {
+        "name": "Jakub Bouček",
+        "email": "pan@jakubboucek.cz",
+        "url": "https://www.jakub-boucek.cz/"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/jakubboucek/ikofein.cz",
+    "devDependencies": {
+        "@nette/vite-plugin": "^1.1.0",
+        "sass": "^1.106.1",
+        "vite": "^8.3.5"
+    },
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=22.12.0"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.3.8",
+        "jodit": "4.18.10",
+        "nette-forms": "^3.5.3",
+        "photoswipe": "^5.4.4"
+    }
 }
