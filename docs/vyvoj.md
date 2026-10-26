@@ -138,7 +138,7 @@ V debug režimu se neexistující stránka zobrazí jako Tracy výjimka s HTTP 5
 
 Produkce používá Cloudflare. Ochrana e-mailových adres přes Email Address Obfuscation je vypnutá. Aplikace zachovává CSP s nonce a `strict-dynamic`; automaticky vložené skripty bez odpovídajícího povolení mohou být blokované. Cloudflare Web Analytics není v aplikaci integrované.
 
-`deployment.php` používá jedinou sekci `Production`, která přenáší `app/`, `www/` včetně verzovaného buildu a `vendor/`. Vynechává `www/.well-known` a vývojový marker `www/assets/.vite/nette.json`. Nastavení `allowDelete: true` odstraňuje i staré hashované assety; cílem je čistý deploy bez hromadění minulých buildů.
+`.deployment.php` používá jedinou sekci `Production`, která přenáší `app/`, `www/` včetně verzovaného buildu a `vendor/`. Vynechává `www/.well-known` a vývojový marker `www/assets/.vite/nette.json`. Nastavení `allowDelete: true` odstraňuje i staré hashované assety; cílem je čistý deploy bez hromadění minulých buildů.
 
 Přihlašovací údaje bere z `.deployment-credentials.php`, lokální konfigurace se nepřenáší. Nasazuj zdroje a odpovídající commitovaný build ze stejného checkoutu; během přenosu jej nepřegenerovávej.
 
