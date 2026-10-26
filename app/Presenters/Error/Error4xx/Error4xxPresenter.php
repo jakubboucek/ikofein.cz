@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace App\Presenters\Error\Error4xx;
 
-use App\Model\WebDir;
 use Nette;
 use Nette\Application\BadRequestException;
 
 class Error4xxPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(
-        private readonly WebDir $wwwDir,
-    ) {
-        parent::__construct();
-    }
-
-
     #[\Override]
     public function startup(): void
     {
@@ -35,8 +27,6 @@ class Error4xxPresenter extends Nette\Application\UI\Presenter
         $template = $this->getTemplate();
         $template->setFile(is_file($file) ? $file : __DIR__ . '/4xx.latte');
 
-        $template->wwwDir = $this->wwwDir->getPath();
         $template->lang = 'en';
-        $template->dataLayer = [['errorCode' => $exception->getCode()]];
     }
 }

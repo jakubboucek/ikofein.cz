@@ -1,17 +1,13 @@
 @font-face {
     font-family: 'Titillium Web';
-    src: url('/fonts/titilliumweb-bold-webfont.eot');
-    src: url('/fonts/titilliumweb-bold-webfont.eot?#iefix') format('embedded-opentype'),
-    url('/fonts/titilliumweb-bold-webfont.woff2') format('woff2'),
-    url('/fonts/titilliumweb-bold-webfont.woff') format('woff');
+    src: url('../../www/fonts/titilliumweb-bold-webfont.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
-
 }
 
 @media screen {
 
-    @page-width: 800px;
+    $page-width: 800px;
 
     body {
         background-color: #eeefe3;
@@ -22,17 +18,17 @@
         text-align: center;
 
         > header {
-            background: #7b8427 url('/img/layout/header-bg.png') no-repeat top center;
+            background: #7b8427 url('../../www/img/layout/header-bg.png') no-repeat top center;
             background-size: 85.25%;
-            @media (min-width: @page-width) {
+            @media (min-width: $page-width) {
                 background-size: 682px;
             }
             width: 100%;
 
             div {
                 width: 100%;
-                @media (min-width: @page-width) {
-                    width: @page-width;
+                @media (min-width: $page-width) {
+                    width: $page-width;
                 }
                 margin: 0 auto;
                 padding: 14px 0 11px;
@@ -43,7 +39,7 @@
                 position: relative;
                 top: 0;
                 left: 22%;
-                background: transparent url('/img/layout/header-logo.png') no-repeat top left;
+                background: transparent url('../../www/img/layout/header-logo.png') no-repeat top left;
                 background-size: 100%;
                 display: block;
                 width: 66.875%;
@@ -62,7 +58,7 @@
         }
 
         > nav.menu {
-            background: #69711e url('/img/layout/menu-bottom-bg.png') repeat-x bottom left;
+            background: #69711e url('../../www/img/layout/menu-bottom-bg.png') repeat-x bottom left;
             width: 100%;
 
             ul {
@@ -73,7 +69,7 @@
                     display: inline-block;
                     margin: 0;
                     padding: 0 5px 0 18px;
-                    background: url('/img/layout/menu-items-separator.png') 0 10px no-repeat;
+                    background: url('../../www/img/layout/menu-items-separator.png') 0 10px no-repeat;
                     @media (min-width: 640px) {
                         background-position: 0 12px;
                         padding: 0 13px 0 25px;
@@ -126,8 +122,8 @@
             text-align: left;
             top: 0;
             width: 100%;
-            @media (min-width: @page-width) {
-                width: @page-width;
+            @media (min-width: $page-width) {
+                width: $page-width;
             }
 
             > h1 {
@@ -139,7 +135,7 @@
                 line-height: 1.4;
                 margin: 20px 0;
                 padding: 0 15px;
-                @media (min-width: (@page-width + 30) ) {
+                @media (min-width: ($page-width + 30px) ) {
                     padding: 0;
                 }
 
@@ -163,13 +159,13 @@
         }
 
         > footer {
-            background: #7b8427 url('/img/layout/footer-bg.png') no-repeat top center;
+            background: #7b8427 url('../../www/img/layout/footer-bg.png') no-repeat top center;
             width: 100%;
             padding: 20px 0;
 
             div {
-                @media (min-width: @page-width) {
-                    width: @page-width;
+                @media (min-width: $page-width) {
+                    width: $page-width;
                 }
                 color: #c8d44c;
                 margin: 0 auto;
@@ -338,4 +334,39 @@
     nav {
         display: none;
     }
+}
+
+div.alert-message {
+    margin-top: 10px;
+    padding: 13px 12px 12px;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+    background-color: #2ba6cb;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 12px;
+    border-radius: 3px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+div.alert-message .box-icon {
+    display: block;
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoBAMAAAB+0KVeAAAALVBMVEUAAAD///////////////////////////////////////////////////////+hSKubAAAADnRSTlMA37/vgHAQr5+PUEAwIM0IdwQAAAB3SURBVCjPYxjGgFEAi6DfE0wxNrvHCRiCHO/eNWAInnv37g2GoN4Tv0foYlzvHvC9W4DuIJAguqPiQIJP0R0EEkRzFOc7kOC7CSiC9969e6T37t1bVAe9AwMUR3G/g2h/twHZQTBBARQHQQCKo+pggs8ZRgEWAAAft0uCg1O8vQAAAABJRU5ErkJggg==) no-repeat center top;
+    width: 50px;
+    flex-shrink: 0;
+    margin-top: -2px;
+}
+
+div.alert-message p {
+    margin: 0;
+    padding: 0;
+}
+
+div.alert-message {
+    background-color: #e3b000;
+    color: #fff;
 }

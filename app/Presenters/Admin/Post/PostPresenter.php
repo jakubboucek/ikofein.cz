@@ -79,9 +79,11 @@ class PostPresenter extends Nette\Application\UI\Presenter
                 . ' Nevyplňujte, nechcete-li plánovat konec zobrazení.'
             );
 
-        $form->addTextArea('content_cs', 'Český obsah', null, 20);
+        $form->addTextArea('content_cs', 'Český obsah', null, 20)
+            ->setHtmlAttribute('data-editor', 'jodit');
 
-        $form->addTextArea('content_en', 'Anglický obsah', null, 20);
+        $form->addTextArea('content_en', 'Anglický obsah', null, 20)
+            ->setHtmlAttribute('data-editor', 'jodit');
 
         $form->addSubmit('send', 'Uložit');
 

@@ -1,12 +1,12 @@
 /.deployment-credentials.php
 /.docker/
 /.htdeployment
-/bower_components
 /local/*
 !/local/Config/.gitignore
 /log/*
 !/log/.gitignore
 /node_modules
+/www/assets/.vite/nette.json
 /temp/*
 !/temp/.gitignore
 /vendor/*

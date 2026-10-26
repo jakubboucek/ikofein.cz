@@ -1,38 +1,25 @@
 {varType string $lang}
-{varType string $wwwDir}
 {varType string[] $altLangs}
-{varType array[] $dataLayer}
 {varType bool $readyForPost}
-
 <!DOCTYPE html>
 <html lang="{$lang}" class="{$lang}" dir="ltr">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>{ifset #h1}{include h1} - {/ifset}
         {if $lang=='cs'}Kofein restaurant na pražských Vinohradech{/if}
         {if $lang=='en'}Kofein restaurant in Vinohrady - Prague{/if}
     </title>
     <meta name="author" content="Solar flare s.r.o.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{$basePath}/css/main.css?{=filemtime($wwwDir . '/css/main.css')}">
-    <link rel="shortcut icon" href="{$basePath}/favicon.ico" />
+    {asset 'front.js'}
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
 
     {ifset $altLangs}
     <link n:foreach="$altLangs as $altLang => $altUrl" rel="alternate" hreflang="{$altLang}" href="{$altUrl}">
     {/ifset}
-    <script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
-    <script n:nonce>
-        dataLayer = {ifset $dataLayer}{$dataLayer}{else}[]{/ifset};
-        (function(w,d,s,l,i){ w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-WLWCSG');</script>
 </head>
 
 <body>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WLWCSG"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <header>
         <div>
             <a href="{$basePath}/" class="logo">

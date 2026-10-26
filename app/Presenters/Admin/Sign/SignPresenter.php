@@ -212,15 +212,12 @@ class SignPresenter extends Nette\Application\UI\Presenter
 
         $form->addPassword('password', 'Heslo:')
             ->setRequired('Heslo musí být vyplněno')
-            ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 15)
-            ->addRule(static fn(Control $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
+            ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 9)
             ->setHtmlAttribute('autofocus')
             ->setHtmlAttribute('autocomplete', 'new-password');
 
         $form->addPassword('password2', 'Heslo znovu:')
             ->setRequired('Heslo musí být vyplněno')
-            ->addRule(UI\Form::MinLength, 'Heslo musí mít alespoň %d znaků.', 15)
-            ->addRule(static fn(Control $input): bool => strlen($input->getValue()) <= 72, 'Heslo smí mít nejvýše 72 bajtů v UTF-8.')
             ->addRule(UI\Form::Equal, 'Hesla se neshodují', $form['password'])
             ->setHtmlAttribute('autocomplete', 'new-password');
 

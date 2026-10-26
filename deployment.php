@@ -16,6 +16,7 @@ return [
         ],
         'ignore' => [
             '/www/.well-known',
+            '/www/assets/.vite/nette.json',
         ],
         'allowDelete' => true,
         'after' => ['https://ikofein.cz/deployment.php?after'],

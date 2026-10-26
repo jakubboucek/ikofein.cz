@@ -4,6 +4,12 @@ application:
         5xx: Error:Error5xx
     mapping: App\Presenters\*\**Presenter
 
+assets:
+    mapping:
+        default:
+            type: vite
+            path: assets
+
 session:
     expiration: 14 days
 
@@ -39,8 +45,6 @@ http:
         object-src: none
         style-src:
             - self
-            - 'https://maxcdn.bootstrapcdn.com'
-            - 'https://cdn.tiny.cloud'
             - 'unsafe-inline' # because wysiwyg editor
         base-uri: none
 
@@ -50,7 +54,6 @@ tracy:
 services:
     - JakubBoucek\Hydrator\HydratorFactory(JakubBoucek\Hydrator\Format\NetteDatabase)
     - App\Model\PostManager
-    - App\Model\WebDir(%wwwDir%)
     - App\Model\PasswordReset
     postRenderer: App\Component\PostRenderer
     router: App\Router\RouterFactory::createRouter

@@ -34,7 +34,8 @@ Tím se použije `Nette\Mail\SendmailMailer` a systémové odesílání pošty n
 1. Připrav neversionovaný `local/Config/config.neon`. Bootstrap jej vždy načítá. Může být prázdný (`[]`) nebo podle prostředí přepsat databázi a mailer.
 2. Zajisti zapisovatelné `temp/` a `log/` a spusť kontejnery.
 3. Nainstaluj Composer závislosti podle lockfile.
-4. Obnov odpovídající databázi z dostupné zálohy. Vytvoření databáze `default` image nenahradí aplikační tabulky ani data. Repozitář nemá úplné výchozí SQL schéma ani seed; na obnovenou DB aplikuj chybějící migrace podle `migrations/README.md`.
+4. Připrav frontend příkazy v části [Sestavení frontendu](#sestavení-frontendu).
+5. Obnov odpovídající databázi z dostupné zálohy. Vytvoření databáze `default` image nenahradí aplikační tabulky ani data. Repozitář nemá úplné výchozí SQL schéma ani seed; na obnovenou DB aplikuj chybějící migrace podle `migrations/README.md`.
 
 ```sh
 docker compose up -d
@@ -69,7 +70,7 @@ Pro příkaz bez běžících služeb lze použít `docker compose run --rm --no
 
 `composer latte-lint` kontroluje syntaxi všech Latte šablon v `app/`. Vlastní proměnné mají deklarace `{varType}`; standardní proměnné presenterů dodává Nette. Deklarace pomáhají IDE, lint neověřuje skutečné typy předaných hodnot. Jazyk veřejného layoutu vždy předává presenter, u chybových stránek je explicitně `en`.
 
-PHPStan 2 používá úroveň 8 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; vlastní testovací data po dokončení odstraní. Bootstrap zamyká běh DB testů proti souběhu. Jednorázovost resetovacího tokenu ověřuje test jeho opakovaného použití. Tester standardně načítá konfiguraci PHP kontejneru. Pro běh bez Xdebugu použij `docker compose exec -e XDEBUG_MODE=off -T web composer test`. `npm test` končí záměrně chybou.
+PHPStan 2 používá úroveň 8 nad `app/`. V `phpstan.neon` se ručně načítají `nette/phpstan-rules` pro porozumění Nette a `phpstan/phpstan-deprecation-rules` pro kontrolu deprecated API; automatický instalátor rozšíření není potřeba. Integrační testy používají Nette Tester (`TestCase`, samostatné testovací metody a `dataProvider`) a spouštějí se příkazem `docker compose exec -T web composer test`. Vyžadují migrovanou testovací DB; vlastní testovací data po dokončení odstraní. Bootstrap zamyká běh DB testů proti souběhu. Jednorázovost resetovacího tokenu ověřuje test jeho opakovaného použití. Tester standardně načítá konfiguraci PHP kontejneru. Pro běh bez Xdebugu použij `docker compose exec -e XDEBUG_MODE=off -T web composer test`.
 
 Lokální databáze obsahuje testovací data, která lze při testování měnit. Samostatná další testovací databáze není nutná. PHPStan databázi nepotřebuje.
 
@@ -103,17 +104,21 @@ Jde výhradně o lokální testovací přihlašovací údaje. Databáze ani tent
 
 ## Sestavení frontendu
 
-Zdroje jsou v `asset/`, závislosti Boweru určuje `bower.json`. Grunt vyžaduje současně `node_modules/` a `bower_components/`. Výstupy v `www/css/` a `www/js/main.js` jsou verzované. Compose nemá službu pro Node ani projekt neurčuje jeho verzi.
-
-Následující příklad používá jednorázový Node kontejner; Node 22 je zde volba pro spuštění nástrojů, nikoli deklarovaný požadavek projektu. Sestavení tímto postupem není automaticky ověřováno testy:
+Node/npm se spouštějí na hostu přes `nvm`, verzi určuje `.nvmrc`. PHP a databáze zůstávají v Dockeru. Závislosti jsou zamčené v `package-lock.json`; zdroje v `assets/`, konfigurace ve `vite.config.js`. Produkční výstupy `www/assets/` včetně `.vite/manifest.json` jsou verzované. Po změně zdrojů nebo závislostí je přegeneruj a commituj společně se zdroji; čistý checkout tak obsahuje hotový build:
 
 ```sh
-docker run --rm -v "$PWD:/app" -w /app node:22 npm ci
-docker run --rm -v "$PWD:/app" -w /app node:22 npx --yes --package=bower bower install --allow-root
-docker run --rm -v "$PWD:/app" -w /app node:22 ./node_modules/.bin/grunt
+source ~/.nvm/nvm.sh
+nvm install
+nvm use
+npm ci
+npm run build
 ```
 
-Po změně zdrojů zkontroluj diff vygenerovaných souborů. Frontend ověřuj ve vlastní instanci Chrome přes MCP a recykluj otevřená okna a záložky. Aplikaci a MailDev měj v samostatných současně otevřených záložkách; nevytvářej nové pro každou iteraci. Zkontroluj dotčené stránky v obou jazycích, konzoli a načtení assetů. E-maily z uložení obsahu a resetu hesla ověř v MailDev.
+Jodit tvoří samostatný větší chunk (přibližně 185 kB gzip JS a 36 kB gzip CSS); Vite na jeho velikost upozorňuje, ale dashboard ani veřejné stránky jej nestahují.
+
+Pro vývoj spusť `npm run dev`. Vite poslouchá na `http://localhost:5173`, aplikaci dál otevírej na `http://localhost:8080/`. Pevný port a CORS jsou nastavené pro tuto adresu. Plugin zapisuje `www/assets/.vite/nette.json`; tento vývojový marker je vyloučen z Gitu i deploye a Nette Assets jej používá jen v debug režimu. Změny SCSS/JS se načítají přes HMR, změny Latte vyvolají obnovení stránky. Před produkčním buildem zastav dev server; při jeho násilném ukončení může zůstat marker, který odstraní nový build.
+
+Frontend ověřuj ve vlastní instanci Chrome přes MCP; pokud nejsou přímé nástroje dostupné, lze použít Chrome DevTools MCP CLI přes `npm exec --yes --package=chrome-devtools-mcp -- chrome-devtools …`. Recykluj záložky a ponech samostatnou pro MailDev. Kontroluj obě jazykové verze, mobil, tisk, klávesnici galerie, konzoli/CSP, přihlášení/reset a ukládání editoru. Testovací obsah po ověření obnov se zachováním historie.
 
 ## Ladění
 
@@ -133,7 +138,9 @@ V debug režimu se neexistující stránka zobrazí jako Tracy výjimka s HTTP 5
 
 Produkce používá Cloudflare. Ochrana e-mailových adres přes Email Address Obfuscation je vypnutá. Aplikace zachovává CSP s nonce a `strict-dynamic`; automaticky vložené skripty bez odpovídajícího povolení mohou být blokované. Cloudflare Web Analytics není v aplikaci integrované.
 
-`deployment.php` nastavuje FTPS přenos na produkci. Přenáší `app/`, `www/` a `vendor/`, vynechává `www/.well-known` a dovoluje mazání vzdálených souborů. Přihlašovací údaje bere z `.deployment-credentials.php`. Lokální konfigurace se nepřenáší.
+`deployment.php` používá jedinou sekci `Production`, která přenáší `app/`, `www/` včetně verzovaného buildu a `vendor/`. Vynechává `www/.well-known` a vývojový marker `www/assets/.vite/nette.json`. Nastavení `allowDelete: true` odstraňuje i staré hashované assety; cílem je čistý deploy bez hromadění minulých buildů.
+
+Přihlašovací údaje bere z `.deployment-credentials.php`, lokální konfigurace se nepřenáší. Nasazuj zdroje a odpovídající commitovaný build ze stejného checkoutu; během přenosu jej nepřegenerovávej.
 
 `bin/deploy-dry.sh` spouští testovací režim nasazovacího nástroje, `bin/deploy.sh` skutečné nasazení. Oba vyžadují globálně dostupný Composer příkaz `deployment` uvnitř kontejneru; není projektovou Composer závislostí. I tyto skripty spouštěj pouze v Dockeru.
 

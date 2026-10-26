@@ -4,7 +4,7 @@
 
 | Cesta | Účel |
 | --- | --- |
-| `www/` | Veřejný kořen Apache, vstup `index.php`, statické soubory a výstupy Gruntu |
+| `www/` | Veřejný kořen Apache, vstup `index.php`, statické soubory a výstupy Vite |
 | `app/Bootstrap.php` | Inicializace Nette, Tracy, RobotLoaderu a konfigurace |
 | `app/Config/config.neon` | Společná konfigurace a DI služby |
 | `local/Config/config.neon` | Povinné lokální přepsání konfigurace, mimo Git |
@@ -12,11 +12,11 @@
 | `app/Presenters/Static/` | Veřejné stránky a jejich šablony |
 | `app/Presenters/Admin/` | Přihlášení, obnova hesel, přehled a editace obsahu |
 | `app/Presenters/Error/` | Samostatné presentery a šablony pro chyby 4xx a 5xx |
-| `app/Model/` | Obsah, uživatelé, obnova hesla a cesta k veřejným souborům |
+| `app/Model/` | Obsah, uživatelé a obnova hesla |
 | `app/Entity/` | Typovaná data článku pro čtení i částečné změny |
 | `app/Components/Post/` | Vykreslování dynamického obsahu |
 | `app/Forms/` | Úprava vykreslování Nette Forms pro Bootstrap |
-| `asset/` | Zdrojový JavaScript a LESS |
+| `assets/` | Zdrojový JavaScript a SCSS |
 | `temp/`, `log/` | Cache a diagnostika; obsah se neverzuje |
 
 `www/index.php` načte Composer a spustí aplikaci přes `App\Bootstrap`. RobotLoader prochází `app/`. Společná konfigurace se načítá před lokální. Časové pásmo aplikace je `Europe/Prague`; debug režim určuje `redbitcz/debug-mode-enabler`.
@@ -74,6 +74,10 @@ Nette Forms mapuje hodnoty editace článku, přihlášení a nastavení hesla p
 
 ## Frontend
 
-Veřejný web používá jQuery a Magnific Popup z Boweru, vlastní skripty a LESS. Grunt vytváří `www/js/main.js`, `www/css/main.css` a `www/css/admin.css`. Veřejný layout přidává k URL CSS a JS čas změny souboru.
+Zdroje jsou v `assets/`: `front.js` načítá veřejné SCSS, `admin.js` Bootstrap 5, Nette Forms a administrační SCSS. Vite s `@nette/vite-plugin` generuje hashované soubory a manifest do `www/assets/`. PHP `nette/assets` je mapuje přes `{asset 'front.js'}` a `{asset 'admin.js'}`, včetně CSP nonce. Fonty a obrázky odkazované ze SCSS se zpracovávají buildem; ostatní statické soubory zůstávají ve `www/`.
 
-Administrace načítá Bootstrap 3, jQuery, TinyMCE 5 a Nette Forms z externích zdrojů. Veřejný web používá Google Tag Manager a na kontaktní stránce Google Maps. CSP je nastavena ve společné konfiguraci; skripty v šablonách používají nonce.
+PhotoSwipe se inicializuje jen na galerii a jeho jádro se načte až při otevření fotografie. Odkazy fungují i bez JS; šablony obsahují skutečné rozměry originálů a české/anglické alternativní texty.
+
+Jodit 4.18.10 (MIT) a jeho CSS se načítají dynamicky pouze pro `textarea[data-editor]`. Má české rozhraní, základní formátování a tabulky. Konfigurace `cleanHTML` zachovává prázdné elementy, historické tagy a NBSP; ochrany proti skriptům a nebezpečným atributům zůstávají zapnuté. Zdrojový režim používá lokální textarea místo externího Ace a má vypnuté `beautifyHTML`, které by jinak stahovalo formátovač z CDN. Při odeslání se synchronizují hodnoty, nezměněný obsah se odesílá v původním přesném zápisu. Editor není serverový HTML sanitizér; obsah nadále upravují přihlášení správci. Výchozí odkaz „Powered by Jodit“ zůstává viditelný.
+
+Nette Forms z npm zajišťuje klientskou validaci i na přihlášení a resetu hesla. BootstrapizeForm používá třídy Bootstrap 5. Web nepotřebuje jQuery ani CDN pro své knihovny. Veřejný web zachovává Google Tag Manager a Google Maps na kontaktní stránce. CSP je ve společné konfiguraci; inline styly jsou povolené kvůli uloženému HTML a editoru.
