@@ -1,0 +1,40 @@
+{varType App\Entity\Post[] $posts}
+
+{block content}
+<div class="card">
+    <div class="table-responsive">
+        <h1 class="card-header h5">Texty na stránkách</h1>
+        <table class="table mb-0">
+            <tr>
+                <th>Typ zprávy</th>
+                <th>Text</th>
+                <th>Zveřejněno</th>
+            </tr>
+            {foreach $posts as $post}
+            <tr n:class="$post->isPublished() ? : 'gray'">
+                <td>
+                    <a n:href="Post:detail key=>$post->key">{$post->title}</a>
+                    <br><small>{$post->techNote}</small>
+                </td>
+                <td>
+                    <strong>Česky: </strong>{$post->contentCs|stripHtml|truncate:100}<br>
+                    <strong>Anglicky: </strong>{$post->contentEn|stripHtml|truncate:100}<br>
+                </td>
+                <td>
+                    {if $post->isPublished()}
+                        <strong class="text-success">Ano</strong>
+                        {ifset $post->publishedTo}
+                            <br><small>až do {$post->publishedTo|date:'Y-m-d H:i:s'}</small>
+                        {/ifset}
+                    {else}
+                        <strong class="text-danger">Ne</strong>
+                        {if $post->isPlanned()}
+                            <br><small>až od {$post->publishedFrom|date:'Y-m-d H:i:s'}</small>
+                        {/if}
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </table>
+    </div>
+</div>

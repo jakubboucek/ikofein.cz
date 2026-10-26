@@ -1,0 +1,81 @@
+{
+  "../node_modules/photoswipe/dist/photoswipe.esm.js": {
+    "file": "photoswipe.esm-CYiGMuLV.js",
+    "name": "photoswipe.esm",
+    "src": "../node_modules/photoswipe/dist/photoswipe.esm.js",
+    "isDynamicEntry": true
+  },
+  "../www/fonts/titilliumweb-bold-webfont.woff2": {
+    "file": "titilliumweb-bold-webfont-eo0OOu1S.woff2",
+    "src": "../www/fonts/titilliumweb-bold-webfont.woff2"
+  },
+  "../www/img/layout/header-logo.png": {
+    "file": "header-logo-C2fpsMk4.png",
+    "src": "../www/img/layout/header-logo.png"
+  },
+  "_preload-helper-BEeJrdAL.js": {
+    "file": "preload-helper-BEeJrdAL.js",
+    "name": "preload-helper"
+  },
+  "admin.js": {
+    "file": "admin-BtjinhBn.js",
+    "name": "admin",
+    "src": "admin.js",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-BEeJrdAL.js"
+    ],
+    "dynamicImports": [
+      "editor.js"
+    ],
+    "css": [
+      "admin-82OQbp6b.css"
+    ]
+  },
+  "editor.js": {
+    "file": "editor-kkuOBh0H.js",
+    "name": "editor",
+    "src": "editor.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "admin.js"
+    ],
+    "css": [
+      "editor-CNHkFuUJ.css"
+    ]
+  },
+  "front.js": {
+    "file": "front-B434Gs8h.js",
+    "name": "front",
+    "src": "front.js",
+    "isEntry": true,
+    "imports": [
+      "_preload-helper-BEeJrdAL.js"
+    ],
+    "dynamicImports": [
+      "gallery.js"
+    ],
+    "css": [
+      "front-Day6eWVo.css"
+    ],
+    "assets": [
+      "titilliumweb-bold-webfont-eo0OOu1S.woff2",
+      "header-logo-C2fpsMk4.png"
+    ]
+  },
+  "gallery.js": {
+    "file": "gallery-CufrB04c.js",
+    "name": "gallery",
+    "src": "gallery.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_preload-helper-BEeJrdAL.js"
+    ],
+    "dynamicImports": [
+      "../node_modules/photoswipe/dist/photoswipe.esm.js"
+    ],
+    "css": [
+      "gallery-DOg8h1BU.css"
+    ]
+  }
+}

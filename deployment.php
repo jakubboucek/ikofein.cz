@@ -11,12 +11,12 @@ return [
         'test' => false,
         'include' => [
             '/app',
-            '/libs',
             '/www',
             '/vendor',
         ],
         'ignore' => [
             '/www/.well-known',
+            '/www/assets/.vite/nette.json',
         ],
         'allowDelete' => true,
         'after' => ['https://ikofein.cz/deployment.php?after'],

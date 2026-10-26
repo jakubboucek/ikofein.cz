@@ -1,0 +1,31 @@
+body {
+    background-color: #eee;
+}
+
+main {
+    padding-bottom: 2rem;
+}
+
+.sign-page form {
+    max-width: 360px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+tr.gray {
+    td, th {
+        color: #707070;
+
+        a {
+            color: #526c82;
+        }
+    }
+}
+
+ul.alert {
+    list-style-type: none;
+}
+
+.jodit-container {
+    text-align: left;
+}

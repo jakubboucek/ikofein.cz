@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="cs" class="cs" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Administrace - Kofein</title>
+    <meta name="author" content="Solar flare s.r.o.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+    {asset 'admin.js'}
+</head>
+<body class={['sign-page' => $presenter->isLinkCurrent('Sign:*')]}>
+<nav class="navbar navbar-expand-sm bg-body-tertiary mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" n:href="Dashboard:">
+            <img alt="Kofein restaurant" src="{$basePath}/img/podpis.png" height="20">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#admin-navigation" aria-controls="admin-navigation" aria-expanded="false" aria-label="Otevřít navigaci">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="admin-navigation">
+            <span class="navbar-text">Administrace</span>
+            <ul n:if="$user->isLoggedIn()" class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">{$user->getIdentity()->name}</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" n:href="Sign:reset">Změnit heslo</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" n:href="Sign:out">Odhlásit</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<main class="container">
+    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}" role="status">
+        {varType \stdClass $flash}
+        {$flash->message}
+    </div>
+    {include content}
+</main>
+</body>
+</html>

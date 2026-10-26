@@ -1,19 +1,22 @@
-parameters:
-    jwt:
-        base64-key: {put-here-key}
-
 application:
-    errorPresenter: Error
+    errorPresenter:
+        4xx: Error:Error4xx
+        5xx: Error:Error5xx
+    mapping: App\Presenters\*\**Presenter
+
+assets:
     mapping:
-        *: App\*Module\Presenters\*Presenter
+        default:
+            type: vite
+            path: assets
 
 session:
     expiration: 14 days
 
-aws:
-    credentials:
-        key: AKIAIZQTKJSYPVJS4E3A
-        secret: {put-here-secret}
+mail:
+    smtp: true
+    host: maildev
+    port: 1025
 
 database:
     dsn: 'mysql:host=mysqldb;dbname=default;charset=utf8'
@@ -25,28 +28,19 @@ database:
 di:
     debugger: false
 
-extensions:
-    aws: JakubBoucek\Aws\DI\AwsExtension
-
 http:
     csp:
         script-src:
             - 'strict-dynamic'
             - 'nonce'
-            - 'unsafe-inline'   # csp-2 fallback
-            - 'http:'           # csp-2 fallback
-            - 'https:'          # csp-2 fallback
         frame-ancestors: none
         frame-src:
             - self
-            - https://www.googletagmanager.com/
             - https://www.google.com/   # google maps
         form-action: self
         object-src: none
         style-src:
             - self
-            - 'https://maxcdn.bootstrapcdn.com'
-            - 'https://cdn.tiny.cloud'
             - 'unsafe-inline' # because wysiwyg editor
         base-uri: none
 
@@ -54,10 +48,9 @@ tracy:
     fromEmail: noreply@ikofein.cz
 
 services:
-    - App\Model\Post
-    - App\Model\WebDir(%wwwDir%)
-    mail.mailer: JakubBoucek\Aws\SesMailer
-    - App\Model\Jwt\Jwt(%jwt.base64-key%)
+    - JakubBoucek\Hydrator\HydratorFactory(JakubBoucek\Hydrator\Format\NetteDatabase)
+    - App\Model\PostManager
+    - App\Model\PasswordReset
     postRenderer: App\Component\PostRenderer
     router: App\Router\RouterFactory::createRouter
     authenticator: App\Model\UserManager

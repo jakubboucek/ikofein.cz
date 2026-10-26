@@ -1,0 +1,37 @@
+{varType string $title}
+{varType string $resetLink}
+{varType string $cancelLink}
+{varType Nette\Http\UrlImmutable $abuseLink}
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{$title}</title>
+    <style>
+        small { color: gray; }
+        h3 { text-align: center; font-size: 1.3em; }
+        table { border-collapse: collapse; }
+        table td, table th { text-align: left; border: 1px solid gray; padding: 5px; }
+    </style>
+</head>
+<body>
+<h1>Reset hesla </h1>
+
+<p>Vážený užvateli,<br>
+    zasíláme Vám jednorázový klíč na změnu hesla do administrace webu https://ikofein.cz/.</p>
+
+<p>Kliknutím na tento odkaz se dostanete na stánku pro nastavení hesla:</p>
+<h3><strong><a href="{$resetLink}">Resetovat heslo</a></strong></h3>
+
+<p>Tuto zprávu jste obdrželi, protože někdo – pravděpodobně Vy - požádal o reset hesla. Pokud jste o změnu nežádali,
+    tuto zprávu ignorujte, nebo <a href="{$cancelLink}">požadavek zrušte</a>.</p>
+
+<p>Administrace webu ikofein.cz</p>
+
+<small>Na tuto zprávu neodpovídejte, je generována automaticky.<br>
+    Pokud nefunguje výše uvedený odkaz, zkuste ručně překopírovat celý následující odkaz do prohlížeče:<br>
+    {$resetLink}<br>
+    Máte-li k tomuto e-mailu připomínky, směřujte je prosím na provozovatele webu:
+    <a href="{$abuseLink}">Jakub Bouček, pan@jakubboucek.cz</a></small>
+</body>
+</html>

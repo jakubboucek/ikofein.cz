@@ -21,7 +21,6 @@ class Bootstrap
 
         $configurator->createRobotLoader()
             ->addDirectory(__DIR__)
-            ->addDirectory(__DIR__ . '/../libs')
             ->register();
 
         $configurator->addConfig(__DIR__ . '/Config/config.neon');

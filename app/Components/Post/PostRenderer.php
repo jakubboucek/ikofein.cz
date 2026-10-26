@@ -7,20 +7,14 @@ namespace App\Component;
 use App\Model;
 use Nette\Application\ApplicationException;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
 use Nette\Bridges\ApplicationLatte\Template;
-use Nette\Caching\Cache;
-use Nette\Caching\Storage;
 
 class PostRenderer extends Control
 {
-    private readonly Model\Post $postModel;
-    private readonly Cache $cache;
-
-
-    public function __construct(Model\Post $postModel, Storage $storage)
-    {
-        $this->postModel = $postModel;
-        $this->cache = new Cache($storage, 'post');
+    public function __construct(
+        private readonly Model\PostManager $postManager,
+    ) {
     }
 
 
@@ -29,38 +23,16 @@ class PostRenderer extends Control
      */
     public function render(string $key, string $lang, string $templateName = 'post'): void
     {
-        $postInfo = $this->getPost($key);
-        $post = $postInfo['post'];
+        $post = $this->postManager->getCachedPublishedPost($key);
 
+        /** @var DefaultTemplate $template */
         $template = $this->getTemplateFile($templateName);
 
-        $template->isEmpty = $postInfo['isEmpty'];
+        $template->isEmpty = $post === null;
 
-        $field = 'content_' . $lang;
-
-        $content = '';
-        if ($post && isset($post[$field])) {
-            $content = $post[$field];
-        }
-        $template->content = $content;
+        $template->content = $post?->getContent($lang) ?? '';
 
         $template->render();
-    }
-
-
-    private function getPost(string $key): array
-    {
-        return $this->cache->load($key, function (&$dependencies) use ($key) {
-            $dependencies = [
-                Cache::Expire => '20 minutes',
-            ];
-
-            $post = $this->postModel->tryFindPostByKey($key, true);
-            return [
-                'post' => $post,
-                'isEmpty' => $post === null
-            ];
-        });
     }
 
 

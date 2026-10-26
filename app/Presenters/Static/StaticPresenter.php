@@ -1,0 +1,241 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Presenters\Static;
+
+use App\Component\PostRenderer;
+use App\Model\PageNotFoundException;
+use Nette;
+use Nette\Application\BadRequestException;
+use Nette\Bridges\ApplicationLatte\DefaultTemplate;
+use OutOfRangeException;
+use Override;
+
+/** @property-read DefaultTemplate $template */
+class StaticPresenter extends Nette\Application\UI\Presenter
+{
+    public const string LangCookie = 'lang';
+
+    private const array Langs = [
+        'en' => 'en-US',
+        'cs' => 'cs-CZ'
+    ];
+
+    private const array PageMap = [
+        'homepage' => ['homepage', 'homepage'],
+        'lunch' => ['lunch', 'poledne'],
+        'dinner' => ['dinner', 'vecer'],
+        'beverages' => ['beverages', 'napoje'],
+        'gallery' => ['gallery', 'galerie'],
+        'contact' => ['contact', 'kontakt'],
+    ];
+
+    public function __construct(
+        private readonly PostRenderer $postRenderer,
+    ) {
+        parent::__construct();
+    }
+
+
+    #[Override]
+    public function beforeRender(): void
+    {
+        $this->template->readyForPost = true;
+    }
+
+
+    /**
+     * @throws BadRequestException
+     * @throws OutOfRangeException
+     * @throws Nette\Application\UI\InvalidLinkException
+     */
+    public function renderDefault(string $page = 'homepage', ?string $lang = null): void
+    {
+        try {
+            [$pageKey, $realLang] = $this->match($page, $lang);
+        } catch (PageNotFoundException $e) {
+            throw new BadRequestException("Page '$lang/$page' does not found", 0, $e);
+        }
+
+        $this->template->lang = $realLang;
+        $this->template->title = $pageKey;
+        $this->template->altLangs = $this->getAllLangsLinks($pageKey);
+
+        $this->getHttpResponse()->addHeader('Content-Language', self::Langs[$realLang]);
+
+        $this->setView("$realLang-$pageKey");
+    }
+
+
+    public function createComponentPost(): PostRenderer
+    {
+        return $this->postRenderer;
+    }
+
+
+    /**
+     * @return array{string, string}
+     * @throws PageNotFoundException|OutOfRangeException
+     */
+    private function match(string $page, ?string $lang): array
+    {
+        $requestPage = $page;
+        $requestLang = $lang;
+
+
+        // parse page
+        $pageKey = $this->getPageKeyByUrl($page);
+
+
+        // lang not defined - determine it
+        if ($lang === null) {
+            // try detect it by cookie
+            if (($lang = $this->getCookiesLang()) === null) {
+                // otherwise detect it by browser
+                $this->getHttpResponse()->addHeader('Vary', 'Accept-Language');
+                $lang = $this->getBrowserLang();
+            }
+
+            // If detected lang invalid (or empty), use default
+            // prevent mystery 404 by invalid HTTP header or cookie
+            if ($lang === null || !isset(self::Langs[$lang])) {
+                $lang = $this->getDefaultLang();
+            }
+        }
+
+        $langKey = $this->getLangKey($lang);
+
+        if (isset(self::PageMap[$pageKey][$langKey]) === false) {
+            throw new OutOfRangeException("Unable to search PageMap[$pageKey][$langKey]");
+        }
+
+        $page = self::PageMap[$pageKey][$langKey];
+
+        $this->getHttpResponse()->setCookie(
+            self::LangCookie,
+            $lang,
+            '+1 month',
+            secure: $this->getHttpRequest()->isSecured(),
+            httpOnly: true,
+        );
+
+        //check and fix canonical URL
+        if ($requestLang !== $lang || $requestPage !== $page) {
+            $this->redirectTo($page, $lang);
+        }
+
+        return [$pageKey, $lang];
+    }
+
+
+    /**
+     * @throws Nette\Application\AbortException
+     */
+    private function redirectTo(string $page, string $lang): never
+    {
+        $queryParameters = $this->getHttpRequest()->getQuery();
+        $this->redirect(
+            'default',
+            $queryParameters + [
+                'lang' => $lang,
+                'page' => $page,
+            ]
+        );
+    }
+
+
+    private function getLangKey(string $lang): int
+    {
+        $langKey = array_search($lang, array_keys(self::Langs), true);
+
+        if ($langKey === false) {
+            throw new PageNotFoundException("Unknown lang '$lang' in Langs");
+        }
+
+        return (int)$langKey;
+    }
+
+    private function getBrowserLang(): ?string
+    {
+        $request = $this->getHttpRequest();
+
+        /** @noinspection PhpConditionAlreadyCheckedInspection False positive - IRequest != Request */
+        if ($request instanceof Nette\Http\Request) {
+            return $request->detectLanguage(array_keys(self::Langs));
+        }
+
+        if (($header = $request->getHeader('Accept-Language')) !== null) {
+            return substr($header, 0, 2);
+        }
+
+        return null;
+    }
+
+
+    private function getCookiesLang(): ?string
+    {
+        return $this->getHttpRequest()->getCookie(self::LangCookie);
+    }
+
+
+    private function getDefaultLang(): string
+    {
+        return array_key_first(self::Langs);
+    }
+
+
+    /**
+     * @throws PageNotFoundException
+     */
+    private function getPageKeyByUrl(string $keyUrl): string
+    {
+        $reversedMap = $this->getReversedPageMap();
+
+        if (isset($reversedMap[$keyUrl])) {
+            return $reversedMap[$keyUrl];
+        }
+
+        throw new PageNotFoundException("Unknown page '$keyUrl' in PageMap");
+    }
+
+
+    /**
+     * Return 1D array with simplified pair url=>key from PageMap
+     * @return array<string, string>
+     */
+    private function getReversedPageMap(): array
+    {
+        $reversedMap = [];
+
+        foreach (self::PageMap as $pageKey => $keyUrls) {
+            foreach ($keyUrls as $keyUrl) {
+                $reversedMap[$keyUrl] = $pageKey;
+            }
+        }
+
+        return $reversedMap;
+    }
+
+
+    /**
+     * Return array of absolute URLs to Static::default presenter for all available langs
+     * @return array<string, string>
+     * @throws Nette\Application\UI\InvalidLinkException
+     */
+    private function getAllLangsLinks(string $pageKey): array
+    {
+        $keyUrls = self::PageMap[$pageKey];
+        $links = [];
+        $langKeys = array_keys(self::Langs);
+        foreach ($keyUrls as $langId => $keyUrl) {
+            $lang = $langKeys[$langId];
+            $url = $this->link('//default', [
+                'lang' => $lang,
+                'page' => $keyUrl,
+            ]);
+            $links[$lang] = $url;
+        }
+        return $links;
+    }
+}
