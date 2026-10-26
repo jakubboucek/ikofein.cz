@@ -1,13 +1,9 @@
 /.deployment-credentials.php
 /.docker/
 /.htdeployment
-/local/*
-!/local/Config/.gitignore
-/log/*
-!/log/.gitignore
+/local/
+/log/
 /node_modules
+/temp/
+/vendor/
 /www/assets/.vite/nette.json
-/temp/*
-!/temp/.gitignore
-/vendor/*
-!/vendor/.htaccess
