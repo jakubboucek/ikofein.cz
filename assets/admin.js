@@ -3,6 +3,7 @@ import 'bootstrap/js/dist/collapse';
 import 'bootstrap/js/dist/dropdown';
 import netteForms from 'nette-forms';
 import './scss/admin.scss';
+import './strip-tracking-url-params.js';
 
 netteForms.initOnLoad();
 
