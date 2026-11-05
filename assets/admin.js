@@ -16,6 +16,7 @@ if (textareas.length) {
     import('./editor.js')
         .then(({ initializeEditors }) => initializeEditors(textareas))
         .catch(error => {
+            window.kofeinMonitoring?.captureException(error);
             const message = document.createElement('p');
             message.className = 'alert alert-warning';
             message.setAttribute('role', 'alert');

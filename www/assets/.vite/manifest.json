@@ -18,7 +18,7 @@
     "name": "preload-helper"
   },
   "admin.js": {
-    "file": "admin-BtjinhBn.js",
+    "file": "admin-BY7GEtqy.js",
     "name": "admin",
     "src": "admin.js",
     "isEntry": true,
@@ -33,7 +33,7 @@
     ]
   },
   "editor.js": {
-    "file": "editor-kkuOBh0H.js",
+    "file": "editor-CuvgL888.js",
     "name": "editor",
     "src": "editor.js",
     "isDynamicEntry": true,
@@ -45,7 +45,7 @@
     ]
   },
   "front.js": {
-    "file": "front-B434Gs8h.js",
+    "file": "front-DJQaXOoH.js",
     "name": "front",
     "src": "front.js",
     "isEntry": true,

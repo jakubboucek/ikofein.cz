@@ -6,6 +6,9 @@ application:
 
 assets:
     mapping:
+        monitoring:
+            path: assets
+            versioning: true
         default:
             type: vite
             path: assets

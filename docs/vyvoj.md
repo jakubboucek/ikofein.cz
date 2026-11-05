@@ -120,6 +120,14 @@ Pro vývoj spusť `npm run dev`. Vite poslouchá na `http://localhost:5173`, apl
 
 Frontend ověřuj ve vlastní instanci Chrome přes MCP; pokud nejsou přímé nástroje dostupné, lze použít Chrome DevTools MCP CLI přes `npm exec --yes --package=chrome-devtools-mcp -- chrome-devtools …`. Recykluj záložky a ponech samostatnou pro MailDev. Kontroluj obě jazykové verze, mobil, tisk, klávesnici galerie, konzoli/CSP, přihlášení/reset a ukládání editoru. Testovací obsah po ověření obnov se zachováním historie.
 
+### Browserový monitoring
+
+`assets/monitoring.js` inicializuje Sentry SDK pro GlitchTip. Samostatný IIFE build `www/assets/monitoring.js` se v obou layoutech načítá synchronně před aplikačními moduly, s CSP nonce a verzováním URL přes Nette Assets. Nezávisí na aplikačních chunkech. Zachytává neošetřené výjimky, odmítnuté Promise a chyby načtení skriptů; galerie a editor hlásí i chyby zachycené v `.catch()`.
+
+Sessions a performance tracing jsou vypnuté, sourcemapy ani release se neposílají. Na localhostu se události označují `development`, jinde `production`; obě prostředí odesílají do stejného projektu. `window.kofeinMonitoring.captureException(error)` umožňuje ruční hlášení výjimky.
+
+`npm run build` sestaví aplikaci i monitoring. `npm run dev` nejprve sestaví monitoring; po změně jeho zdrojů během vývoje spusť `npm run build:monitoring` a obnov stránku. Monitoring nemá HMR.
+
 ## Ladění
 
 Compose nastavuje `XDEBUG_CONFIG=client_host=host.docker.internal`; `PHP_IDE_CONFIG` je zakomentované. Pro ladění se serverem `docker-cli` odkomentuj `PHP_IDE_CONFIG=serverName=docker-cli` a v PhpStormu nastav mapování kořene projektu na `/var/www/html`. Pro spuštění kódu používej Docker interpreter pro PHP 8.5.

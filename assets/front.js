@@ -2,5 +2,8 @@ import './scss/front.scss';
 import './strip-tracking-url-params.js';
 
 if (document.querySelector('article.gallery')) {
-    import('./gallery.js').catch(error => console.error('Gallery could not be loaded.', error));
+    import('./gallery.js').catch(error => {
+        window.kofeinMonitoring?.captureException(error);
+        console.error('Gallery could not be loaded.', error);
+    });
 }
